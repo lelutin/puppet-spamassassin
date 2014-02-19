@@ -9,6 +9,12 @@
 # Boolean. Enable the sa-update cron job.
 # Default: false
 #
+# [*run_execs_as_user*]
+# If you enabled razor and/or pyzor and would
+# like the razor-admin or pyzor discover commands
+# to be run as a different user specify the username
+# in this directive. Example: amavis. Default: undef
+#
 # [*service_enable*]
 # Boolean. Will enable service at boot
 # and ensure a running service.
@@ -193,6 +199,9 @@
 # This option tells SpamAssassin specifically where to find the pyzor client instead 
 # of relying on SpamAssassin to find it in the current PATH.
 #
+# [*pyzor_home*]
+# Define the homedir for pyzor. Default is to use the [global config dir]/.pyzor
+#
 # [*razor_enabled*]
 # Boolean. Enable/disable the Pyzor plugin. Default: true
 #
@@ -200,9 +209,8 @@
 # How many seconds you wait for Razor to complete before you go on without the results.
 # Default: 5
 #
-# [*razor_config*]
-# Define the filename used to store Razor's configuration settings. Currently this is
-# left to Razor to decide. Please note that if you set a custom path the module will 
+# [*razor_home*]
+# Define the homedir for razor. Please note that if you set a custom path the module will 
 # automatically use the directory in which you store your razor config as the home 
 # directory for the module. Default is to use the [global config dir]/.razor
 #
@@ -303,6 +311,7 @@
 #
 class spamassassin(
   $sa_update                          = false,
+  $run_execs_as_user                  = undef,
   # Spamd settings
   $service_enabled                    = false,
   $spamd_max_children                 = 5,
@@ -354,10 +363,11 @@ class spamassassin(
   $pyzor_max                          = undef,
   $pyzor_options                      = undef,
   $pyzor_path                         = undef,
+  $pyzor_home                         = undef,
   # Razor plugin
   $razor_enabled                      = true,
   $razor_timeout                      = undef,
-  $razor_config                       = undef,
+  $razor_home                         = undef,
   # Spamcop plugin
   $spamcop_enabled                    = false,
   $spamcop_from_address               = undef,
@@ -426,11 +436,23 @@ class spamassassin(
 
   validate_re($dns_available, '^(test|yes|no)$',
   'dns_available parameter must have a value of: test, yes or no')
-
+  
   $final_skip_rbl_checks   = bool2num($skip_rbl_checks)
   $final_bayes_use_hapaxes = bool2num($bayes_use_hapaxes)
   $final_bayes_auto_learn  = bool2num($bayes_auto_learn)
   $final_bayes_auto_expire = bool2num($bayes_auto_expire)
+
+  $final_razor_home = $razor_home ? {
+    undef   => "${spamassassin::params::configdir}/.razor",
+    default => $razor_home
+  }
+  validate_absolute_path($final_razor_home)
+
+  $final_pyzor_home = $pyzor_home ? {
+    undef   => "${spamassassin::params::configdir}/.pyzor",
+    default => $pyzor_home,
+  }
+  validate_absolute_path($final_pyzor_home)
 
   case $::osfamily {
     'Debian' : {
@@ -468,8 +490,15 @@ class spamassassin(
     ensure => installed,
   }
 
-  Exec {
-    path => ['/bin', '/usr/bin'],
+  if $run_execs_as_user {
+    Exec {
+      path => ['/bin', '/usr/bin'],
+      user => $run_execs_as_user,
+    }
+  } else {
+    Exec {
+      path => ['/bin', '/usr/bin'],
+    }
   }
 
   # Install and setup pyzor
@@ -479,8 +508,8 @@ class spamassassin(
       require  => Package['spamassassin'],
     }
     exec { 'pyzor_discover':
-      command   => "/usr/bin/pyzor --homedir '${spamassassin::params::configdir}/.pyzor' discover",
-      unless    => "test -d ${spamassassin::params::configdir}/.pyzor",
+      command   => "/usr/bin/pyzor --homedir '${final_pyzor_home}' discover",
+      unless    => "test -d ${final_pyzor_home}",
       require   => Package['pyzor'],
     }
   }
@@ -491,38 +520,22 @@ class spamassassin(
       ensure   => installed,
       alias    => 'razor',
       require  => Package['spamassassin'],
-    }
-
-    if $razor_config {
-      validate_absolute_path($razor_config)
-
-      $final_razor_config = $razor_config
-      $razor_home = dirname($razor_config)
-    } else {
-      $razor_home = "${spamassassin::params::configdir}/.razor"
-      $final_razor_config = "${spamassassin::params::configdir}/.razor/razor-agent.conf"
-    }
-    
-    file { $razor_home:
-      ensure  => directory,
+    } ->
+    file { $final_razor_home:
+      ensure => directory,
       recurse => true,
-      require => Package['razor'],
-    }
+    } ->
     exec { 'razor_register':
-      command => "/usr/bin/razor-admin -home=${razor_home} -register",
-      unless  => "test -h ${razor_home}/identity",
-      require => File[$razor_home],
-    }
+      command => "/usr/bin/razor-admin -home=${final_razor_home} -register",
+      unless  => "test -h ${final_razor_home}/identity",
+    } ->
     exec { 'razor_create':
-      command   => "/usr/bin/razor-admin -home=${razor_home} -create",
-      creates   => $final_razor_config,
-      subscribe => Exec['razor_register'],
-    }
+      command   => "/usr/bin/razor-admin -home=${final_razor_home} -create",
+      creates   => "${final_razor_home}/razor-agent.conf",
+    } ->
     exec { 'razor_discover':
-      command     => "/usr/bin/razor-admin -home=${razor_home} -discover",
-      require     => Exec['razor_create'],
+      command     => "/usr/bin/razor-admin -home=${final_razor_home} -discover",
       refreshonly => true,
-      subscribe   => Exec['razor_register'], 
     }
   }
 

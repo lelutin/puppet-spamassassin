@@ -19,6 +19,17 @@ class { 'spamassassin':
   service_enabled => true,
 }
 
+Use with amavis
+
+class { 'spamassassin':
+  sa-update         => true,
+  run_execs_as_user => 'amavis',
+  service_enabled   => false,
+  bayes_path		=> '/var/lib/amavis/bayes'
+  razor_home        => '/var/lib/amavis/.razor',
+  pyzor_home        => '/var/lib/amavis/.pyzor',
+}
+
 The tests folder has some more examples.
 
 ## Limitations

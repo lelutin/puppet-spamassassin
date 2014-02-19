@@ -1,5 +1,7 @@
 class spamassassin::params {
-  $configdir = '/etc/mail/spamassassin'
+  $configdir  = '/etc/mail/spamassassin'
+  $razor_home = "${spamassassin::params::configdir}/.razor"
+  $pyzor_home = "${spamassassin::params::configdir}/.pyzor"
 
   case $::osfamily {
       "Debian": {

@@ -1,5 +1,9 @@
 class { 'spamassassin':
   sa_update      => true,
+  score_tests    => {
+    'BAYES_00' => '-1.9',
+    'HTML_IMAGE_ONLY_28' => '1.40',
+  },
   whitelist_from => ['*@googlemail.com', '*@gmail.com'],
   whitelist_to   => ['bob@gmail.com','sarah@yahoo.co.uk'],
   blacklist_from => ['*@msn.com','*@hotmail.com'],

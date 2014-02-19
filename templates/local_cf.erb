@@ -25,11 +25,15 @@ rewrite_header from <%= @rewrite_header_from %>
 rewrite_header to   <%= @rewrite_header_to %>
 <% end -%>
 report_safe         <%= @report_safe %>
-<%if @clear_trusted_networks -%>clear_trusted_networks<% end %>
+<%if @clear_trusted_networks -%>
+clear_trusted_networks
+<% end -%>
 <% @trusted_networks.each do |val| -%>
 trusted_networks    <%= val %>
 <% end -%>
-<%if @clear_internal_networks -%>clear_internal_networks<% end %>
+<%if @clear_internal_networks -%>
+clear_internal_networks
+<% end -%>
 <% @internal_networks.each do |val| -%>
 internal_networks    <%= val %>
 <% end -%>
@@ -126,7 +130,7 @@ pyzor_max           <%= @pyzor_max %>
 <%if @pyzor_path -%>
 pyzor_path          <%= @pyzor_path %>
 <% end -%>
-pyzor_options       --homedir <%= scope.lookupvar('spamassassin::params::configdir') %>/.pyzor <%= @pyzor_options %>
+pyzor_options       --homedir <%= @final_pyzor_home %> <%= @pyzor_options %>
 <% end -%>
 <% if @razor_enabled -%>
 
@@ -135,7 +139,7 @@ use_razor2          1
 <%if @razor_timeout -%>
 razor_timeout       <%= @razor_timeout %>
 <% end -%>
-razor_config        <%= @final_razor_config %>
+razor_config        <%= @final_razor_home %>/razor-agent.conf
 <% end -%>
 
 <% if @spamcop_enabled -%>
