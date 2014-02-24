@@ -4,7 +4,7 @@ source 'https://github.com/wyrie/puppet-spamassassin'
 author 'Scott Barr'
 license 'Apache License, Version 2.0'
 summary 'Spamassassin'
-description 'Installs and configures spamassassin and a few of it's plugins.'
+description 'Installs and configures spamassassin and a few of its plugins.'
 project_page 'https://github.com/wyrie/puppet-spamassassin'
 
 ## Add dependencies, if any:
