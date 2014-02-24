@@ -586,6 +586,18 @@ class spamassassin(
       }
   }
 
+  if $::osfamily == 'Debian' {
+    # We enable the service regardless of our service_enabled parameter. Trying to
+    # stop or start the spamassassin init script without the enabled will fail.
+    file_line { 'spamd_service' :
+      path    => $spamassassin::params::spamd_options_file,
+      line    => "ENABLED=1",
+      match   => '^ENABLED',
+      notify  => Service['spamassassin'],
+      require => Package['spamassassin'],
+    }
+  }
+  
   if $service_enabled {
     $extra_options = inline_template("-m <%= @spamd_max_children %> -i <%= @spamd_listen_address %> -A <%= @spamd_allowed_ips %><% if @spamd_nouserconfig -%> --nouser-config<% end -%><% if @spamd_allowtell -%> --allow-tell<% end -%>")
 
@@ -595,21 +607,6 @@ class spamassassin(
       match   => "^${spamassassin::params::spamd_options_var}=\"[^\"]+\"$",
       notify  => Service['spamassassin'],
       require => Package['spamassassin']
-    }
-
-    if $::osfamily == 'Debian' {
-
-      $enabled = $service_enabled ? {
-        true    => 1,
-        default => 0,
-      }
-      file_line { 'spamd_service' :
-        path    => $spamassassin::params::spamd_options_file,
-        line    => "ENABLED=${enabled}",
-        match   => '^ENABLED',
-        notify  => Service['spamassassin'],
-        require => Package['spamassassin'],
-      }
     }
   }
 

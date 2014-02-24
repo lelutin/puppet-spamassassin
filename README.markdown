@@ -14,14 +14,14 @@ If you want to use razor and/or pyzor see limitations below and note that the mo
 
 Minimal usage for spamd
 
-class { 'spamassassin':
+```class { 'spamassassin':
   sa_update       => true,
   service_enabled => true,
 }
-
+```
 Use with amavis
 
-class { 'spamassassin':
+```class { 'spamassassin':
   sa-update         => true,
   run_execs_as_user => 'amavis',
   service_enabled   => false,
@@ -29,6 +29,7 @@ class { 'spamassassin':
   razor_home        => '/var/lib/amavis/.razor',
   pyzor_home        => '/var/lib/amavis/.pyzor',
 }
+```
 
 The tests folder has some more examples.
 
