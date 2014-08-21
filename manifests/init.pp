@@ -428,10 +428,10 @@ class spamassassin(
   validate_array($internal_networks)
   validate_array($bayes_ignore_header)
 
-  validate_re($spamd_max_children, '^[1-9]([0-9]*)?$',
+  validate_re("${spamd_max_children}", '^[1-9]([0-9]*)?$',
   'spamd_max_children parameter should be a number')
 
-  validate_re($required_score, '^[0-9]([0-9]*)?(\.[0-9]{1,2})?$',
+  validate_re("${required_score}", '^[0-9]([0-9]*)?(\.[0-9]{1,2})?$',
   'required_score parameter should be an integer or real number.')
 
   validate_re($dns_available, '^(test|yes|no)$',
