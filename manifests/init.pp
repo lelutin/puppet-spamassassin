@@ -543,18 +543,22 @@ class spamassassin(
     "${spamassassin::params::configdir}/local.cf":
       ensure  => present,
       content => template('spamassassin/local_cf.erb'),
+      notify  => Service['spamassassin'],
       require => Package['spamassassin'];
     "${spamassassin::params::configdir}/v310.pre":
       ensure  => present,
       content => template('spamassassin/v310_pre.erb'),
+      notify  => Service['spamassassin'],
       require => Package['spamassassin'];
     "${spamassassin::params::configdir}/v312.pre":
       ensure  => present,
       content => template('spamassassin/v312_pre.erb'),
+      notify  => Service['spamassassin'],
       require => Package['spamassassin'];
     "${spamassassin::params::configdir}/v320.pre":
       ensure  => present,
       content => template('spamassassin/v320_pre.erb'),
+      notify  => Service['spamassassin'],
       require => Package['spamassassin'];
   }
 
