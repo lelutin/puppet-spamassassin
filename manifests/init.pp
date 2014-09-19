@@ -444,8 +444,10 @@ class spamassassin(
   validate_re($spamd_max_children, '^[1-9]([0-9]*)?$',
   'spamd_max_children parameter should be a number')
 
-  validate_re("${spamd_min_children}", '^[1-9]([0-9]*)?$',
+  if $spamd_min_children {
+    validate_re("${spamd_min_children}", '^[1-9]([0-9]*)?$',
   'spamd_min_children parameter should be a number')
+  }
 
   validate_re($required_score, '^[0-9]([0-9]*)?(\.[0-9]{1,2})?$',
   'required_score parameter should be an integer or real number.')
