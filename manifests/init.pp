@@ -413,6 +413,7 @@ class spamassassin(
   validate_bool($service_enabled)
   validate_bool($spamd_nouserconfig)
   validate_bool($spamd_allowtell)
+  validate_bool($spamd_sql_config)
   validate_bool($clear_trusted_networks)
   validate_bool($clear_internal_networks)
   validate_bool($bayes_enabled)
@@ -442,6 +443,9 @@ class spamassassin(
 
   validate_re($spamd_max_children, '^[1-9]([0-9]*)?$',
   'spamd_max_children parameter should be a number')
+ 
+  validate_re("${spamd_min_children}", '^[1-9]([0-9]*)?$',
+  'spamd_min_children parameter should be a number')
 
   validate_re($required_score, '^[0-9]([0-9]*)?(\.[0-9]{1,2})?$',
   'required_score parameter should be an integer or real number.')
@@ -611,7 +615,7 @@ class spamassassin(
   }
   
   if $service_enabled {
-    $extra_options = inline_template("-m <%= @spamd_max_children %> -i <%= @spamd_listen_address %> -A <%= @spamd_allowed_ips %><% if @spamd_nouserconfig -%> --nouser-config<% end -%><% if @spamd_allowtell -%> --allow-tell<% end -%>")
+    $extra_options = inline_template("-m <%= @spamd_max_children %><% if @spamd_min_children -%> --min-children=<%=@spamd_min_children -%><% end -%> -i <%= @spamd_listen_address %> -A <%= @spamd_allowed_ips %><% if @spamd_nouserconfig -%> --nouser-config<% end -%><% if @spamd_allowtell -%> --allow-tell<% end -%><% if @spamd_sql_config -%> -q<% end -%>")
 
     file_line { 'spamd_options' :
       path    => $spamassassin::params::spamd_options_file,
