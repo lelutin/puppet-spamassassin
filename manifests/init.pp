@@ -24,6 +24,11 @@
 # Spamd will spawn that number of children, then sleep in the background 
 # until a child dies, wherein it will go and spawn a new child.
 #
+# [*spamd_min_children*]
+# The minimum number of children that will be kept running
+# The minimum value is 1, the default value is 1 in spamd, and undef here.
+# If you have lots of free RAM, you may want to increase this.
+#
 # [*spamd_listen_address*]
 # Tells spamd to listen on the specified IP address (defaults to 127.0.0.1).
 # Use 0.0.0.0to listen on all interfaces. You can also use a  valid hostname 
@@ -46,6 +51,11 @@
 # revoking (to a remote database) by spamd. The client issues a TELL command 
 # to tell what type of message is being processed and whether local (learn/forget)
 # or remote (report/revoke) databases should be updated.
+#
+# [*spamd_sql_config*]
+# Turn on SQL lookups even when per-user config files have been disabled with -x
+# this is useful for spamd hosts which don’t have user’s home directories
+# but do want to load user preferences from an SQL database.
 #
 # [*required_score*]
 # Set the score required before a mail is considered spam. n.nn can be an 
