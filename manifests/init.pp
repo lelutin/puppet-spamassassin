@@ -328,6 +328,8 @@ class spamassassin(
   $spamd_min_children                 = undef,
   $spamd_listen_address               = '127.0.0.1',
   $spamd_allowed_ips                  = '127.0.0.1/32',
+  $spamd_username                     = undef,
+  $spamd_groupname                    = undef,
   $spamd_nouserconfig                 = false,
   $spamd_allowtell                    = false,
   $spamd_sql_config                   = false,
@@ -617,7 +619,7 @@ class spamassassin(
   }
 
   if $service_enabled {
-    $extra_options = inline_template("-m <%= @spamd_max_children %><% if @spamd_min_children -%> --min-children=<%=@spamd_min_children -%><% end -%> -i <%= @spamd_listen_address %> -A <%= @spamd_allowed_ips %><% if @spamd_nouserconfig -%> --nouser-config<% end -%><% if @spamd_allowtell -%> --allow-tell<% end -%><% if @spamd_sql_config -%> -q<% end -%>")
+    $extra_options = inline_template("<% if @spamd_username -%>-u <%= @spamd_username -%><% end -%> <% if @spamd_groupname -%>-g <%= @spamd_groupname -%><% end -%> -m <%= @spamd_max_children %><% if @spamd_min_children -%> --min-children=<%=@spamd_min_children -%><% end -%> -i <%= @spamd_listen_address %> -A <%= @spamd_allowed_ips %><% if @spamd_nouserconfig -%> --nouser-config<% end -%><% if @spamd_allowtell -%> --allow-tell<% end -%><% if @spamd_sql_config -%> -q<% end -%>")
 
     file_line { 'spamd_options' :
       path    => $spamassassin::params::spamd_options_file,
