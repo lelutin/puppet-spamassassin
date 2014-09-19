@@ -21,7 +21,7 @@
 #
 # [*spamd_max_children*]
 # This option specifies the maximum number of children to spawn.
-# Spamd will spawn that number of children, then sleep in the background 
+# Spamd will spawn that number of children, then sleep in the background
 # until a child dies, wherein it will go and spawn a new child.
 #
 # [*spamd_min_children*]
@@ -31,24 +31,24 @@
 #
 # [*spamd_listen_address*]
 # Tells spamd to listen on the specified IP address (defaults to 127.0.0.1).
-# Use 0.0.0.0to listen on all interfaces. You can also use a  valid hostname 
+# Use 0.0.0.0to listen on all interfaces. You can also use a  valid hostname
 # which will make spamd listen on the first address that name resolves to.
 #
 # [*spamd_allowed_ips*]
 # Specify a list of authorized hosts or networks which can connect to this
-# spamd instance. Single IP addresses, CIDR format networks, or ranges of 
-# IP addresses by listing 3 or less octets with a trailing dot. Hostnames 
+# spamd instance. Single IP addresses, CIDR format networks, or ranges of
+# IP addresses by listing 3 or less octets with a trailing dot. Hostnames
 # are not supported, only IP addresses.  This option can be specified
 # multiple times, or can take a list of addresses separated by commas.
 #
 # [*spamd_nouserconfig*]
 # Turn off (on) reading of per-user configuration files (user_prefs) from
-# the user's home directory. The default behaviour is to read per-user 
+# the user's home directory. The default behaviour is to read per-user
 # configuration from the user's home directory (--user-config).
 #
 # [*spamd_allowtell*]
-# Allow learning and forgetting (to a local Bayes database), reporting and 
-# revoking (to a remote database) by spamd. The client issues a TELL command 
+# Allow learning and forgetting (to a local Bayes database), reporting and
+# revoking (to a remote database) by spamd. The client issues a TELL command
 # to tell what type of message is being processed and whether local (learn/forget)
 # or remote (report/revoke) databases should be updated.
 #
@@ -58,7 +58,7 @@
 # but do want to load user preferences from an SQL database.
 #
 # [*required_score*]
-# Set the score required before a mail is considered spam. n.nn can be an 
+# Set the score required before a mail is considered spam. n.nn can be an
 # integer or a real number.
 #
 # [*score_tests*]
@@ -74,7 +74,7 @@
 # If the given address appears as a recipient in the message headers
 # (Resent-To, To, Cc, obvious envelope recipient, etc.) the mail will
 # be whitelisted.
-# 
+#
 # [*blacklist_from*]
 # Used to specify addresses which send mail that is often
 # tagged (incorrectly) as non-spam, but which the user doesn't want.
@@ -87,7 +87,7 @@
 # [*rewrite_header_subject*]
 # By default, suspected spam messages will not have the Subject, From
 # or To lines tagged to indicate spam. By setting this option, the header
-# will be tagged with the value of the parameter to indicate that a message 
+# will be tagged with the value of the parameter to indicate that a message
 # is spam.
 #
 # [*rewrite_header_from*]
@@ -113,14 +113,14 @@
 # Boolean. Empty the list of internal networks. Default: false
 #
 # [*internal_networks*]
-# Internal means that relay hosts on these networks are considered 
+# Internal means that relay hosts on these networks are considered
 # to be MXes for your domain(s), or internal relays.
 #
 # [*skip_rbl_checks*]
 # Boolean. If false SpamAssassin will run RBL checks. Default: true
 #
 # [*dns_available*]
-# If set to 'test', SpamAssassin will query some default hosts on the 
+# If set to 'test', SpamAssassin will query some default hosts on the
 # internet to attempt to check if DNS is working or not. Default: yes
 #
 # [*bayes_enabled*]
@@ -128,8 +128,8 @@
 # into SpamAssassin. Default: true
 #
 # [*bayes_use_hapaxes*]
-# Boolean. Should the Bayesian classifier use hapaxes (words/tokens that occur 
-# only once) when classifying? This produces significantly better hit-rates, 
+# Boolean. Should the Bayesian classifier use hapaxes (words/tokens that occur
+# only once) when classifying? This produces significantly better hit-rates,
 # but increases database size by about a factor of 8 to 10. Default: true
 #
 # [*bayes_auto_learn*]
@@ -160,8 +160,8 @@
 # The sql password used for the dsn provided above.
 #
 # [*bayes_sql_override_username*]
-# If this options is set the BayesStore::SQL module will override the set 
-# username with the value given. This could be useful for implementing global 
+# If this options is set the BayesStore::SQL module will override the set
+# username with the value given. This could be useful for implementing global
 # or group bayes databases.
 #
 # [*bayes_path*]
@@ -177,7 +177,7 @@
 #
 # [*dcc_body_max*]
 # This option sets how often a message's body/fuz1/fuz2 checksum
-# must have been reported to the DCC server before SpamAssassin 
+# must have been reported to the DCC server before SpamAssassin
 # will consider the DCC check as matched. As nearly all DCC clients
 # are auto-reporting these checksums, you should set this to a relatively
 # high value, e.g. 999999 (this is DCC's MANY count). Default: 999999
@@ -206,7 +206,7 @@
 # the module will automatically add the homedir options as part of the configuration.
 #
 # [*pyzor_path*]
-# This option tells SpamAssassin specifically where to find the pyzor client instead 
+# This option tells SpamAssassin specifically where to find the pyzor client instead
 # of relying on SpamAssassin to find it in the current PATH.
 #
 # [*pyzor_home*]
@@ -220,16 +220,16 @@
 # Default: 5
 #
 # [*razor_home*]
-# Define the homedir for razor. Please note that if you set a custom path the module will 
-# automatically use the directory in which you store your razor config as the home 
+# Define the homedir for razor. Please note that if you set a custom path the module will
+# automatically use the directory in which you store your razor config as the home
 # directory for the module. Default is to use the [global config dir]/.razor
 #
 # [*spamcop_enabled*]
 # Boolean. Enable/disable the Pyzor plugin. Default: false
 #
 # [*spamcop_from_address*]
-# This address is used during manual reports to SpamCop as the From: address. You 
-# can use your normal email address. If this is not set, a guess will be used as 
+# This address is used during manual reports to SpamCop as the From: address. You
+# can use your normal email address. If this is not set, a guess will be used as
 # the From: address in SpamCop reports.
 #
 # [*spamcop_to_address*]
@@ -253,7 +253,7 @@
 # [*awl_dsn*]
 # This parameter gives the connect string used to connect to the SQL based
 # storage. By default will use the mysql driver and a database called
-# spamassassin. Please note the module does not manage any database 
+# spamassassin. Please note the module does not manage any database
 # settings or the creation of the schema.
 #
 # [*awl_sql_username*]
@@ -263,17 +263,17 @@
 # The sql password used for the dsn provided above.
 #
 # [*awl_sql_override_username*]
-# Used by the SQLBasedAddrList storage implementation.  If this option is 
-# set the SQLBasedAddrList module will override the set username with the 
-# value given. This can be useful for implementing global or group based 
+# Used by the SQLBasedAddrList storage implementation.  If this option is
+# set the SQLBasedAddrList module will override the set username with the
+# value given. This can be useful for implementing global or group based
 # auto-whitelist databases.
 #
 # [*auto_whitelist_path*]
-# This is the automatic-whitelist directory and filename. 
+# This is the automatic-whitelist directory and filename.
 # Default: ~/.spamassassin/auto-whitelist
 #
 # [*auto_whitelist_file_mode*]
-# The file mode bits used for the automatic-whitelist directory or file. 
+# The file mode bits used for the automatic-whitelist directory or file.
 # Default: 0600
 #
 # [*shortcircuit_enabled*]
@@ -443,7 +443,7 @@ class spamassassin(
 
   validate_re($spamd_max_children, '^[1-9]([0-9]*)?$',
   'spamd_max_children parameter should be a number')
- 
+
   validate_re("${spamd_min_children}", '^[1-9]([0-9]*)?$',
   'spamd_min_children parameter should be a number')
 
@@ -452,7 +452,7 @@ class spamassassin(
 
   validate_re($dns_available, '^(test|yes|no)$',
   'dns_available parameter must have a value of: test, yes or no')
-  
+
   $final_skip_rbl_checks   = bool2num($skip_rbl_checks)
   $final_bayes_use_hapaxes = bool2num($bayes_use_hapaxes)
   $final_bayes_auto_learn  = bool2num($bayes_auto_learn)
@@ -597,7 +597,7 @@ class spamassassin(
             path    => $spamassassin::params::sa_update_file,
             line    => "SAUPDATE=${saupdate}",
             match   => "^#?SAUPDATE=",
-            require => Package['spamassassin'] 
+            require => Package['spamassassin']
           }
       }
   }
@@ -613,7 +613,7 @@ class spamassassin(
       require => Package['spamassassin'],
     }
   }
-  
+
   if $service_enabled {
     $extra_options = inline_template("-m <%= @spamd_max_children %><% if @spamd_min_children -%> --min-children=<%=@spamd_min_children -%><% end -%> -i <%= @spamd_listen_address %> -A <%= @spamd_allowed_ips %><% if @spamd_nouserconfig -%> --nouser-config<% end -%><% if @spamd_allowtell -%> --allow-tell<% end -%><% if @spamd_sql_config -%> -q<% end -%>")
 
