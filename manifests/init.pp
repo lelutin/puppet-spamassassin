@@ -41,6 +41,12 @@
 # are not supported, only IP addresses.  This option can be specified
 # multiple times, or can take a list of addresses separated by commas.
 #
+# [*spamd_username*]
+# spamd runs as this user
+#
+# [*spamd_groupname*]
+# spamd runs in this group
+#
 # [*spamd_nouserconfig*]
 # Turn off (on) reading of per-user configuration files (user_prefs) from
 # the user's home directory. The default behaviour is to read per-user
