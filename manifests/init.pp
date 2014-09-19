@@ -174,6 +174,16 @@
 # This is the directory and filename for Bayes databases. Please note this
 # parameter is not used if bayes_sql_enabled is true.
 #
+# [*sql_config_user_scores_dsn*]
+# The perl DBI DSN string used to specify the SQL server holding user config
+# example: 'DBI:mysql:dbname:hostname
+#
+# [*sql_config_user_scores_username*]
+# The SQL username to connect to the above server
+#
+# [*sql_config_user_scores_password*]
+# The SQL password for the above user
+#
 # [*dcc_enabled*]
 # Boolean. Enable/disable the DCC plugin. Default: false
 #
@@ -371,6 +381,10 @@ class spamassassin(
   $bayes_sql_password                 = undef,
   $bayes_sql_override_username        = undef,
   $bayes_path                         = undef,
+  # SQL config parameters
+  $sql_config_user_scores_dsn         = undef,
+  $sql_config_user_scores_username    = undef,
+  $sql_config_user_scores_password    = undef,
   # DCC plugin
   $dcc_enabled                        = false,
   $dcc_timeout                        = undef,
@@ -462,6 +476,12 @@ class spamassassin(
 
   validate_re($dns_available, '^(test|yes|no)$',
   'dns_available parameter must have a value of: test, yes or no')
+
+  if $spamd_sql_config {
+    validate_string($sql_config_user_scores_dsn)
+    validate_string($sql_config_user_scores_username)
+    validate_string($sql_config_user_scores_password)
+  }
 
   $final_skip_rbl_checks   = bool2num($skip_rbl_checks)
   $final_bayes_use_hapaxes = bool2num($bayes_use_hapaxes)
