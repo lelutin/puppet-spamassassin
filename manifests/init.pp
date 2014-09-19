@@ -315,10 +315,12 @@ class spamassassin(
   # Spamd settings
   $service_enabled                    = false,
   $spamd_max_children                 = 5,
+  $spamd_min_children                 = undef,
   $spamd_listen_address               = '127.0.0.1',
   $spamd_allowed_ips                  = '127.0.0.1/32',
   $spamd_nouserconfig                 = false,
   $spamd_allowtell                    = false,
+  $spamd_sql_config                   = false,
   # Scoring options
   $required_score                     = 5,
   $score_tests                        = {},
