@@ -622,7 +622,7 @@ class spamassassin(
     file_line { 'spamd_options' :
       path    => $spamassassin::params::spamd_options_file,
       line    => "${spamassassin::params::spamd_options_var}=\"${spamassassin::params::spamd_defaults} ${extra_options}\"",
-      match   => "^${spamassassin::params::spamd_options_var}=\"[^\"]+\"$",
+      match   => "^${spamassassin::params::spamd_options_var}=",
       notify  => Service['spamassassin'],
       require => Package['spamassassin']
     }
