@@ -604,6 +604,14 @@ class spamassassin(
       require => Package['spamassassin'];
   }
 
+  if $spamd_sql_config {
+    file { "${spamassassin::params::configdir}/sql.cf":
+      ensure  => present,
+      content => template('spamassassin/sql.cf'),
+      require => Package['spamassassin'],
+    }
+  }
+
   # Enable or explicitly disable sa-update cron.
   case $::osfamily {
       "Debian": {
