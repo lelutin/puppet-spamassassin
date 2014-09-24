@@ -9,6 +9,11 @@
 # Boolean. Enable the sa-update cron job.
 # Default: false
 #
+# [*use_sa_compiled*]
+# Boolean.  Enable the Rule2XSBody plugin.
+# Compile ruleset to native code with sa-compile.
+# Requires re2c and gcc packages (not managed in this module)
+#
 # [*run_execs_as_user*]
 # If you enabled razor and/or pyzor and would
 # like the razor-admin or pyzor discover commands
@@ -337,6 +342,7 @@
 #
 class spamassassin(
   $sa_update                          = false,
+  $use_sa_compiled                    = false,
   $run_execs_as_user                  = undef,
   # Spamd settings
   $service_enabled                    = false,
