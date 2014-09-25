@@ -9,11 +9,6 @@
 # Boolean. Enable the sa-update cron job.
 # Default: false
 #
-# [*use_sa_compiled*]
-# Boolean.  Enable the Rule2XSBody plugin.
-# Compile ruleset to native code with sa-compile.
-# Requires re2c and gcc packages (not managed in this module)
-#
 # [*run_execs_as_user*]
 # If you enabled razor and/or pyzor and would
 # like the razor-admin or pyzor discover commands
@@ -179,15 +174,18 @@
 # This is the directory and filename for Bayes databases. Please note this
 # parameter is not used if bayes_sql_enabled is true.
 #
-# [*sql_config_user_scores_dsn*]
+# [*user_scores_dsn*]
 # The perl DBI DSN string used to specify the SQL server holding user config
 # example: 'DBI:mysql:dbname:hostname
 #
-# [*sql_config_user_scores_username*]
+# [*user_scores_sql_username*]
 # The SQL username to connect to the above server
 #
-# [*sql_config_user_scores_password*]
+# [*user_scores_sql_password*]
 # The SQL password for the above user
+#
+# [*user_scores_sql_custom_query*]
+# Custom SQL query to use for spamd user_prefs.
 #
 # [*dcc_enabled*]
 # Boolean. Enable/disable the DCC plugin. Default: false
@@ -332,6 +330,12 @@
 # before scanning continues without the DKIM result.
 # Default: 5
 #
+# [*rules2xsbody_enabled*]
+# Boolean.  Enable the Rule2XSBody plugin.
+# Compile ruleset to native code with sa-compile.
+# Requires re2c and gcc packages (not managed in this module)
+#
+#
 # === Examples
 #
 #  See tests folder.
@@ -342,7 +346,6 @@
 #
 class spamassassin(
   $sa_update                          = false,
-  $use_sa_compiled                    = false,
   $run_execs_as_user                  = undef,
   # Spamd settings
   $service_enabled                    = false,
@@ -387,10 +390,11 @@ class spamassassin(
   $bayes_sql_password                 = undef,
   $bayes_sql_override_username        = undef,
   $bayes_path                         = undef,
-  # SQL config parameters
-  $sql_config_user_scores_dsn         = undef,
-  $sql_config_user_scores_username    = undef,
-  $sql_config_user_scores_password    = undef,
+  # SQL based user preferences
+  $user_scores_dsn                    = undef,
+  $user_scores_sql_username           = undef,
+  $user_scores_sql_password           = undef,
+  $user_scores_sql_custom_query       = undef,
   # DCC plugin
   $dcc_enabled                        = false,
   $dcc_timeout                        = undef,
@@ -435,6 +439,8 @@ class spamassassin(
   # DKIM plugin
   $dkim_enabled                       = true,
   $dkim_timeout                       = undef,
+  # Rule2XSBody plugin
+  $rules2xsbody_enabled               = false,
 ) {
   include spamassassin::params
 
@@ -484,9 +490,10 @@ class spamassassin(
   'dns_available parameter must have a value of: test, yes or no')
 
   if $spamd_sql_config {
-    validate_string($sql_config_user_scores_dsn)
-    validate_string($sql_config_user_scores_username)
-    validate_string($sql_config_user_scores_password)
+    validate_string($user_scores_dsn)
+    validate_string($user_scores_sql_username)
+    validate_string($user_scores_sql_password)
+    validate_string($user_scores_sql_custom_query)
   }
 
   $final_skip_rbl_checks   = bool2num($skip_rbl_checks)
@@ -508,11 +515,6 @@ class spamassassin(
 
   case $::osfamily {
     'Debian' : {
-      if $bayes_sql_enabled or $awl_sql_enabled {
-        package { ['libdbd-mysql','libdbd-pgsql','libdbd-sqlite']:
-          ensure => installed,
-        }
-      }
       if $dkim_enabled {
         package { 'libmail-dkim-perl':
           ensure => installed,
@@ -521,11 +523,6 @@ class spamassassin(
       $razor_package = 'razor'
     }
     'RedHat' : {
-      if $bayes_sql_enabled or $awl_sql_enabled {
-        package { ['libdbi-dbd-mysql','libdbi-dbd-pgsql','libdbi-dbd-sqlite']:
-          ensure => installed,
-        }
-      }
       if $dkim_enabled {
         package { 'perl-Mail-DKIM':
           ensure => installed,
@@ -568,13 +565,19 @@ class spamassassin(
 
   # Install and setup razor
   if $razor_enabled {
+    $razor_home_owner = $run_execs_as_user ? {
+      undef   => 'root',
+      default => $run_execs_as_user,
+    }
+
     package { $razor_package:
       ensure   => installed,
       alias    => 'razor',
       require  => Package['spamassassin'],
     } ->
     file { $final_razor_home:
-      ensure => directory,
+      ensure  => directory,
+      owner   => $razor_home_owner,
       recurse => true,
     } ->
     exec { 'razor_register':
