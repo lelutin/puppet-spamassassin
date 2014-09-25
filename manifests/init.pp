@@ -621,6 +621,7 @@ class spamassassin(
     file { "${spamassassin::params::configdir}/sql.cf":
       ensure  => present,
       content => template('spamassassin/sql.cf.erb'),
+      notify  => Service['spamassassin'],
       require => Package['spamassassin'],
     }
   }
