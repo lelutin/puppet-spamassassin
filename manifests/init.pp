@@ -475,7 +475,7 @@ class spamassassin(
   validate_array($internal_networks)
   validate_array($bayes_ignore_header)
 
-  validate_re($spamd_max_children, '^[1-9]([0-9]*)?$',
+  validate_re("${spamd_max_children}", '^[1-9]([0-9]*)?$',
   'spamd_max_children parameter should be a number')
 
   if $spamd_min_children {
@@ -483,7 +483,7 @@ class spamassassin(
   'spamd_min_children parameter should be a number')
   }
 
-  validate_re($required_score, '^[0-9]([0-9]*)?(\.[0-9]{1,2})?$',
+  validate_re("${required_score}", '^[0-9]([0-9]*)?(\.[0-9]{1,2})?$',
   'required_score parameter should be an integer or real number.')
 
   validate_re($dns_available, '^(test|yes|no)$',
@@ -598,18 +598,22 @@ class spamassassin(
     "${spamassassin::params::configdir}/local.cf":
       ensure  => present,
       content => template('spamassassin/local_cf.erb'),
+      notify  => Service['spamassassin'],
       require => Package['spamassassin'];
     "${spamassassin::params::configdir}/v310.pre":
       ensure  => present,
       content => template('spamassassin/v310_pre.erb'),
+      notify  => Service['spamassassin'],
       require => Package['spamassassin'];
     "${spamassassin::params::configdir}/v312.pre":
       ensure  => present,
       content => template('spamassassin/v312_pre.erb'),
+      notify  => Service['spamassassin'],
       require => Package['spamassassin'];
     "${spamassassin::params::configdir}/v320.pre":
       ensure  => present,
       content => template('spamassassin/v320_pre.erb'),
+      notify  => Service['spamassassin'],
       require => Package['spamassassin'];
   }
 
