@@ -628,7 +628,7 @@ class spamassassin(
 
   # Enable or explicitly disable sa-update cron.
   case $::osfamily {
-      "Debian": {
+      'Debian': {
           $cron = $sa_update ? {
             true    => 1,
             default => 0,
@@ -636,11 +636,11 @@ class spamassassin(
           file_line { 'sa_update':
             path    => $spamassassin::params::sa_update_file,
             line    => "CRON=${cron}",
-            match   => "^CRON=[0-1]$",
+            match   => '^CRON=[0-1]$',
             require => Package['spamassassin']
           }
       }
-      "Redhat": {
+      'Redhat': {
           $saupdate = $sa_update ? {
             true    => 'yes',
             default => 'no',
@@ -648,7 +648,7 @@ class spamassassin(
           file_line { 'sa-update':
             path    => $spamassassin::params::sa_update_file,
             line    => "SAUPDATE=${saupdate}",
-            match   => "^#?SAUPDATE=",
+            match   => '^#?SAUPDATE=',
             require => Package['spamassassin']
           }
       }
@@ -659,7 +659,7 @@ class spamassassin(
     # stop or start the spamassassin init script without the enabled will fail.
     file_line { 'spamd_service' :
       path    => $spamassassin::params::spamd_options_file,
-      line    => "ENABLED=1",
+      line    => 'ENABLED=1',
       match   => '^ENABLED',
       notify  => Service['spamassassin'],
       require => Package['spamassassin'],
