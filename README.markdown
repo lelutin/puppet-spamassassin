@@ -4,10 +4,10 @@
 
 1. [Overview](#overview)
 2. [Module Description - What the module does and why it is useful](#module-description)
-3. [Setup - The basics of getting started with [Modulename]](#setup)
-    * [What [Modulename] affects](#what-[modulename]-affects)
+3. [Setup - The basics of getting started with spamassassin](#setup)
+    * [What spamassassin affects](#what-spamassassin-affects)
     * [Setup requirements](#setup-requirements)
-    * [Beginning with [Modulename]](#beginning-with-[Modulename])
+    * [Beginning with spamassassin](#beginning-with-spamassassin)
 4. [Usage - Configuration options and additional functionality](#usage)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 5. [Limitations - OS compatibility, etc.](#limitations)
@@ -24,7 +24,7 @@ parameters and most of them have a brief description of it's function in the hea
 
 ##Setup
 
-###What [Modulename] affects
+###What spamassassin affects
 
 * spamassassin package.
 * spamassassin configuration files: local.cf, v310.cf, v312.cf, v320.cf and sql.cf (optional).
@@ -37,7 +37,7 @@ On Redhat systems, if you enable razor and/or pyzor, the packages need to come f
 
 The installation of the DCC plugin, if enabled, needs to be handled elsewhere.
 	
-###Beginning with [Modulename]	
+###Beginning with spamassassin	
 
 Minimal usage for spamd
 
