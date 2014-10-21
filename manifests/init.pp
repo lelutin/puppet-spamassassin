@@ -644,7 +644,7 @@ class spamassassin(
             true    => 'yes',
             default => 'no',
           }
-          file_line { 'sa-update':
+          file_line { 'sa_update':
             path    => $sa_update_file,
             line    => "SAUPDATE=${saupdate}",
             match   => '^#?SAUPDATE=',
