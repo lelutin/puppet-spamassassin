@@ -501,13 +501,13 @@ class spamassassin(
   $final_bayes_auto_expire = bool2num($bayes_auto_expire)
 
   $final_razor_home = $razor_home ? {
-    undef   => "${configdir}/.razor",
+    undef   => "${spamassassin::params::configdir}/.razor",
     default => $razor_home
   }
   validate_absolute_path($final_razor_home)
 
   $final_pyzor_home = $pyzor_home ? {
-    undef   => "${configdir}/.pyzor",
+    undef   => "${spamassassin::params::configdir}/.pyzor",
     default => $pyzor_home,
   }
   validate_absolute_path($final_pyzor_home)
@@ -596,22 +596,22 @@ class spamassassin(
   }
 
   file {
-    "${configdir}/local.cf":
+    "${spamassassin::params::configdir}/local.cf":
       ensure  => present,
       content => template('spamassassin/local_cf.erb'),
       notify  => Service['spamassassin'],
       require => Package['spamassassin'];
-    "${configdir}/v310.pre":
+    "${spamassassin::params::configdir}/v310.pre":
       ensure  => present,
       content => template('spamassassin/v310_pre.erb'),
       notify  => Service['spamassassin'],
       require => Package['spamassassin'];
-    "${configdir}/v312.pre":
+    "${spamassassin::params::configdir}/v312.pre":
       ensure  => present,
       content => template('spamassassin/v312_pre.erb'),
       notify  => Service['spamassassin'],
       require => Package['spamassassin'];
-    "${configdir}/v320.pre":
+    "${spamassassin::params::configdir}/v320.pre":
       ensure  => present,
       content => template('spamassassin/v320_pre.erb'),
       notify  => Service['spamassassin'],
@@ -619,7 +619,7 @@ class spamassassin(
   }
 
   if $spamd_sql_config {
-    file { "${configdir}/sql.cf":
+    file { "${spamassassin::params::configdir}/sql.cf":
       ensure  => present,
       content => template('spamassassin/sql.cf.erb'),
       notify  => Service['spamassassin'],
@@ -635,7 +635,7 @@ class spamassassin(
             default => 0,
           }
           file_line { 'sa_update':
-            path    => $sa_update_file,
+            path    => $spamassassin::params::sa_update_file,
             line    => "CRON=${cron}",
             match   => '^CRON=[0-1]$',
             require => Package['spamassassin']
@@ -647,7 +647,7 @@ class spamassassin(
             default => 'no',
           }
           file_line { 'sa_update':
-            path    => $sa_update_file,
+            path    => $spamassassin::params::sa_update_file,
             line    => "SAUPDATE=${saupdate}",
             match   => '^#?SAUPDATE=',
             require => Package['spamassassin']
@@ -659,7 +659,7 @@ class spamassassin(
     # We enable the service regardless of our service_enabled parameter. Trying to
     # stop or start the spamassassin init script without the enabled will fail.
     file_line { 'spamd_service' :
-      path    => $spamd_options_file,
+      path    => $spamassassin::params::spamd_options_file,
       line    => 'ENABLED=1',
       match   => '^ENABLED',
       notify  => Service['spamassassin'],
@@ -668,12 +668,12 @@ class spamassassin(
   }
 
   if $service_enabled {
-    $extra_options = inline_template("<% if @spamd_username -%>-u <%= @spamd_username -%> <% end -%><% if @spamd_groupname -%>-g <%= @spamd_groupname -%> <% end -%>-m <%= @spamd_max_children %><% if @spamd_min_children -%> --min-children=<%=@spamd_min_children -%><% end -%> -i <%= @spamd_listen_address %> -A <%= @spamd_allowed_ips %><% if @spamd_nouserconfig -%> --nouser-config<% end -%><% if @spamd_allowtell -%> --allow-tell<% end -%><% if @spamd_sql_config -%> -q<% end -%>")
+    $extra_options = inline_template('<% if @spamd_username -%>-u <%= @spamd_username -%> <% end -%><% if @spamd_groupname -%>-g <%= @spamd_groupname -%> <% end -%>-m <%= @spamd_max_children %><% if @spamd_min_children -%> --min-children=<%=@spamd_min_children -%><% end -%> -i <%= @spamd_listen_address %> -A <%= @spamd_allowed_ips %><% if @spamd_nouserconfig -%> --nouser-config<% end -%><% if @spamd_allowtell -%> --allow-tell<% end -%><% if @spamd_sql_config -%> -q<% end -%>')
 
     file_line { 'spamd_options' :
-      path    => $spamd_options_file,
-      line    => "${spamd_options_var}=\"${spamd_defaults} ${extra_options}\"",
-      match   => "^${spamd_options_var}=",
+      path    => $spamassassin::params::spamd_options_file,
+      line    => "${spamassassin::params::spamd_options_var}=\"${spamassassin::params::spamd_defaults} ${extra_options}\"",
+      match   => "^${spamassassin::params::spamd_options_var}=",
       notify  => Service['spamassassin'],
       require => Package['spamassassin']
     }
