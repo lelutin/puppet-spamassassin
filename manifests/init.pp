@@ -553,13 +553,13 @@ class spamassassin(
   # Install and setup pyzor
   if $pyzor_enabled {
     package { 'pyzor':
-      ensure   => installed,
-      require  => Package['spamassassin'],
+      ensure  => installed,
+      require => Package['spamassassin'],
     }
     exec { 'pyzor_discover':
-      command   => "/usr/bin/pyzor --homedir '${final_pyzor_home}' discover",
-      unless    => "test -d ${final_pyzor_home}",
-      require   => Package['pyzor'],
+      command => "/usr/bin/pyzor --homedir '${final_pyzor_home}' discover",
+      unless  => "test -d ${final_pyzor_home}",
+      require => Package['pyzor'],
     }
   }
 
@@ -571,9 +571,9 @@ class spamassassin(
     }
 
     package { $razor_package:
-      ensure   => installed,
-      alias    => 'razor',
-      require  => Package['spamassassin'],
+      ensure  => installed,
+      alias   => 'razor',
+      require => Package['spamassassin'],
     } ->
     file { $final_razor_home:
       ensure  => directory,
@@ -585,8 +585,8 @@ class spamassassin(
       unless  => "test -h ${final_razor_home}/identity",
     } ->
     exec { 'razor_create':
-      command   => "/usr/bin/razor-admin -home=${final_razor_home} -create",
-      creates   => "${final_razor_home}/razor-agent.conf",
+      command => "/usr/bin/razor-admin -home=${final_razor_home} -create",
+      creates => "${final_razor_home}/razor-agent.conf",
     } ->
     exec { 'razor_discover':
       command     => "/usr/bin/razor-admin -home=${final_razor_home} -discover",
@@ -679,9 +679,9 @@ class spamassassin(
   }
 
   service { 'spamassassin':
-      ensure    => $service_enabled,
-      enable    => $service_enabled,
-      pattern   => 'spamd',
-      require   => Package['spamassassin'],
+      ensure  => $service_enabled,
+      enable  => $service_enabled,
+      pattern => 'spamd',
+      require => Package['spamassassin'],
   }
 }

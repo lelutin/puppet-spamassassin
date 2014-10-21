@@ -4,13 +4,13 @@ class spamassassin::params {
   $pyzor_home = "${spamassassin::params::configdir}/.pyzor"
 
   case $::osfamily {
-      "Debian": {
+      'Debian': {
           $spamd_options_file   = '/etc/default/spamassassin'
           $spamd_options_var    = 'OPTIONS'
           $spamd_defaults       = '-c -H'
           $sa_update_file       = $spamd_options_file
       }
-      "Redhat": {
+      'Redhat': {
           $spamd_options_file   = '/etc/sysconfig/spamassassin'
           $spamd_options_var    = 'SPAMDOPTIONS'
           $spamd_defaults       = '-d -c -H'
