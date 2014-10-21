@@ -1,5 +1,7 @@
 #Spamassassin
 
+[![Build Status](https://secure.travis-ci.org/wyrie/puppet-spamassassin.png?branch=master)](http://travis-ci.org/wyrie/puppet-spamassassin)
+
 ####Table of Contents
 
 1. [Overview](#overview)
@@ -496,5 +498,5 @@ The module has been tested on:
 
 The list of contributors can be found at: [https://github.com/wyrie/puppet-spamassassin/graphs/contributors](https://github.com/wyrie/puppet-spamassassin/graphs/contributors)
 
-  * [https://github.com/tomboland](tomboland)
-  * [https://github.com/szynaka](szynaka)
+  * [tomboland](https://github.com/tomboland)
+  * [szynaka](https://github.com/szynaka)
