@@ -515,16 +515,18 @@ class spamassassin(
   case $::osfamily {
     'Debian' : {
       if $dkim_enabled {
-        package { 'libmail-dkim-perl':
+        package { 'dkim':
           ensure => installed,
+          name   => 'libmail-dkim-perl',
         }
       }
       $razor_package = 'razor'
     }
     'RedHat' : {
       if $dkim_enabled {
-        package { 'perl-Mail-DKIM':
+        package { 'dkim':
           ensure => installed,
+          name   => 'perl-Mail-DKIM',
         }
       }
       $razor_package = 'perl-Razor-Agent'
@@ -569,9 +571,9 @@ class spamassassin(
       default => $run_execs_as_user,
     }
 
-    package { $razor_package:
+    package { 'razor':
       ensure  => installed,
-      alias   => 'razor',
+      name    => $razor_package,
       require => Package['spamassassin'],
     } ->
     file { $final_razor_home:
