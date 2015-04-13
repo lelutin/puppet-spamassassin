@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "author": "Scott Barr",
   "summary": "Spamassassin Module",
-  "license": "Apache Version 2.0",
+  "license": "Apache-2.0",
   "source": "https://github.com/wyrie/puppet-spamassassin",
   "project_page": "https://github.com/wyrie/puppet-spamassassin",
   "issues_url": "https://github.com/wyrie/puppet-spamassassin/issues",
@@ -28,6 +28,6 @@
   "description": "Spamassassin Module for Debian and CentOS.",
   "dependencies": [{
     "name": "puppetlabs/stdlib",
-    "version_requirement": ">= 4.0.2"
+    "version_requirement": ">= 4.0.2 < 5.0.0"
   }]
 }
