@@ -102,6 +102,24 @@
 # [*rewrite_header_to*]
 # See rewrite_header_subject.
 #
+# [*add_header_spam*]
+# Customise headers to be added to spam emails. Each array item should contain: header_name string.
+#
+# [*add_header_ham*]
+# See add_header_spam.
+#
+# [*add_header_all*]
+# See add_header_spam.
+#
+# [*remove_header_spam*]
+# Remove headers from spam emails. Each array item should be a header_name to remove.
+#
+# [*remove_header_ham*]
+# See remove_header_spam.
+#
+# [*remove_header_all*]
+# See remove_header_spam.
+#
 # [*report_safe*]
 # Values: 0,1 or 2.
 # See: http://spamassassin.apache.org/full/3.3.x/doc/Mail_SpamAssassin_Conf.html#report_safe
@@ -371,6 +389,12 @@ class spamassassin(
   $rewrite_header_from                = undef,
   $rewrite_header_to                  = undef,
   $report_safe                        = 0,
+  $add_header_spam                    = [],
+  $add_header_ham                     = [],
+  $add_header_all                     = [],
+  $remove_header_spam                 = [],
+  $remove_header_ham                  = [],
+  $remove_header_all                  = [],
   # Network test options
   $clear_trusted_networks             = false,
   $trusted_networks                   = [],
@@ -473,6 +497,12 @@ class spamassassin(
   validate_array($trusted_networks)
   validate_array($internal_networks)
   validate_array($bayes_ignore_header)
+  validate_array($add_header_spam)
+  validate_array($add_header_ham)
+  validate_array($add_header_all)
+  validate_array($remove_header_spam)
+  validate_array($remove_header_ham)
+  validate_array($remove_header_all)
 
   validate_re("${spamd_max_children}", '^[1-9]([0-9]*)?$',
   'spamd_max_children parameter should be a number')

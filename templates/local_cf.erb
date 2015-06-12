@@ -24,6 +24,24 @@ rewrite_header from <%= @rewrite_header_from %>
 <%if @rewrite_header_to -%>
 rewrite_header to   <%= @rewrite_header_to %>
 <% end -%>
+<% @add_header_spam.each do |val| -%>
+add_header spam    <%= val %>
+<% end -%>
+<% @add_header_ham.each do |val| -%>
+add_header ham    <%= val %>
+<% end -%>
+<% @add_header_all.each do |val| -%>
+add_header all    <%= val %>
+<% end -%>
+<% @remove_header_spam.each do |val| -%>
+remove_header spam    <%= val %>
+<% end -%>
+<% @remove_header_ham.each do |val| -%>
+remove_header ham    <%= val %>
+<% end -%>
+<% @remove_header_all.each do |val| -%>
+remove_header all    <%= val %>
+<% end -%>
 report_safe         <%= @report_safe %>
 <%if @clear_trusted_networks -%>
 clear_trusted_networks
