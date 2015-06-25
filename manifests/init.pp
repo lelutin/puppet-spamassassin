@@ -512,10 +512,10 @@ class spamassassin(
   validate_array($remove_header_ham)
   validate_array($remove_header_all)
 
-  validate_integer($spamd_max_children, undef, 0)
+  validate_integer($spamd_max_children, undef, 1)
 
   if $spamd_min_children {
-    validate_integer($spamd_min_children, undef, 0)
+    validate_integer($spamd_min_children, undef, 1)
   }
 
   validate_numeric($required_score, undef, 0)
