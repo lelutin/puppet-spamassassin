@@ -77,6 +77,12 @@ use_bayes           1
 bayes_use_hapaxes   <%= @final_bayes_use_hapaxes %>
 bayes_auto_expire   <%= @final_bayes_auto_expire %>
 bayes_auto_learn    <%= @final_bayes_auto_learn %>
+<%if @bayes_auto_learn_threshold_nonspam -%>
+bayes_auto_learn_threshold_nonspam <%= @bayes_auto_learn_threshold_nonspam %>
+<% end -%>
+<%if @bayes_auto_learn_threshold_spam -%>
+bayes_auto_learn_threshold_spam <%= @bayes_auto_learn_threshold_spam %>
+<% end -%>
 <% @bayes_ignore_header.each do |val| -%>
 bayes_ignore_header <%= val %>
 <% end -%>

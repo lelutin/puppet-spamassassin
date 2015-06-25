@@ -192,6 +192,12 @@
 # This is the directory and filename for Bayes databases. Please note this
 # parameter is not used if bayes_sql_enabled is true.
 #
+# [*bayes_auto_learn_threshold_nonspam*]
+# Score at which SA learns the message as ham.
+#
+# [*bayes_auto_learn_threshold_spam*]
+# Score at which SA learns the message as spam.
+#
 # [*user_scores_dsn*]
 # The perl DBI DSN string used to specify the SQL server holding user config
 # example: 'DBI:mysql:dbname:hostname
@@ -414,6 +420,8 @@ class spamassassin(
   $bayes_sql_password                 = undef,
   $bayes_sql_override_username        = undef,
   $bayes_path                         = undef,
+  $bayes_auto_learn_threshold_nonspam = undef,
+  $bayes_auto_learn_threshold_spam    = undef,
   # SQL based user preferences
   $user_scores_dsn                    = undef,
   $user_scores_sql_username           = undef,
