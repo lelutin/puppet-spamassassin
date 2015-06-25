@@ -474,7 +474,7 @@ class spamassassin(
   # Rule2XSBody plugin
   $rules2xsbody_enabled               = false,
 ) inherits spamassassin::params {
-  
+
   validate_bool($service_enabled)
   validate_bool($spamd_nouserconfig)
   validate_bool($spamd_allowtell)
@@ -512,16 +512,13 @@ class spamassassin(
   validate_array($remove_header_ham)
   validate_array($remove_header_all)
 
-  validate_re("${spamd_max_children}", '^[1-9]([0-9]*)?$',
-  'spamd_max_children parameter should be a number')
+  validate_integer($spamd_max_children, undef, 0)
 
   if $spamd_min_children {
-    validate_re("${spamd_min_children}", '^[1-9]([0-9]*)?$',
-  'spamd_min_children parameter should be a number')
+    validate_integer($spamd_min_children, undef, 0)
   }
 
-  validate_re("${required_score}", '^[0-9]([0-9]*)?(\.[0-9]{1,2})?$',
-  'required_score parameter should be an integer or real number.')
+  validate_numeric($required_score, undef, 0)
 
   validate_re($dns_available, '^(test|yes|no)$',
   'dns_available parameter must have a value of: test, yes or no')
