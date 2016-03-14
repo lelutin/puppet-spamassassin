@@ -60,7 +60,7 @@
 #
 # [*spamd_sql_config*]
 # Turn on SQL lookups even when per-user config files have been disabled with -x
-# this is useful for spamd hosts which don’t have user’s home directories
+# this is useful for spamd hosts which dont have users home directories
 # but do want to load user preferences from an SQL database.
 #
 # [*required_score*]
