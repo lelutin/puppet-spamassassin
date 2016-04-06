@@ -154,7 +154,7 @@ pyzor_max           <%= @pyzor_max %>
 <%if @pyzor_path -%>
 pyzor_path          <%= @pyzor_path %>
 <% end -%>
-pyzor_options       --homedir <%= @final_pyzor_home %> <%= @pyzor_options %>
+pyzor_options       --homedir <%= @pyzor_home %> <%= @pyzor_options %>
 <% end -%>
 <% if @razor_enabled -%>
 
@@ -163,7 +163,7 @@ use_razor2          1
 <%if @razor_timeout -%>
 razor_timeout       <%= @razor_timeout %>
 <% end -%>
-razor_config        <%= @final_razor_home %>/razor-agent.conf
+razor_config        <%= @razor_home %>/razor-agent.conf
 <% end -%>
 
 <% if @spamcop_enabled -%>
