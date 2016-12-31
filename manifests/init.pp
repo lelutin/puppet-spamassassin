@@ -76,6 +76,10 @@
 # tagged (incorrectly) as spam. This would be written to the global
 # local.cf file
 #
+# [*whitelist_from_rcvd*]
+# Used to whitelist the combination of a sender address and rDNS name/IP.
+# This would be written to the global local.cf file
+#
 # [*whitelist_to*]
 # If the given address appears as a recipient in the message headers
 # (Resent-To, To, Cc, obvious envelope recipient, etc.) the mail will
@@ -392,6 +396,7 @@ class spamassassin(
   $sa_update_file                     = $::spamassassin::params::sa_update_file,
   # Whitelist and blacklist options
   $whitelist_from                     = [],
+  $whitelist_from_rcvd                = [],
   $whitelist_to                       = [],
   $blacklist_from                     = [],
   $blacklist_to                       = [],
@@ -504,6 +509,7 @@ class spamassassin(
   validate_hash($score_tests)
 
   validate_array($whitelist_from)
+  validate_array($whitelist_from_rcvd)
   validate_array($whitelist_to)
   validate_array($blacklist_from)
   validate_array($blacklist_to)
