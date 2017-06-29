@@ -71,6 +71,16 @@
 # Assign scores (the number of points for a hit) to a given test.
 # Scores can be positive or negative real numbers or integers.
 #
+# [*custom_rules*]
+# Define custom rules. This is a hash of hashes. The key for the outer hash is the
+# spamassassin rule name, the inner hash for each entry should contain the rule definition, e.g:
+#
+# spamassassin::custom_rules:
+#   INVOICE_SPAM:
+#     body: '/Invoice.*from.*You have received an invoice from .* To start with it, print out or download a JS copy of your invoice/'
+#     score: 6
+#     describe: 'spam reported claiming "You have received an invoice"'
+#
 # [*whitelist_from*]
 # Used to whitelist sender addresses which send mail that is often
 # tagged (incorrectly) as spam. This would be written to the global
@@ -483,6 +493,8 @@ class spamassassin(
   $dkim_timeout                       = undef,
   # Rule2XSBody plugin
   $rules2xsbody_enabled               = false,
+  # custom rules
+  $custom_rules                       = {},
 ) inherits spamassassin::params {
 
   validate_bool($service_enabled)
@@ -507,6 +519,7 @@ class spamassassin(
   validate_bool($dkim_enabled)
 
   validate_hash($score_tests)
+  validate_hash($custom_rules)
 
   validate_array($whitelist_from)
   validate_array($whitelist_from_rcvd)

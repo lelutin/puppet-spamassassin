@@ -215,3 +215,11 @@ shortcircuit ALL_TRUSTED             <%= @shortcircuit_all_trusted %>
 dkim_timeout       <%= @dkim_timeout %>
 <% end -%>
 <% end -%>
+
+<% @custom_rules.each do |rulename, ruledef| -%>
+    <%- ['body','header','meta','rawbody','uri','score','describe'].each do |keyword| -%>
+        <%- if ruledef[keyword].to_s != '' then -%>
+<%= keyword %> <%= rulename %> <%= ruledef[keyword] %>
+        <%- end -%>
+    <%- end -%>
+<%- end -%>
