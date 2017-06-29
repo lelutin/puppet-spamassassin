@@ -19,6 +19,10 @@
 # Boolean. Will enable service at boot
 # and ensure a running service.
 #
+# [*notify_service_name*]
+# String. If specified then this service will be notified instead of "spamd"
+# when config is update. Only has an effect if service_enable is false.
+#
 # [*spamd_max_children*]
 # This option specifies the maximum number of children to spawn.
 # Spamd will spawn that number of children, then sleep in the background
@@ -387,6 +391,7 @@ class spamassassin(
   $run_execs_as_user                  = undef,
   # Spamd settings
   $service_enabled                    = false,
+  $notify_service_name                = undef,
   $spamd_max_children                 = 5,
   $spamd_min_children                 = undef,
   $spamd_listen_address               = '127.0.0.1',
@@ -645,26 +650,34 @@ class spamassassin(
     }
   }
 
+  if $service_enabled {
+    $config_notify = Service['spamassassin']
+  } elsif $notify_service_name {
+    $config_notify = Service[$notify_service_name]
+  } else {
+    $config_notify = []
+  }
+
   file {
     "${configdir}/local.cf":
       ensure  => present,
       content => template('spamassassin/local_cf.erb'),
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin'];
     "${configdir}/v310.pre":
       ensure  => present,
       content => template('spamassassin/v310_pre.erb'),
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin'];
     "${configdir}/v312.pre":
       ensure  => present,
       content => template('spamassassin/v312_pre.erb'),
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin'];
     "${configdir}/v320.pre":
       ensure  => present,
       content => template('spamassassin/v320_pre.erb'),
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin'];
   }
 
@@ -672,7 +685,7 @@ class spamassassin(
     file { "${configdir}/sql.cf":
       ensure  => present,
       content => template('spamassassin/sql.cf.erb'),
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin'],
     }
   }
@@ -712,7 +725,7 @@ class spamassassin(
       path    => $spamd_options_file,
       line    => 'ENABLED=1',
       match   => '^ENABLED',
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin'],
     }
   }
@@ -724,7 +737,7 @@ class spamassassin(
       path    => $spamd_options_file,
       line    => "${spamd_options_var}=\"${spamd_defaults} ${extra_options}\"",
       match   => "^${spamd_options_var}=",
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin']
     }
   }
