@@ -80,6 +80,7 @@ class { 'spamassassin':
 ```puppet
 class { 'spamassassin':
   whitelist_from => ['*@abccorp.com', '*@abc.com'],
+  whitelist_from_rcvd => ['*@abccorp.com mail.abccorp.com'],
   whitelist_to   => ['bob@gmail.com','sarah@yahoo.co.uk'],
   blacklist_from => ['*@msn.com','*@hotmail.com'],
   blacklist_to   => ['frank@spammer.com', 'rita@example.com'],
@@ -216,6 +217,10 @@ Scores can be positive or negative real numbers or integers.
 Used to whitelist sender addresses which send mail that is often
 tagged (incorrectly) as spam. This would be written to the global
 local.cf file
+
+####`whitelist_from_rcvd`
+Used to whitelist the combination of a sender address and rDNS name/IP.
+This would be written to the global local.cf file
 
 ####`whitelist_to`
 If the given address appears as a recipient in the message headers

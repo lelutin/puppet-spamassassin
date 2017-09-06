@@ -19,6 +19,10 @@
 # Boolean. Will enable service at boot
 # and ensure a running service.
 #
+# [*notify_service_name*]
+# String. If specified then this service will be notified instead of "spamd"
+# when config is update. Only has an effect if service_enable is false.
+#
 # [*spamd_max_children*]
 # This option specifies the maximum number of children to spawn.
 # Spamd will spawn that number of children, then sleep in the background
@@ -71,10 +75,24 @@
 # Assign scores (the number of points for a hit) to a given test.
 # Scores can be positive or negative real numbers or integers.
 #
+# [*custom_rules*]
+# Define custom rules. This is a hash of hashes. The key for the outer hash is the
+# spamassassin rule name, the inner hash for each entry should contain the rule definition, e.g:
+#
+# spamassassin::custom_rules:
+#   INVOICE_SPAM:
+#     body: '/Invoice.*from.*You have received an invoice from .* To start with it, print out or download a JS copy of your invoice/'
+#     score: 6
+#     describe: 'spam reported claiming "You have received an invoice"'
+#
 # [*whitelist_from*]
 # Used to whitelist sender addresses which send mail that is often
 # tagged (incorrectly) as spam. This would be written to the global
 # local.cf file
+#
+# [*whitelist_from_rcvd*]
+# Used to whitelist the combination of a sender address and rDNS name/IP.
+# This would be written to the global local.cf file
 #
 # [*whitelist_to*]
 # If the given address appears as a recipient in the message headers
@@ -373,6 +391,7 @@ class spamassassin(
   $run_execs_as_user                  = undef,
   # Spamd settings
   $service_enabled                    = false,
+  $notify_service_name                = undef,
   $spamd_max_children                 = 5,
   $spamd_min_children                 = undef,
   $spamd_listen_address               = '127.0.0.1',
@@ -392,6 +411,7 @@ class spamassassin(
   $sa_update_file                     = $::spamassassin::params::sa_update_file,
   # Whitelist and blacklist options
   $whitelist_from                     = [],
+  $whitelist_from_rcvd                = [],
   $whitelist_to                       = [],
   $blacklist_from                     = [],
   $blacklist_to                       = [],
@@ -479,6 +499,8 @@ class spamassassin(
   $dkim_timeout                       = undef,
   # Rule2XSBody plugin
   $rules2xsbody_enabled               = false,
+  # custom rules
+  $custom_rules                       = {},
 ) inherits spamassassin::params {
 
   validate_bool($service_enabled)
@@ -503,8 +525,10 @@ class spamassassin(
   validate_bool($dkim_enabled)
 
   validate_hash($score_tests)
+  validate_hash($custom_rules)
 
   validate_array($whitelist_from)
+  validate_array($whitelist_from_rcvd)
   validate_array($whitelist_to)
   validate_array($blacklist_from)
   validate_array($blacklist_to)
@@ -627,26 +651,34 @@ class spamassassin(
     }
   }
 
+  if $service_enabled {
+    $config_notify = Service['spamassassin']
+  } elsif $notify_service_name {
+    $config_notify = Service[$notify_service_name]
+  } else {
+    $config_notify = []
+  }
+
   file {
     "${configdir}/local.cf":
       ensure  => present,
       content => template('spamassassin/local_cf.erb'),
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin'];
     "${configdir}/v310.pre":
       ensure  => present,
       content => template('spamassassin/v310_pre.erb'),
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin'];
     "${configdir}/v312.pre":
       ensure  => present,
       content => template('spamassassin/v312_pre.erb'),
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin'];
     "${configdir}/v320.pre":
       ensure  => present,
       content => template('spamassassin/v320_pre.erb'),
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin'];
   }
 
@@ -654,7 +686,7 @@ class spamassassin(
     file { "${configdir}/sql.cf":
       ensure  => present,
       content => template('spamassassin/sql.cf.erb'),
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin'],
     }
   }
@@ -694,7 +726,7 @@ class spamassassin(
       path    => $spamd_options_file,
       line    => 'ENABLED=1',
       match   => '^ENABLED',
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin'],
     }
   }
@@ -706,7 +738,7 @@ class spamassassin(
       path    => $spamd_options_file,
       line    => "${spamd_options_var}=\"${spamd_defaults} ${extra_options}\"",
       match   => "^${spamd_options_var}=",
-      notify  => Service['spamassassin'],
+      notify  => $config_notify,
       require => Package['spamassassin']
     }
   }

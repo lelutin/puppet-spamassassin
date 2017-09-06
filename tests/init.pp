@@ -5,6 +5,7 @@ class { 'spamassassin':
     'HTML_IMAGE_ONLY_28' => '1.40',
   },
   whitelist_from                     => ['*@googlemail.com', '*@gmail.com'],
+  whitelist_from_rcvd                => ['*@googlemail.com google.com', '*@gmail.com google.com'],
   whitelist_to                       => ['bob@gmail.com','sarah@yahoo.co.uk'],
   blacklist_from                     => ['*@msn.com','*@hotmail.com'],
   blacklist_to                       => ['frank@spammer.com', 'rita@example.com'],

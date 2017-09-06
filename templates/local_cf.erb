@@ -60,6 +60,9 @@ dns_available       <%= @dns_available %>
 <% @whitelist_from.each do |val| -%>
 whitelist_from      <%= val %>
 <% end -%>
+<% @whitelist_from_rcvd.each do |val| -%>
+whitelist_from_rcvd <%= val %>
+<% end -%>
 <% @whitelist_to.each do |val| -%>
 whitelist_to        <%= val %>
 <% end -%>
@@ -215,3 +218,10 @@ shortcircuit ALL_TRUSTED             <%= @shortcircuit_all_trusted %>
 dkim_timeout       <%= @dkim_timeout %>
 <% end -%>
 <% end -%>
+<% @custom_rules.each do |rulename, ruledef| -%>
+    <%- ['body','header','meta','rawbody','uri','score','describe'].each do |keyword| -%>
+        <%- if ruledef[keyword].to_s != '' then -%>
+<%= keyword %> <%= rulename %> <%= ruledef[keyword] %>
+        <%- end -%>
+    <%- end -%>
+<%- end -%>
