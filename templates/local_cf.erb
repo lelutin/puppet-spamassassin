@@ -101,6 +101,9 @@ bayes_sql_override_username <%= @bayes_sql_override_username %>
 <%if @bayes_path -%>
 bayes_path         <%= @bayes_path %>
 <% end -%>
+<%if @bayes_file_mode -%>
+bayes_file_mode    <%= @bayes_file_mode %>
+<% end -%>
 <% end -%>
 <% end -%>
 <% if @awl_enabled -%>
@@ -215,7 +218,6 @@ shortcircuit ALL_TRUSTED             <%= @shortcircuit_all_trusted %>
 dkim_timeout       <%= @dkim_timeout %>
 <% end -%>
 <% end -%>
-
 <% @custom_rules.each do |rulename, ruledef| -%>
     <%- ['body','header','meta','rawbody','uri','score','describe'].each do |keyword| -%>
         <%- if ruledef[keyword].to_s != '' then -%>

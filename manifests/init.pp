@@ -445,6 +445,7 @@ class spamassassin(
   $bayes_sql_password                 = undef,
   $bayes_sql_override_username        = undef,
   $bayes_path                         = undef,
+  $bayes_file_mode                    = undef,
   $bayes_auto_learn_threshold_nonspam = undef,
   $bayes_auto_learn_threshold_spam    = undef,
   # SQL based user preferences
