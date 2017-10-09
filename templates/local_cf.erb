@@ -219,7 +219,7 @@ dkim_timeout       <%= @dkim_timeout %>
 <% end -%>
 <% end -%>
 <% @custom_rules.each do |rulename, ruledef| -%>
-    <%- ['body','header','meta','rawbody','uri','score','describe'].each do |keyword| -%>
+    <%- ['body','header','meta','rawbody','uri','score','describe','full','tflags','priority','askdns','mimeheader','uri_block_cc','uri_block_cidr','uri_block_exclude','uri_block_isp','uri_detail','uridnsbl','uridnssub','urifullnsrhsbl','urifullnsrhssub','urinsrhsbl','urinsrhssub','urirhsbl','urirhssub'].each do |keyword| -%>
         <%- if ruledef[keyword].to_s != '' then -%>
 <%= keyword %> <%= rulename %> <%= ruledef[keyword] %>
         <%- end -%>
