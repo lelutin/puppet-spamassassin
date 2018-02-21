@@ -713,7 +713,7 @@ class spamassassin(
           file_line { 'sa_update':
             path    => $sa_update_file,
             line    => "SAUPDATE=${saupdate}",
-            match   => '^#?SAUPDATE=',
+            match   => '^SAUPDATE=',
             require => Package['spamassassin']
           }
       }
