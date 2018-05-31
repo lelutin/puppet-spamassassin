@@ -249,6 +249,7 @@ describe 'spamassassin' do
           :bayes_sql_dsn      => 'DBI:mysql:spamassassin:localhost:3306',
           :bayes_sql_username => 'sqluser',
           :bayes_sql_password => 'somesecret',
+          :bayes_store_module => 'Mail::SpamAssassin::BayesStore::PgSQL',
         }}
 
         it { should contain_file('/etc/mail/spamassassin/local.cf').with({
@@ -259,6 +260,9 @@ describe 'spamassassin' do
         }
         it { should contain_file('/etc/mail/spamassassin/local.cf').with({
           'content' => /bayes_sql_password   somesecret/})
+        }
+        it { should contain_file('/etc/mail/spamassassin/local.cf').with({
+          'content' => /bayes_store_module   Mail::SpamAssassin::BayesStore::PgSQL/})
         }
       end
 

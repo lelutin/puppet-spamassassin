@@ -186,8 +186,8 @@
 # tokens from the database. Default: true
 #
 # [*bayes_sql_enabled*]
-# Boolean. If true will set bayes_store_module to use sql and will write the
-# sql dsn, and other directives, to local.cf. Default: false
+# Boolean. If true will write the SQL-related directives to local.cf.
+# Default: false
 #
 # [*bayes_sql_dsn*]
 # This parameter gives the connect string used to connect to the SQL based
@@ -205,6 +205,14 @@
 # If this options is set the BayesStore::SQL module will override the set
 # username with the value given. This could be useful for implementing global
 # or group bayes databases.
+#
+# [*bayes_store_module*]
+# This parameter configures the module that spamassassin will use when
+# connecting to the Bayes SQL database. The default will work for most
+# database types, but selecting the module for a DBMS may result provide
+# performance improvements or additional features. Certain modules may
+# require the additional perl modules that are not installed by this Puppet
+# module.
 #
 # [*bayes_path*]
 # This is the directory and filename for Bayes databases. Please note this
@@ -444,6 +452,7 @@ class spamassassin(
   $bayes_sql_username                 = 'root',
   $bayes_sql_password                 = undef,
   $bayes_sql_override_username        = undef,
+  $bayes_store_module                 = 'Mail::SpamAssassin::BayesStore::SQL',
   $bayes_path                         = undef,
   $bayes_file_mode                    = undef,
   $bayes_auto_learn_threshold_nonspam = undef,

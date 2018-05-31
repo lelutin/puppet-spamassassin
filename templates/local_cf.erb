@@ -90,7 +90,7 @@ bayes_auto_learn_threshold_spam <%= @bayes_auto_learn_threshold_spam %>
 bayes_ignore_header <%= val %>
 <% end -%>
 <% if @bayes_sql_enabled -%>
-bayes_store_module   Mail::SpamAssassin::BayesStore::SQL
+bayes_store_module   <%= @bayes_store_module %>
 bayes_sql_dsn        <%= @bayes_sql_dsn %>
 bayes_sql_username   <%= @bayes_sql_username %>
 bayes_sql_password   <%= @bayes_sql_password %>
