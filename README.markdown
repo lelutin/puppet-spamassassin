@@ -1,6 +1,6 @@
 #Spamassassin
 
-[![Build Status](https://secure.travis-ci.org/wyrie/puppet-spamassassin.png?branch=master)](http://travis-ci.org/wyrie/puppet-spamassassin)
+[![Build Status](https://img.shields.io/bitbucket/pipelines/atlassian/adf-builder-javascript.svg)]
 
 ####Table of Contents
 
