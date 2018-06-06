@@ -1,6 +1,6 @@
 #Spamassassin
 
-![Build Status](https://img.shields.io/bitbucket/pipelines/atlassian/adf-builder-javascript.svg)
+![Build Status](https://img.shields.io/bitbucket/pipelines/wyrie/puppet-spamassassin.svg)
 
 ####Table of Contents
 
