@@ -1,0 +1,20 @@
+# This is a sample build configuration for Ruby.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: ruby:2.4.0
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - ruby --version
+          - bundler --version
+          - bundler
+        script: # Modify the commands below to build your repository.
+          - bundle exec rake spec
+
+definitions:
+  caches:
+    bundler: ./vendor/bundle
+
