@@ -8,13 +8,12 @@ pipelines:
   default:
     - step:
         caches:
-          - ruby --version
-          - bundler --version
           - bundler
         script: # Modify the commands below to build your repository.
+          - ruby --version
+          - bundler --version
           - bundle exec rake spec
 
 definitions:
   caches:
-    bundler: ./vendor/bundle
-
+    bundler: ./vendor
