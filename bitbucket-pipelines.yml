@@ -12,6 +12,7 @@ pipelines:
         script: # Modify the commands below to build your repository.
           - ruby --version
           - bundler --version
+          - bundle install
           - bundle exec rake spec
 
 definitions:
