@@ -640,21 +640,17 @@ class spamassassin(
       ensure  => installed,
       name    => $razor_package,
       require => Package['spamassassin'],
-    } ->
-    file { $razor_home:
+    } -> file { $razor_home:
       ensure  => directory,
       owner   => $razor_home_owner,
       recurse => true,
-    } ->
-    exec { 'razor_register':
+    } -> exec { 'razor_register':
       command => "/usr/bin/razor-admin -home=${razor_home} -register",
       unless  => "test -h ${razor_home}/identity",
-    } ->
-    exec { 'razor_create':
+    } -> exec { 'razor_create':
       command => "/usr/bin/razor-admin -home=${razor_home} -create",
       creates => "${razor_home}/razor-agent.conf",
-    } ->
-    exec { 'razor_discover':
+    } -> exec { 'razor_discover':
       command     => "/usr/bin/razor-admin -home=${razor_home} -discover",
       refreshonly => true,
     }

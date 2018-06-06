@@ -1,3 +1,4 @@
+#
 class spamassassin::params {
   $configdir  = '/etc/mail/spamassassin'
   $razor_home = "${spamassassin::params::configdir}/.razor"

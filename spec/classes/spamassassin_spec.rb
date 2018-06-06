@@ -1,20 +1,12 @@
 require 'spec_helper'
 
 describe 'spamassassin' do
-  let(:facts) {{ :is_virtual => 'false' }}
+  let(:facts) { { 'is_virtual' => 'false' } }
 
-   context 'on a non-supported osfamily' do
-      let(:params) {{}}
-      let :facts do {
-        :osfamily => 'foo',
-        :operatingsystem => 'bar'
-      }
-      end
-      it 'should fail' do
-        expect {
-          should raise_error(Puppet::Error, /bar is not supported by this module./)
-        }
-      end
+  context 'on a non-supported osfamily' do
+    let(:facts) { { 'os' => { 'family' => 'Unknown', 'name' => 'Unknown' } } }
+
+    it { is_expected.to compile.and_raise_error(%r{is not supported by this module}) }
   end
 
   ['Debian', 'RedHat'].each do |system|
