@@ -218,6 +218,10 @@
 # This is the directory and filename for Bayes databases. Please note this
 # parameter is not used if bayes_sql_enabled is true.
 #
+# [*bayes_file_mode*]
+# The permissions that spamassassin will set to the bayes file that it may
+# create.
+#
 # [*bayes_auto_learn_threshold_nonspam*]
 # Score at which SA learns the message as ham.
 #
@@ -394,188 +398,137 @@
 #
 # Scott Barr <gsbarr@gmail.com>
 #
-class spamassassin(
-  $sa_update                          = false,
-  $run_execs_as_user                  = undef,
+class spamassassin (
+  Boolean          $sa_update         = false,
+  Optional[String] $run_execs_as_user = undef,
   # Spamd settings
-  $service_enabled                    = false,
-  $notify_service_name                = undef,
-  $spamd_max_children                 = 5,
-  $spamd_min_children                 = undef,
-  $spamd_listen_address               = '127.0.0.1',
-  $spamd_allowed_ips                  = '127.0.0.1/32',
-  $spamd_username                     = undef,
-  $spamd_groupname                    = undef,
-  $spamd_nouserconfig                 = false,
-  $spamd_allowtell                    = false,
-  $spamd_sql_config                   = false,
+  Boolean              $service_enabled      = false,
+  Optional[String]     $notify_service_name  = undef,
+  Integer[1]           $spamd_max_children   = 5,
+  Optional[Integer[1]] $spamd_min_children   = undef,
+  Stdlib::Ip_address   $spamd_listen_address = '127.0.0.1',
+  String               $spamd_allowed_ips    = '127.0.0.1/32',
+  Optional[String]     $spamd_username       = undef,
+  Optional[String]     $spamd_groupname      = undef,
+  Boolean              $spamd_nouserconfig   = false,
+  Boolean              $spamd_allowtell      = false,
+  Boolean              $spamd_sql_config     = false,
   # Scoring options
-  $required_score                     = 5,
-  $score_tests                        = {},
-  $configdir                          = $::spamassassin::params::configdir,
-  $spamd_options_file                 = $::spamassassin::params::spamd_options_file,
-  $spamd_options_var                  = $::spamassassin::params::spamd_options_var,
-  $spamd_defaults                     = $::spamassassin::params::spamd_defaults,
-  $sa_update_file                     = $::spamassassin::params::sa_update_file,
+  Integer[0]           $required_score     = 5,
+  Hash                 $score_tests        = {},
+  Stdlib::Absolutepath $configdir          = $::spamassassin::params::configdir,
+  Stdlib::Absolutepath $spamd_options_file = $::spamassassin::params::spamd_options_file,
+  String               $spamd_options_var  = $::spamassassin::params::spamd_options_var,
+  String               $spamd_defaults     = $::spamassassin::params::spamd_defaults,
+  Stdlib::Absolutepath $sa_update_file     = $::spamassassin::params::sa_update_file,
   # Whitelist and blacklist options
-  $whitelist_from                     = [],
-  $whitelist_from_rcvd                = [],
-  $whitelist_to                       = [],
-  $blacklist_from                     = [],
-  $blacklist_to                       = [],
+  Array $whitelist_from      = [],
+  Array $whitelist_from_rcvd = [],
+  Array $whitelist_to        = [],
+  Array $blacklist_from      = [],
+  Array $blacklist_to        = [],
   # Message tagging options
-  $rewrite_header_subject             = undef,
-  $rewrite_header_from                = undef,
-  $rewrite_header_to                  = undef,
-  $report_safe                        = 0,
-  $add_header_spam                    = [],
-  $add_header_ham                     = [],
-  $add_header_all                     = [],
-  $remove_header_spam                 = [],
-  $remove_header_ham                  = [],
-  $remove_header_all                  = [],
+  Optional[String] $rewrite_header_subject = undef,
+  Optional[String] $rewrite_header_from    = undef,
+  Optional[String] $rewrite_header_to      = undef,
+  Integer[0,2]     $report_safe            = 0,
+  Array            $add_header_spam        = [],
+  Array            $add_header_ham         = [],
+  Array            $add_header_all         = [],
+  Array            $remove_header_spam     = [],
+  Array            $remove_header_ham      = [],
+  Array            $remove_header_all      = [],
   # Network test options
-  $clear_trusted_networks             = false,
-  $trusted_networks                   = [],
-  $clear_internal_networks            = false,
-  $internal_networks                  = [],
-  $skip_rbl_checks                    = true,
-  $dns_available                      = 'yes',
+  Boolean                   $clear_trusted_networks  = false,
+  Array                     $trusted_networks        = [],
+  Boolean                   $clear_internal_networks = false,
+  Array                     $internal_networks       = [],
+  Boolean                   $skip_rbl_checks         = true,
+  Regexp[/^(test|yes|no)$/] $dns_available           = 'yes',
   # Learning options
-  $bayes_enabled                      = true,
-  $bayes_use_hapaxes                  = true,
-  $bayes_auto_learn                   = true,
-  $bayes_ignore_header                = [],
-  $bayes_auto_expire                  = true,
-  $bayes_sql_enabled                  = false,
-  $bayes_sql_dsn                      = 'DBI:mysql:spamassassin',
-  $bayes_sql_username                 = 'root',
-  $bayes_sql_password                 = undef,
-  $bayes_sql_override_username        = undef,
-  $bayes_store_module                 = 'Mail::SpamAssassin::BayesStore::SQL',
-  $bayes_path                         = undef,
-  $bayes_file_mode                    = undef,
-  $bayes_auto_learn_threshold_nonspam = undef,
-  $bayes_auto_learn_threshold_spam    = undef,
+  Boolean                        $bayes_enabled                      = true,
+  Boolean                        $bayes_use_hapaxes                  = true,
+  Boolean                        $bayes_auto_learn                   = true,
+  Array                          $bayes_ignore_header                = [],
+  Boolean                        $bayes_auto_expire                  = true,
+  Boolean                        $bayes_sql_enabled                  = false,
+  String                         $bayes_sql_dsn                      = 'DBI:mysql:spamassassin',
+  String                         $bayes_sql_username                 = 'root',
+  Optional[String]               $bayes_sql_password                 = undef,
+  Optional[String]               $bayes_sql_override_username        = undef,
+  String                         $bayes_store_module                 = 'Mail::SpamAssassin::BayesStore::SQL',
+  Optional[Stdlib::Absolutepath] $bayes_path                         = undef,
+  Optional[String]               $bayes_file_mode                    = undef,
+  Optional[Float]                $bayes_auto_learn_threshold_nonspam = undef,
+  Optional[Float]                $bayes_auto_learn_threshold_spam    = undef,
   # SQL based user preferences
-  $user_scores_dsn                    = undef,
-  $user_scores_sql_username           = undef,
-  $user_scores_sql_password           = undef,
-  $user_scores_sql_custom_query       = undef,
+  Optional[String] $user_scores_dsn              = undef,
+  Optional[String] $user_scores_sql_username     = undef,
+  Optional[String] $user_scores_sql_password     = undef,
+  Optional[String] $user_scores_sql_custom_query = undef,
   # DCC plugin
-  $dcc_enabled                        = false,
-  $dcc_timeout                        = undef,
-  $dcc_body_max                       = undef,
-  $dcc_fuz1_max                       = undef,
-  $dcc_fuz2_max                       = undef,
+  Boolean $dcc_enabled            = false,
+  Optional[Integer] $dcc_timeout  = undef,
+  Optional[Integer] $dcc_body_max = undef,
+  Optional[Integer] $dcc_fuz1_max = undef,
+  Optional[Integer] $dcc_fuz2_max = undef,
   # Pyzor plugin
-  $pyzor_enabled                      = true,
-  $pyzor_timeout                      = undef,
-  $pyzor_max                          = undef,
-  $pyzor_options                      = undef,
-  $pyzor_path                         = undef,
-  $pyzor_home                         = $::spamassassin::params::pyzor_home,
+  Boolean                                  $pyzor_enabled = true,
+  Optional[Float]                          $pyzor_timeout = undef,
+  Optional[Integer]                        $pyzor_max     = undef,
+  Optional[Regexp[/[0-9A-Za-z ,._\/-]\+/]] $pyzor_options = undef,
+  Optional[Stdlib::Absolutepath]           $pyzor_path    = undef,
+  Stdlib::Absolutepath                     $pyzor_home    = $::spamassassin::params::pyzor_home,
   # Razor plugin
-  $razor_enabled                      = true,
-  $razor_timeout                      = undef,
-  $razor_home                         = $::spamassassin::params::razor_home,
+  Boolean              $razor_enabled = true,
+  Optional[Integer]    $razor_timeout = undef,
+  Stdlib::Absolutepath $razor_home    = $::spamassassin::params::razor_home,
   # Spamcop plugin
-  $spamcop_enabled                    = false,
-  $spamcop_from_address               = undef,
-  $spamcop_to_address                 = undef,
-  $spamcop_max_report_size            = undef,
+  Boolean           $spamcop_enabled         = false,
+  Optional[String]  $spamcop_from_address    = undef,
+  Optional[String]  $spamcop_to_address      = undef,
+  Optional[Integer] $spamcop_max_report_size = undef,
   # Auto-whitelist plugin
-  $awl_enabled                        = false,
-  $awl_sql_enabled                    = false,
-  $awl_dsn                            = 'DBI:mysql:spamassassin',
-  $awl_sql_username                   = 'root',
-  $awl_sql_password                   = undef,
-  $awl_sql_override_username          = undef,
-  $auto_whitelist_path                = undef,
-  $auto_whitelist_file_mode           = undef,
+  Boolean          $awl_enabled               = false,
+  Boolean          $awl_sql_enabled           = false,
+  String           $awl_dsn                   = 'DBI:mysql:spamassassin',
+  String           $awl_sql_username          = 'root',
+  Optional[String] $awl_sql_password          = undef,
+  Optional[String] $awl_sql_override_username = undef,
+  Optional[String] $auto_whitelist_path       = undef,
+  Optional[String] $auto_whitelist_file_mode  = undef,
   # Shortcircuit plugin
-  $shortcircuit_enabled               = false,
-  $shortcircuit_user_in_whitelist     = undef,
-  $shortcircuit_user_in_def_whitelist = undef,
-  $shortcircuit_user_in_all_spam_to   = undef,
-  $shortcircuit_subject_in_whitelist  = undef,
-  $shortcircuit_user_in_blacklist     = undef,
-  $shortcircuit_user_in_blacklist_to  = undef,
-  $shortcircuit_subject_in_blacklist  = undef,
-  $shortcircuit_all_trusted           = undef,
+  Boolean                       $shortcircuit_enabled               = false,
+  Enum['ham','spam','on','off'] $shortcircuit_user_in_whitelist     = undef,
+  Enum['ham','spam','on','off'] $shortcircuit_user_in_def_whitelist = undef,
+  Enum['ham','spam','on','off'] $shortcircuit_user_in_all_spam_to   = undef,
+  Enum['ham','spam','on','off'] $shortcircuit_subject_in_whitelist  = undef,
+  Enum['ham','spam','on','off'] $shortcircuit_user_in_blacklist     = undef,
+  Enum['ham','spam','on','off'] $shortcircuit_user_in_blacklist_to  = undef,
+  Enum['ham','spam','on','off'] $shortcircuit_subject_in_blacklist  = undef,
+  Enum['ham','spam','on','off'] $shortcircuit_all_trusted           = undef,
   # DKIM plugin
-  $dkim_enabled                       = true,
-  $dkim_timeout                       = undef,
+  Boolean           $dkim_enabled = true,
+  Optional[Integer] $dkim_timeout = undef,
   # Rule2XSBody plugin
-  $rules2xsbody_enabled               = false,
+  Boolean $rules2xsbody_enabled = false,
   # custom rules
-  $custom_rules                       = {},
+  Hash $custom_rules = {},
 ) inherits spamassassin::params {
 
-  validate_bool($service_enabled)
-  validate_bool($spamd_nouserconfig)
-  validate_bool($spamd_allowtell)
-  validate_bool($spamd_sql_config)
-  validate_bool($clear_trusted_networks)
-  validate_bool($clear_internal_networks)
-  validate_bool($bayes_enabled)
-  validate_bool($bayes_use_hapaxes)
-  validate_bool($bayes_auto_learn)
-  validate_bool($bayes_auto_expire)
-  validate_bool($bayes_sql_enabled)
-  validate_bool($skip_rbl_checks)
-  validate_bool($dcc_enabled)
-  validate_bool($pyzor_enabled)
-  validate_bool($razor_enabled)
-  validate_bool($spamcop_enabled)
-  validate_bool($awl_enabled)
-  validate_bool($awl_sql_enabled)
-  validate_bool($shortcircuit_enabled)
-  validate_bool($dkim_enabled)
-
-  validate_hash($score_tests)
-  validate_hash($custom_rules)
-
-  validate_array($whitelist_from)
-  validate_array($whitelist_from_rcvd)
-  validate_array($whitelist_to)
-  validate_array($blacklist_from)
-  validate_array($blacklist_to)
-  validate_array($trusted_networks)
-  validate_array($internal_networks)
-  validate_array($bayes_ignore_header)
-  validate_array($add_header_spam)
-  validate_array($add_header_ham)
-  validate_array($add_header_all)
-  validate_array($remove_header_spam)
-  validate_array($remove_header_ham)
-  validate_array($remove_header_all)
-
-  validate_integer($spamd_max_children, undef, 1)
-
-  if $spamd_min_children {
-    validate_integer($spamd_min_children, undef, 1)
-  }
-
-  validate_numeric($required_score, undef, 0)
-
-  validate_re($dns_available, '^(test|yes|no)$',
-  'dns_available parameter must have a value of: test, yes or no')
-
-  if $spamd_sql_config {
-    validate_string($user_scores_dsn)
-    validate_string($user_scores_sql_username)
-    validate_string($user_scores_sql_password)
-    validate_string($user_scores_sql_custom_query)
+  if $spamd_sql_config and (
+    $user_scores_dsn !~ String
+    or $user_scores_sql_username !~ String
+    or $user_scores_sql_password !~ String
+    or $user_scores_sql_custom_query !~ String
+  ) {
+    fail('spamd_sql_config is enabled but one or more of $user_scores_* not set')
   }
 
   $final_skip_rbl_checks   = bool2num($skip_rbl_checks)
   $final_bayes_use_hapaxes = bool2num($bayes_use_hapaxes)
   $final_bayes_auto_learn  = bool2num($bayes_auto_learn)
   $final_bayes_auto_expire = bool2num($bayes_auto_expire)
-
-  validate_absolute_path($razor_home)
-  validate_absolute_path($pyzor_home)
 
   case $::osfamily {
     'Debian' : {
