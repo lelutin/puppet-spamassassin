@@ -30,7 +30,7 @@
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">=3.x"
+      "version_requirement": ">=4.10"
     }
   ],
   "description": "Spamassassin Module for Debian and CentOS.",
