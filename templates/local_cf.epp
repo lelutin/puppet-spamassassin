@@ -1,0 +1,227 @@
+########################################
+# PUPPET MANAGED
+########################################
+
+# This is the right place to customize your installation of SpamAssassin.
+#
+# See 'perldoc Mail::SpamAssassin::Conf' for details of what can be
+# tweaked.
+#
+# Only a small subset of options are listed below
+#
+###########################################################################
+
+required_score      <%= $required_score %>
+<% $score_tests.each |$test,$score| { -%>
+score <%= $test %> <%= $score %>
+<% } -%>
+<% if $rewrite_header_subject { -%>
+rewrite_header subject <%= $rewrite_header_subject %>
+<% } -%>
+<% if $rewrite_header_from { -%>
+rewrite_header from <%= $rewrite_header_from %>
+<% } -%>
+<% if $rewrite_header_to { -%>
+rewrite_header to   <%= $rewrite_header_to %>
+<% } -%>
+<% $add_header_spam.each |$val| { -%>
+add_header spam    <%= $val %>
+<% } -%>
+<% $add_header_ham.each |$val| { -%>
+add_header ham    <%= $val %>
+<% } -%>
+<% $add_header_all.each |$val| { -%>
+add_header all    <%= $val %>
+<% } -%>
+<% $remove_header_spam.each |$val| { -%>
+remove_header spam    <%= $val %>
+<% } -%>
+<% $remove_header_ham.each |$val| { -%>
+remove_header ham    <%= $val %>
+<% } -%>
+<% $remove_header_all.each |$val| { -%>
+remove_header all    <%= $val %>
+<% } -%>
+report_safe         <%= $report_safe %>
+<% if $clear_trusted_networks { -%>
+clear_trusted_networks
+<% } -%>
+<% $trusted_networks.each |$val| { -%>
+trusted_networks    <%= $val %>
+<% } -%>
+<% if $clear_internal_networks { -%>
+clear_internal_networks
+<% } -%>
+<% $internal_networks.each |$val| { -%>
+internal_networks    <%= $val %>
+<% } -%>
+skip_rbl_checks     <%= $skip_rbl_checks %>
+dns_available       <%= $dns_available %>
+<% $whitelist_from.each |$val| { -%>
+whitelist_from      <%= $val %>
+<% } -%>
+<% $whitelist_from_rcvd.each |$val| { -%>
+whitelist_from_rcvd <%= $val %>
+<% } -%>
+<% $whitelist_to.each |$val| { -%>
+whitelist_to        <%= $val %>
+<% } -%>
+<% $blacklist_from.each |$val| { -%>
+blacklist_from      <%= $val %>
+<% } -%>
+<% $blacklist_to.each |$val| { -%>
+blacklist_to        <%= $val %>
+<% } -%>
+<% if $bayes_enabled { -%>
+
+#   Use Bayesian classifier (default: 1)
+#
+use_bayes           1
+bayes_use_hapaxes   <%= $bayes_use_hapaxes %>
+bayes_auto_expire   <%= $bayes_auto_expire %>
+bayes_auto_learn    <%= $bayes_auto_learn %>
+  <%- if $bayes_auto_learn_threshold_nonspam { -%>
+bayes_auto_learn_threshold_nonspam <%= $bayes_auto_learn_threshold_nonspam %>
+  <%- } -%>
+  <%- if $bayes_auto_learn_threshold_spam { -%>
+bayes_auto_learn_threshold_spam <%= $bayes_auto_learn_threshold_spam %>
+  <%- } -%>
+  <%- $bayes_ignore_header.each |$val| { -%>
+bayes_ignore_header <%= $val %>
+  <%- } -%>
+  <%- if $bayes_sql_enabled { -%>
+bayes_store_module   <%= $bayes_store_module %>
+bayes_sql_dsn        <%= $bayes_sql_dsn %>
+bayes_sql_username   <%= $bayes_sql_username %>
+bayes_sql_password   <%= $bayes_sql_password %>
+    <%- if $bayes_sql_override_username { -%>
+bayes_sql_override_username <%= $bayes_sql_override_username %>
+    <%- } -%>
+  <%- } else { -%>
+    <%- if $bayes_path { -%>
+bayes_path         <%= $bayes_path %>
+    <%- } -%>
+    <%- if $bayes_file_mode { -%>
+bayes_file_mode    <%= $bayes_file_mode %>
+    <%- } -%>
+  <%- } -%>
+<% } -%>
+<% if $awl_enabled { -%>
+
+#	Auto-Whitelist configuration
+#
+use_auto_whitelist  1
+  <%- if $awl_sql_enabled { -%>
+auto_whitelist_factory      Mail::SpamAssassin::SQLBasedAddrList
+user_awl_dsn                <%= $awl_dsn %>
+user_awl_sql_username       <%= $awl_sql_username %>
+    <%- if $awl_sql_password { -%>
+user_awl_sql_password       <%= $awl_sql_password %>
+    <%- } -%>
+    <%- if $awl_sql_override_username { -%>
+user_awl_sql_override_username <%= $awl_sql_override_username %>
+    <%- } -%>
+  <%- } else { -%>
+    <%- if $auto_whitelist_path { -%>
+auto_whitelist_path         <%= $auto_whitelist_path %>
+    <%- } -%>
+    <%- if $auto_whitelist_file_mode { -%>
+auto_whitelist_file_mode    <%= $auto_whitelist_file_mode %>
+    <%- } -%>
+  <%- } -%>
+<% } -%>
+<% if $dcc_enabled { -%>
+
+# Distributed Checksum Clearinghouse (DCC) options.
+use_dcc             1
+  <%- if $dcc_timeout { -%>
+dcc_timeout         <%= $dcc_timeout %>
+  <%- } -%>
+  <%- if $dcc_body_max { -%>
+dcc_body_max        <%= $dcc_body_max %>
+  <%- } -%>
+  <%- if $dcc_fuz1_max { -%>
+dcc_fuz1_max        <%= $dcc_fuz1_max %>
+  <%- } -%>
+  <%- if $dcc_fuz2_max { -%>
+dcc_fuz2_max        <%= $dcc_fuz2_max %>
+  <%- } -%>
+<% } -%>
+<% if $pyzor_enabled { -%>
+
+# Pyzor options.
+use_pyzor           1
+  <%- if $pyzor_timeout { -%>
+pyzor_timeout       <%= $pyzor_timeout %>
+  <%- } -%>
+  <%- if $pyzor_max { -%>
+pyzor_max           <%= $pyzor_max %>
+  <%- } -%>
+  <%- if $pyzor_path { -%>
+pyzor_path          <%= $pyzor_path %>
+  <%- } -%>
+pyzor_options       --homedir <%= $pyzor_home %> <%= $pyzor_options %>
+<% } -%>
+<% if $razor_enabled { -%>
+
+# Vipul's Razor options.
+use_razor2          1
+  <%- if $razor_timeout { -%>
+razor_timeout       <%= $razor_timeout %>
+  <%- } -%>
+razor_config        <%= $razor_home %>/razor-agent.conf
+<% } -%>
+
+<% if $spamcop_enabled { -%>
+  <%- if $spamcop_from_address { -%>
+spamcop_from_address <%= $spamcop_from_address %>
+  <%- } -%>
+  <%- if $spamcop_to_address { -%>
+spamcop_to_address   <%= $spamcop_to_address %>
+  <%- } -%>
+  <%- if $spamcop_max_report_size { -%>
+spamcop_max_report_size <%= $spamcop_max_report_size %>
+  <%- } -%>
+<% } -%>
+<% if $shortcircuit_enabled { -%>
+
+#   Some shortcircuiting
+#
+  <%- if $shortcircuit_user_in_whitelist { -%>
+shortcircuit USER_IN_WHITELIST       <%= $shortcircuit_user_in_whitelist %>
+  <%- } -%>
+  <%- if $shortcircuit_user_in_def_whitelist { -%>
+shortcircuit USER_IN_DEF_WHITELIST   <%= $shortcircuit_user_in_def_whitelist %>
+  <%- } -%>
+  <%- if $shortcircuit_user_in_all_spam_to { -%>
+shortcircuit USER_IN_ALL_SPAM_TO     <%= $shortcircuit_user_in_all_spam_to %>
+  <%- } -%>
+  <%- if $shortcircuit_subject_in_whitelist { -%>
+shortcircuit SUBJECT_IN_WHITELIST    <%= $shortcircuit_subject_in_whitelist %>
+  <%- } -%>
+  <%- if $shortcircuit_user_in_blacklist { -%>
+shortcircuit USER_IN_BLACKLIST       <%= $shortcircuit_user_in_blacklist %>
+  <%- } -%>
+  <%- if $shortcircuit_user_in_blacklist_to { -%>
+shortcircuit USER_IN_BLACKLIST_TO    <%= $shortcircuit_user_in_blacklist_to %>
+  <%- } -%>
+  <%- if $shortcircuit_subject_in_blacklist { -%>
+shortcircuit SUBJECT_IN_BLACKLIST    <%= $shortcircuit_subject_in_blacklist %>
+  <%- } -%>
+  <%- if $shortcircuit_all_trusted { -%>
+shortcircuit ALL_TRUSTED             <%= $shortcircuit_all_trusted %>
+  <%- } -%>
+<% } -%>
+
+<% if $dkim_enabled { -%>
+  <%- if $dkim_timeout { -%>
+dkim_timeout       <%= $dkim_timeout %>
+  <%- } -%>
+<% } -%>
+<% $custom_rules.each |$rulename, $ruledef| {-%>
+  <%- ['body','header','meta','rawbody','uri','score','describe','full','tflags','priority','askdns','mimeheader','uri_block_cc','uri_block_cidr','uri_block_exclude','uri_block_isp','uri_detail','uridnsbl','uridnssub','urifullnsrhsbl','urifullnsrhssub','urinsrhsbl','urinsrhssub','urirhsbl','urirhssub'].each |$keyword| { -%>
+    <%- if $ruledef[$keyword] != '' { -%>
+<%= $keyword %> <%= $rulename %> <%= $ruledef[$keyword] %>
+    <%- } -%>
+  <%- } -%>
+<%- } -%>

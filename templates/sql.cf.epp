@@ -1,0 +1,10 @@
+########################################
+# PUPPET MANAGED
+########################################
+
+user_scores_dsn            <%= $user_scores_dsn %>
+user_scores_sql_username   <%= $user_scores_sql_username %>
+user_scores_sql_password   <%= $user_scores_sql_password %>
+<% if $user_scores_sql_custom_query { -%>
+user_scores_sql_custom_query <%= $user_scores_sql_custom_query %>
+<% } -%>

@@ -1,3 +1,7 @@
+########################################
+# PUPPET MANAGED
+########################################
+
 # This is the right place to customize your installation of SpamAssassin.
 #
 # See 'perldoc Mail::SpamAssassin::Conf' for details of what can be
@@ -25,8 +29,8 @@
 # Note that if C<Mail::DKIM> version 0.20 or later is installed, this
 # renders the DomainKeys plugin redundant.
 #
-<% if @dkim_enabled -%>
+<% if $dkim_enabled { -%>
 loadplugin Mail::SpamAssassin::Plugin::DKIM
-<% else -%>
+<% } else { -%>
 #loadplugin Mail::SpamAssassin::Plugin::DKIM
-<% end -%>
+<% } -%>

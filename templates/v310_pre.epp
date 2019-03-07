@@ -25,36 +25,36 @@
 # DCC is disabled here because it is not open source. See the DCC
 # license for more details.
 #
-<% if @dcc_enabled -%>
+<% if $dcc_enabled { -%>
 loadplugin Mail::SpamAssassin::Plugin::DCC
-<% else -%>
+<% } else { -%>
 #loadplugin Mail::SpamAssassin::Plugin::DCC
-<% end -%>
+<% } -%>
 
 # Pyzor - perform Pyzor message checks.
 #
-<% if @pyzor_enabled -%>
+<% if $pyzor_enabled { -%>
 loadplugin Mail::SpamAssassin::Plugin::Pyzor
-<% else -%>
+<% } else { -%>
 #loadplugin Mail::SpamAssassin::Plugin::Pyzor
-<% end -%>
+<% } -%>
 
 
 # Razor2 - perform Razor2 message checks.
 #
-<% if @razor_enabled -%>
+<% if $razor_enabled { -%>
 loadplugin Mail::SpamAssassin::Plugin::Razor2
-<% else -%>
+<% } else { -%>
 #loadplugin Mail::SpamAssassin::Plugin::Razor2
-<% end -%>
+<% } -%>
 
 # SpamCop - perform SpamCop message reporting
 #
-<% if @spamcop_enabled -%>
+<% if $spamcop_enabled { -%>
 loadplugin Mail::SpamAssassin::Plugin::SpamCop
-<% else -%>
+<% } else { -%>
 #loadplugin Mail::SpamAssassin::Plugin::SpamCop
-<% end -%>
+<% } -%>
 
 # AntiVirus - some simple anti-virus checks, this is not a replacement
 # for an anti-virus filter like Clam AntiVirus
@@ -63,11 +63,11 @@ loadplugin Mail::SpamAssassin::Plugin::SpamCop
 
 # AWL - do auto-whitelist checks
 #
-<% if @awl_enabled -%>
+<% if $awl_enabled { -%>
 loadplugin Mail::SpamAssassin::Plugin::AWL
-<% else -%>
+<% } else { -%>
 #loadplugin Mail::SpamAssassin::Plugin::AWL
-<% end -%>
+<% } -%>
 
 # AutoLearnThreshold - threshold-based discriminator for Bayes auto-learning
 #

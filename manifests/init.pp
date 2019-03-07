@@ -474,7 +474,9 @@ class spamassassin (
   Optional[Integer] $dcc_fuz2_max = undef,
   # Pyzor plugin
   Boolean                                  $pyzor_enabled = true,
-  Optional[Float]                          $pyzor_timeout = undef,
+  # TODO: add a pattern to pyzor_timeout to allow strings with an int/float
+  #   value with an suffix of s, m, h, d, w
+  Optional[Variant[Integer,Float]]          $pyzor_timeout = undef,
   Optional[Integer]                        $pyzor_max     = undef,
   Optional[Regexp[/[0-9A-Za-z ,._\/-]\+/]] $pyzor_options = undef,
   Optional[Stdlib::Absolutepath]           $pyzor_path    = undef,
@@ -525,186 +527,12 @@ class spamassassin (
     fail('spamd_sql_config is enabled but one or more of $user_scores_* not set')
   }
 
-  $final_skip_rbl_checks   = bool2num($skip_rbl_checks)
-  $final_bayes_use_hapaxes = bool2num($bayes_use_hapaxes)
-  $final_bayes_auto_learn  = bool2num($bayes_auto_learn)
-  $final_bayes_auto_expire = bool2num($bayes_auto_expire)
+  contain spamassassin::install
+  contain spamassassin::config
+  contain spamassassin::service
 
-  case $::osfamily {
-    'Debian' : {
-      if $dkim_enabled {
-        package { 'dkim':
-          ensure => installed,
-          name   => 'libmail-dkim-perl',
-        }
-      }
-      $razor_package = 'razor'
-    }
-    'RedHat' : {
-      if $dkim_enabled {
-        package { 'dkim':
-          ensure => installed,
-          name   => 'perl-Mail-DKIM',
-        }
-      }
-      $razor_package = 'perl-Razor-Agent'
-    }
-    default: {
-        fail("${::operatingsystem} is not supported")
-    }
-  }
+  Class['spamassassin::install']
+  -> Class['spamassassin::config']
+  ~> Class['spamassassin::service']
 
-  package { 'spamassassin':
-    ensure => installed,
-  }
-
-  if $run_execs_as_user {
-    Exec {
-      path => ['/bin', '/usr/bin'],
-      user => $run_execs_as_user,
-    }
-  } else {
-    Exec {
-      path => ['/bin', '/usr/bin'],
-    }
-  }
-
-  # Install and setup pyzor
-  if $pyzor_enabled {
-    package { 'pyzor':
-      ensure  => installed,
-      require => Package['spamassassin'],
-    }
-    exec { 'pyzor_discover':
-      command => "/usr/bin/pyzor --homedir '${pyzor_home}' discover",
-      unless  => "test -d ${pyzor_home}",
-      require => Package['pyzor'],
-    }
-  }
-
-  # Install and setup razor
-  if $razor_enabled {
-    $razor_home_owner = $run_execs_as_user ? {
-      undef   => 'root',
-      default => $run_execs_as_user,
-    }
-
-    package { 'razor':
-      ensure  => installed,
-      name    => $razor_package,
-      require => Package['spamassassin'],
-    } -> file { $razor_home:
-      ensure  => directory,
-      owner   => $razor_home_owner,
-      recurse => true,
-    } -> exec { 'razor_register':
-      command => "/usr/bin/razor-admin -home=${razor_home} -register",
-      unless  => "test -h ${razor_home}/identity",
-    } -> exec { 'razor_create':
-      command => "/usr/bin/razor-admin -home=${razor_home} -create",
-      creates => "${razor_home}/razor-agent.conf",
-    } -> exec { 'razor_discover':
-      command     => "/usr/bin/razor-admin -home=${razor_home} -discover",
-      refreshonly => true,
-    }
-  }
-
-  if $service_enabled {
-    $config_notify = Service['spamassassin']
-  } elsif $notify_service_name {
-    $config_notify = Service[$notify_service_name]
-  } else {
-    $config_notify = []
-  }
-
-  file {
-    "${configdir}/local.cf":
-      ensure  => present,
-      content => template('spamassassin/local_cf.erb'),
-      notify  => $config_notify,
-      require => Package['spamassassin'];
-    "${configdir}/v310.pre":
-      ensure  => present,
-      content => template('spamassassin/v310_pre.erb'),
-      notify  => $config_notify,
-      require => Package['spamassassin'];
-    "${configdir}/v312.pre":
-      ensure  => present,
-      content => template('spamassassin/v312_pre.erb'),
-      notify  => $config_notify,
-      require => Package['spamassassin'];
-    "${configdir}/v320.pre":
-      ensure  => present,
-      content => template('spamassassin/v320_pre.erb'),
-      notify  => $config_notify,
-      require => Package['spamassassin'];
-  }
-
-  if $spamd_sql_config {
-    file { "${configdir}/sql.cf":
-      ensure  => present,
-      content => template('spamassassin/sql.cf.erb'),
-      notify  => $config_notify,
-      require => Package['spamassassin'],
-    }
-  }
-
-  # Enable or explicitly disable sa-update cron.
-  case $::osfamily {
-      'Debian': {
-          $cron = $sa_update ? {
-            true    => 1,
-            default => 0,
-          }
-          file_line { 'sa_update':
-            path    => $sa_update_file,
-            line    => "CRON=${cron}",
-            match   => '^CRON=[0-1]$',
-            require => Package['spamassassin']
-          }
-      }
-      'Redhat': {
-          $saupdate = $sa_update ? {
-            true    => 'yes',
-            default => 'no',
-          }
-          file_line { 'sa_update':
-            path    => $sa_update_file,
-            line    => "SAUPDATE=${saupdate}",
-            match   => '^SAUPDATE=',
-            require => Package['spamassassin']
-          }
-      }
-  }
-
-  if $::osfamily == 'Debian' {
-    # We enable the service regardless of our service_enabled parameter. Trying to
-    # stop or start the spamassassin init script without the enabled will fail.
-    file_line { 'spamd_service' :
-      path    => $spamd_options_file,
-      line    => 'ENABLED=1',
-      match   => '^ENABLED',
-      notify  => $config_notify,
-      require => Package['spamassassin'],
-    }
-  }
-
-  if $service_enabled {
-    $extra_options = inline_template('<% if @spamd_username -%>-u <%= @spamd_username -%> <% end -%><% if @spamd_groupname -%>-g <%= @spamd_groupname -%> <% end -%>-m <%= @spamd_max_children %><% if @spamd_min_children -%> --min-children=<%=@spamd_min_children -%><% end -%> -i <%= @spamd_listen_address %> -A <%= @spamd_allowed_ips %><% if @spamd_nouserconfig -%> --nouser-config<% end -%><% if @spamd_allowtell -%> --allow-tell<% end -%><% if @spamd_sql_config -%> -q<% end -%>')
-
-    file_line { 'spamd_options' :
-      path    => $spamd_options_file,
-      line    => "${spamd_options_var}=\"${spamd_defaults} ${extra_options}\"",
-      match   => "^${spamd_options_var}=",
-      notify  => $config_notify,
-      require => Package['spamassassin']
-    }
-  }
-
-  service { 'spamassassin':
-      ensure  => $service_enabled,
-      enable  => $service_enabled,
-      pattern => 'spamd',
-      require => Package['spamassassin'],
-  }
 }
