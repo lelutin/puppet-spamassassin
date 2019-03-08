@@ -56,7 +56,7 @@ class { 'spamassassin':
   sa_update         => true,
   run_execs_as_user => 'amavis',
   service_enabled   => false,
-  bayes_path		=> '/var/lib/amavis/bayes'
+  bayes_path        => '/var/lib/amavis/bayes'
   razor_home        => '/var/lib/amavis/.razor',
   pyzor_home        => '/var/lib/amavis/.pyzor',
 }
@@ -79,11 +79,11 @@ class { 'spamassassin':
 
 ```puppet
 class { 'spamassassin':
-  whitelist_from => ['*@abccorp.com', '*@abc.com'],
+  whitelist_from      => ['*@abccorp.com', '*@abc.com'],
   whitelist_from_rcvd => ['*@abccorp.com mail.abccorp.com'],
-  whitelist_to   => ['bob@gmail.com','sarah@yahoo.co.uk'],
-  blacklist_from => ['*@msn.com','*@hotmail.com'],
-  blacklist_to   => ['frank@spammer.com', 'rita@example.com'],
+  whitelist_to        => ['bob@gmail.com','sarah@yahoo.co.uk'],
+  blacklist_from      => ['*@msn.com','*@hotmail.com'],
+  blacklist_to        => ['frank@spammer.com', 'rita@example.com'],
 }
 ```
 
@@ -91,10 +91,10 @@ class { 'spamassassin':
 
 ```puppet
 class { 'spamassassin':
-  bayes_sql_enabled 		   => true,
-  bayes_sql_dsn     		   => 'DBI:mysql:spamassassin:localhost:3306',
-  bayes_sql_username 		   => 'sqluser',
-  bayes_sql_password 		   => 'somesecret',
+  bayes_sql_enabled            => true,
+  bayes_sql_dsn                => 'DBI:mysql:spamassassin:localhost:3306',
+  bayes_sql_username           => 'sqluser',
+  bayes_sql_password           => 'somesecret',
   bayes_sql_override_username  => 'amavis',
   user_scores_dsn              => 'DBI:mysql:spamassassin:localhost:3306',
   user_scores_sql_username     => 'sqluser',
@@ -111,23 +111,23 @@ class { 'spamassassin':
 
 ```puppet
 class { 'spamassassin':
-  rewrite_header_subject 			 => '***SPAM***',
-  report_safe	 		 			 => 2,
-  trusted_networks 					 => ['192.168.0.0/24'],
-  skip_rbl_checks 				     => false,
-  dns_available  					 => 'test',
-  bayes_ignore_header 				 => ['X-Spam-Flag','X-Spam-Status'],
-  spamcop_enabled 					 => true,
-  spamcop_from_address 				 => 'me@mydomain.com',
-  spamcop_max_report_size 			 => 100,
-  awl_enabled 						 => true,
-  shortcircuit_enabled 				 => true,
-  shortcircuit_user_in_whitelist 	 => 'on',
+  rewrite_header_subject             => '***SPAM***',
+  report_safe                        => 2,
+  trusted_networks                   => ['192.168.0.0/24'],
+  skip_rbl_checks                    => false,
+  dns_available                      => 'test',
+  bayes_ignore_header                => ['X-Spam-Flag','X-Spam-Status'],
+  spamcop_enabled                    => true,
+  spamcop_from_address               => 'me@mydomain.com',
+  spamcop_max_report_size            => 100,
+  awl_enabled                        => true,
+  shortcircuit_enabled               => true,
+  shortcircuit_user_in_whitelist     => 'on',
   shortcircuit_user_in_def_whitelist => 'on',
-  shortcircuit_user_in_blacklist 	 => 'on',
-  dkim_timeout 						 => 10,
-  razor_timeout 					 => 10,
-  pyzor_timeout 					 => 10,
+  shortcircuit_user_in_blacklist     => 'on',
+  dkim_timeout                       => 10,
+  razor_timeout                      => 10,
+  pyzor_timeout                      => 10,
 }
 ```
 
