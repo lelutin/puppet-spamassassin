@@ -501,7 +501,7 @@ The module has been tested on:
 
 #### Contributors
 
-The list of contributors can be found at: [https://github.com/wyrie/puppet-spamassassin/graphs/contributors](https://github.com/wyrie/puppet-spamassassin/graphs/contributors)
+The list of contributors can be found in two places:
 
-  * [tomboland](https://github.com/tomboland)
-  * [szynaka](https://github.com/szynaka)
+ * Upstream: [https://bitbucket.org/wyrie/puppet-spamassassin/commits/all](https://bitbucket.org/wyrie/puppet-spamassassin/commits/all)
+ * Here: [https://github.com/lelutin/puppet-spamassassin/graphs/contributors](https://github.com/lelutin/puppet-spamassassin/graphs/contributors)
