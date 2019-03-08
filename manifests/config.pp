@@ -220,8 +220,8 @@ class spamassassin::config {
       spamd_allowtell      => $spamassassin::spamd_allowtell,
       spamd_sql_config     => $spamassassin::spamd_sql_config,
     }
-    $extra_options = inline_epp(
-      '<% if $spamd_username { -%>-u <%= $spamd_username -%> <% } -%><% if $spamd_groupname { -%>-g <%= $spamd_groupname -%> <% } -%>-m <%= $spamd_max_children %><% if $spamd_min_children { -%> --min-children=<%=$spamd_min_children -%><% } -%> -i <%= $spamd_listen_address %> -A <%= $spamd_allowed_ips %><% if $spamd_nouserconfig { -%> --nouser-config<% } -%><% if $spamd_allowtell { -%> --allow-tell<% } -%><% if $spamd_sql_config { -%> -q<% } -%>',
+    $extra_options = epp(
+      'spamassassin/service_extra_options.epp',
       $extra_options_context
     )
 
