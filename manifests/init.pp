@@ -476,7 +476,7 @@ class spamassassin (
   Boolean                                   $pyzor_enabled = true,
   # TODO: add a pattern to pyzor_timeout to allow strings with an int/float
   #   value with an suffix of s, m, h, d, w
-  Optional[Variant[Integer,Float]]          $pyzor_timeout = undef,
+  Optional[Numeric]                         $pyzor_timeout = undef,
   Optional[Integer]                         $pyzor_max     = undef,
   Optional[Pattern[/[0-9A-Za-z ,._\/-]\+/]] $pyzor_options = undef,
   Optional[Stdlib::Absolutepath]            $pyzor_path    = undef,
