@@ -165,6 +165,31 @@
 # If set to 'test', SpamAssassin will query some default hosts on the
 # internet to attempt to check if DNS is working or not. Default: yes
 #
+# [*uridnsbl_skip_domain*]
+# List of domains for which URIDNSBL tests should be skipped. This can be used
+# to reduce the volume of URIBDNSBL checks, for example by disabling checks for
+# known domains that get sent to very often.
+#
+# [*uridnsbl*]
+# Specify a lookup. Each entry's key is the name of the rule to be used. The
+# value should be an array with two items. The first item is the dnsbl zone to
+# lookup IPs in, and the second item is the type of lookup to perform (TXT or
+# A). Note that you must also define a body-eval rule calling check_uridnsbl()
+# to use this.
+#
+# [*urirhsbl*]
+# Specify a RHSBL-style domain lookup. Each entry's key is the name of the rule
+# to be used. The value should be an array with two items. The first item is
+# the dnsbl zone to lookup IPs in, and the second item is the type of lookup to
+# perform (TXT or A).
+#
+# [*urirhssub*]
+# Specify a RHSBL-style domain lookup with a sub-test. Each entry's key is the
+# name of the rule to be used. The value should be an array with three items.
+# The first item is the dnsbl zone to lookup IPs in. The second item is the
+# type of lookup to perform (TXT or A). Finally, the third item is the sub-test
+# to run against the returned data.
+#
 # [*bayes_enabled*]
 # Boolean. Whether to use the naive-Bayesian-style classifier built
 # into SpamAssassin. Default: true
@@ -457,6 +482,11 @@ class spamassassin (
   Array                      $internal_networks       = [],
   Boolean                    $skip_rbl_checks         = true,
   Pattern[/^(test|yes|no)$/] $dns_available           = 'yes',
+  # URIBL options
+  Array[String]                   $uridnsbl_skip_domain = [],
+  Hash[String, Array[String,2,2]] $uridnsbl             = {},
+  Hash[String, Array[String,2,2]] $urirhsbl             = {},
+  Hash[String, Array[String,3,3]] $urirhssub            = {},
   # Learning options
   Boolean                        $bayes_enabled                      = true,
   Boolean                        $bayes_use_hapaxes                  = true,

@@ -1,4 +1,6 @@
 class { 'spamassassin':
+  uridnsbl_skip_domain               => ['google.com', 'youtu.be'],
+  uridnsbl                           => { 'URIBL_SBLXBL' => ['sbl-xbl.spamhaus.org.', 'TXT']},
   sa_update                          => true,
   score_tests                        => {
     'BAYES_00'           => '-1.9',

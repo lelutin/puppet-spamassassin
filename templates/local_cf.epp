@@ -57,6 +57,18 @@ internal_networks    <%= $val %>
 <% } -%>
 skip_rbl_checks     <%= $skip_rbl_checks %>
 dns_available       <%= $dns_available %>
+<% $uridnsbl_skip_domain.each |$dom| { -%>
+uridnsbl_skip_domain <%= $dom %>
+<% } -%>
+<% $uridnsbl.each |$rule,$val| { -%>
+uridnsbl <%= $rule %> <%= $val[0] %> <%= $val[1] %>
+<% } -%>
+<% $urirhsbl.each |$rule,$val| { -%>
+urirhsbl <%= $rule %> <%= $val[0] %> <%= $val[1] %>
+<% } -%>
+<% $urirhssub.each |$rule,$val| { -%>
+urirhssub <%= $rule %> <%= $val[0] %> <%= $val[1] %> <%= $val[2] %>
+<% } -%>
 <% $whitelist_from.each |$val| { -%>
 whitelist_from      <%= $val %>
 <% } -%>
