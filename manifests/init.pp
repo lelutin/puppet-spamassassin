@@ -414,7 +414,7 @@ class spamassassin (
   Boolean              $spamd_allowtell      = false,
   Boolean              $spamd_sql_config     = false,
   # Scoring options
-  Integer[0]           $required_score     = 5,
+  Numeric              $required_score     = 5,
   Hash                 $score_tests        = {},
   Stdlib::Absolutepath $configdir          = $::spamassassin::params::configdir,
   Stdlib::Absolutepath $spamd_options_file = $::spamassassin::params::spamd_options_file,
