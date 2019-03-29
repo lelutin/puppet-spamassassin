@@ -95,6 +95,9 @@ class spamassassin::config {
     awl_sql_override_username          => $spamassassin::awl_sql_override_username,
     auto_whitelist_path                => $spamassassin::auto_whitelist_path,
     auto_whitelist_file_mode           => $spamassassin::auto_whitelist_file_mode,
+    textcat_enabled                    => $spamassassin::textcat_enabled,
+    ok_locales                         => $spamassassin::ok_locales,
+    normalize_charset                  => bool2num($spamassassin::normalize_charset),
     dcc_enabled                        => $spamassassin::dcc_enabled,
     dcc_timeout                        => $spamassassin::dcc_timeout,
     dcc_body_max                       => $spamassassin::dcc_body_max,
@@ -137,6 +140,7 @@ class spamassassin::config {
     razor_enabled   => $spamassassin::razor_enabled,
     spamcop_enabled => $spamassassin::spamcop_enabled,
     awl_enabled     => $spamassassin::awl_enabled,
+    textcat_enabled => $spamassassin::textcat_enabled,
   }
   file { "${spamassassin::configdir}/v310.pre":
     ensure  => present,

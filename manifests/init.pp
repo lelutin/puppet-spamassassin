@@ -349,6 +349,18 @@
 # The file mode bits used for the automatic-whitelist directory or file.
 # Default: 0600
 #
+# [*textcat_enabled*]
+# Boolean. Enable/disable the TextCat plugin. Default: false
+#
+# [*ok_locales*]
+# List of charsets that are permitted. If unset, defaults to accepting all
+# locales.
+# Default: ['all']
+#
+# [*normalize_charset*]
+# Boolean. Enable/disable scanning non-UTF8 or non-ASCII parts to guess charset.
+# Default: false
+#
 # [*shortcircuit_enabled*]
 # Boolean. Enable/disable the Shortcircuit plugin. Default: false
 #
@@ -499,6 +511,10 @@ class spamassassin (
   Optional[String] $awl_sql_override_username = undef,
   Optional[String] $auto_whitelist_path       = undef,
   Optional[String] $auto_whitelist_file_mode  = undef,
+  # Language guessing plugin
+  Boolean       $textcat_enabled   = false,
+  Array[String] $ok_locales        = ['all'],
+  Boolean       $normalize_charset = false,
   # Shortcircuit plugin
   Boolean                       $shortcircuit_enabled               = false,
   Optional[Enum['ham','spam','on','off']] $shortcircuit_user_in_whitelist     = undef,

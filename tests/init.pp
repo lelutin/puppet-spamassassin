@@ -21,6 +21,8 @@ class { 'spamassassin':
   spamcop_from_address               => 'me@mydomain.com',
   spamcop_max_report_size            => 100,
   awl_enabled                        => true,
+  textcat_enabled                    => true,
+  ok_locales                         => ['en','ja'],
   shortcircuit_enabled               => true,
   shortcircuit_user_in_whitelist     => 'on',
   shortcircuit_user_in_def_whitelist => 'on',

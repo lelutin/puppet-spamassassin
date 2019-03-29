@@ -75,7 +75,11 @@ loadplugin Mail::SpamAssassin::Plugin::AutoLearnThreshold
 
 # TextCat - language guesser
 #
+<% if $textcat_enabled { -%>
+loadplugin Mail::SpamAssassin::Plugin::TextCat
+<% } else { -%>
 #loadplugin Mail::SpamAssassin::Plugin::TextCat
+<% } -%>
 
 # AccessDB - lookup from-addresses in access database
 #

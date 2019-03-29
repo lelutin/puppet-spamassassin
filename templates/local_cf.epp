@@ -130,6 +130,14 @@ auto_whitelist_file_mode    <%= $auto_whitelist_file_mode %>
     <%- } -%>
   <%- } -%>
 <% } -%>
+<% if $textcat_enabled { -%>
+
+# Language guessing configuration
+  <%- if ! $ok_locales.empty { -%>
+ok_locales <%= $ok_locales.join(' ') %>
+  <%- } -%>
+normalize_charset <%= $normalize_charset %>
+<% } -%>
 <% if $dcc_enabled { -%>
 
 # Distributed Checksum Clearinghouse (DCC) options.
