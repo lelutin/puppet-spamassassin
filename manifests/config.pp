@@ -134,6 +134,11 @@ class spamassassin::config {
     content => epp('spamassassin/local_cf.epp',$local_cf_context),
   }
 
+  file { "${spamassassin::configdir}/init.pre":
+    ensure => present,
+    source => 'puppet:///modules/spamassassin/init.pre',
+  }
+
   $v310_context = {
     dcc_enabled     => $spamassassin::dcc_enabled,
     pyzor_enabled   => $spamassassin::pyzor_enabled,
