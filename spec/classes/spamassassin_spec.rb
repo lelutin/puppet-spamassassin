@@ -90,6 +90,32 @@ describe 'spamassassin' do
         )}
       end
 
+      describe 'with all extra service options enabled' do
+        let(:params) do
+          {
+            service_enabled:          true,
+            spamd_username:           'myuser',
+            spamd_groupname:          'mygroup',
+            spamd_max_children:       42,
+            spamd_min_children:       2,
+            spamd_listen_address:     '127.0.0.2',
+            spamd_allowed_ips:        '10.0.0.0/8',
+            spamd_nouserconfig:       true,
+            spamd_allowtell:          true,
+            spamd_sql_config:         true,
+            user_scores_dsn:          'DBI:mysql:spamassassin:localhost:3306',
+            user_scores_sql_username: 'sqluser',
+            user_scores_sql_password: 'somesecret',
+          }
+        end
+
+        opts = '-u myuser -g mygroup -m 42 --min-children=2 -i 127.0.0.2 '\
+          '-A 10.0.0.0/8 --nouser-config --allow-tell -q'
+        it { should contain_file_line('spamd_options').with({
+          'line' => /(?:SPAMD)?OPTIONS=".+\s#{opts}"/})
+        }
+      end
+
       describe "with auto update enabled" do
         let(:params) {{ :sa_update => true }}
         if system == 'RedHat'

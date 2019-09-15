@@ -240,7 +240,7 @@ class spamassassin::config {
 
     file_line { 'spamd_options' :
       path  => $spamassassin::spamd_options_file,
-      line  => "${spamassassin::spamd_options_var}=\"${spamassassin::spamd_defaults} ${spamassassin::extra_options}\"",
+      line  => "${spamassassin::spamd_options_var}=\"${spamassassin::spamd_defaults} ${extra_options}\"",
       match => "^${spamassassin::spamd_options_var}=",
     }
   }
