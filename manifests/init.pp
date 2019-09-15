@@ -568,7 +568,6 @@ class spamassassin (
     $user_scores_dsn !~ String
     or $user_scores_sql_username !~ String
     or $user_scores_sql_password !~ String
-    or $user_scores_sql_custom_query !~ String
   ) {
     fail('spamd_sql_config is enabled but one or more of $user_scores_* not set')
   }
