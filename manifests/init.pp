@@ -443,7 +443,7 @@ class spamassassin (
   Optional[String]     $notify_service_name  = undef,
   Integer[1]           $spamd_max_children   = 5,
   Optional[Integer[1]] $spamd_min_children   = undef,
-  Stdlib::Ip_address   $spamd_listen_address = '127.0.0.1',
+  Stdlib::IP::Address  $spamd_listen_address = '127.0.0.1',
   String               $spamd_allowed_ips    = '127.0.0.1/32',
   Optional[String]     $spamd_username       = undef,
   Optional[String]     $spamd_groupname      = undef,
