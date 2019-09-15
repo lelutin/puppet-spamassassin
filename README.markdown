@@ -483,12 +483,12 @@ Requires re2c and gcc packages (not managed in this module)
 
 ## Limitations
 
-This module has been built on and tested against Puppet 3.3.2 and higher.
+This module has been built on and tested against Puppet 4.10 and higher.
 
 The module has been tested on:
 
 * CentOS 6
-* Debian 7
+* Debian 8 and 9
 
 ## Development
 
