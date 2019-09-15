@@ -32,27 +32,19 @@ describe 'spamassassin' do
 
       it { should contain_file('/etc/mail/spamassassin/local.cf').with(
         :ensure  => 'present',
-        :require => 'Package[spamassassin]',
-        :notify  => [],
         )
       }
 
       it { should contain_file('/etc/mail/spamassassin/v310.pre').with(
         :ensure  => 'present',
-        :require => 'Package[spamassassin]',
-        :notify  => [],
         )
       }
       it { should contain_file('/etc/mail/spamassassin/v312.pre').with(
         :ensure  => 'present',
-        :require => 'Package[spamassassin]',
-        :notify  => [],
         )
       }
       it { should contain_file('/etc/mail/spamassassin/v320.pre').with(
         :ensure  => 'present',
-        :require => 'Package[spamassassin]',
-        :notify  => [],
         )
       }
 
@@ -157,7 +149,6 @@ describe 'spamassassin' do
         it { should contain_exec('pyzor_discover').with(
           :command => "/usr/bin/pyzor --homedir '/etc/mail/spamassassin/.pyzor' discover",
           :unless  => "test -d /etc/mail/spamassassin/.pyzor",
-          :require => 'Package[pyzor]'
         )}
       end
 
