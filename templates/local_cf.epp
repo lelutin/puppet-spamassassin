@@ -240,7 +240,7 @@ dkim_timeout       <%= $dkim_timeout %>
 <% } -%>
 <% $custom_rules.each |$rulename, $ruledef| {-%>
   <%- ['body','header','meta','rawbody','uri','score','describe','full','tflags','priority','askdns','mimeheader','uri_block_cc','uri_block_cidr','uri_block_exclude','uri_block_isp','uri_detail','uridnsbl','uridnssub','urifullnsrhsbl','urifullnsrhssub','urinsrhsbl','urinsrhssub','urirhsbl','urirhssub'].each |$keyword| { -%>
-    <%- if $ruledef[$keyword] != '' { -%>
+    <%- if $ruledef[$keyword] and $ruledef[$keyword] != '' { -%>
 <%= $keyword %> <%= $rulename %> <%= $ruledef[$keyword] %>
     <%- } -%>
   <%- } -%>

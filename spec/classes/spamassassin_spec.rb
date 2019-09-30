@@ -296,6 +296,18 @@ describe 'spamassassin' do
         end
       end
 
+      describe "with custom rules" do
+        let(:params) {{ custom_rules: { 'LOCAL_TEST' => { 'body' => '/this is spam/', 'score' => '5.0' } } }}
+
+        it { should contain_file('/etc/mail/spamassassin/local.cf').with({
+          'content' => %r{^body LOCAL_TEST /this is spam/$}})
+        }
+
+        it { should_not contain_file('/etc/mail/spamassassin/local.cf').with({
+          'content' => %r{^header LOCAL_TEST}})
+        }
+      end
+
     end
   end
 end
