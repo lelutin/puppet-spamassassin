@@ -145,6 +145,9 @@ auto_whitelist_file_mode    <%= $auto_whitelist_file_mode %>
 <% if $textcat_enabled { -%>
 
 # Language guessing configuration
+  <%- if ! $ok_languages.empty { -%>
+ok_languages <%= $ok_languages.join(' ') %>
+<% } -%>
   <%- if ! $ok_locales.empty { -%>
 ok_locales <%= $ok_locales.join(' ') %>
   <%- } -%>

@@ -100,6 +100,7 @@ class spamassassin::config {
     auto_whitelist_path                => $spamassassin::auto_whitelist_path,
     auto_whitelist_file_mode           => $spamassassin::auto_whitelist_file_mode,
     textcat_enabled                    => $spamassassin::textcat_enabled,
+    ok_languages                       => $spamassassin::ok_languages,
     ok_locales                         => $spamassassin::ok_locales,
     normalize_charset                  => bool2num($spamassassin::normalize_charset),
     dcc_enabled                        => $spamassassin::dcc_enabled,

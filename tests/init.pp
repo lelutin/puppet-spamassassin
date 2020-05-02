@@ -24,6 +24,7 @@ class { 'spamassassin':
   spamcop_max_report_size            => 100,
   awl_enabled                        => true,
   textcat_enabled                    => true,
+  ok_langauges                       => ['en','zh'],
   ok_locales                         => ['en','ja'],
   shortcircuit_enabled               => true,
   shortcircuit_user_in_whitelist     => 'on',

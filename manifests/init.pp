@@ -377,6 +377,11 @@
 # [*textcat_enabled*]
 # Boolean. Enable/disable the TextCat plugin. Default: false
 #
+# [*ok_languages*]
+# List of languages which are considered okay for incoming mail. If unset,
+# defaults to accepting all languages.
+# Default: ['all']
+#
 # [*ok_locales*]
 # List of charsets that are permitted. If unset, defaults to accepting all
 # locales.
@@ -543,6 +548,7 @@ class spamassassin (
   Optional[String] $auto_whitelist_file_mode  = undef,
   # Language guessing plugin
   Boolean       $textcat_enabled   = false,
+  Array[String] $ok_languages      = ['all'],
   Array[String] $ok_locales        = ['all'],
   Boolean       $normalize_charset = false,
   # Shortcircuit plugin
