@@ -34,16 +34,19 @@
 # If you have lots of free RAM, you may want to increase this.
 #
 # [*spamd_listen_address*]
-# Tells spamd to listen on the specified IP address (defaults to 127.0.0.1).
-# Use 0.0.0.0to listen on all interfaces. You can also use a  valid hostname
-# which will make spamd listen on the first address that name resolves to.
+# List of IP addresses spamd will listen to (defaults to "localhost",
+# which will listen both on IPv4 and IPv6 locally). Use 0.0.0.0 to listen on
+# all interfaces. You can also use a valid hostname which will make spamd
+# listen on the first address that name resolves to. To listen only to an IPv6
+# address, make sure to encase the address within square brackets (i.e.
+# "[fe80::fc54:ff:fe8f:4b36]")
 #
 # [*spamd_allowed_ips*]
 # Specify a list of authorized hosts or networks which can connect to this
-# spamd instance. Single IP addresses, CIDR format networks, or ranges of
-# IP addresses by listing 3 or less octets with a trailing dot. Hostnames
-# are not supported, only IP addresses.  This option can be specified
-# multiple times, or can take a list of addresses separated by commas.
+# spamd instance. Values can be single IP addresses or CIDR format networks.
+# Hostnames are not supported, only IP addresses. Similarly to
+# spamd_listen_address, to specify IPs or CIDR notation for IPV6, make sure to
+# encase the address or network part in square brackets)
 #
 # [*spamd_username*]
 # spamd runs as this user
@@ -448,8 +451,8 @@ class spamassassin (
   Optional[String]     $notify_service_name  = undef,
   Integer[1]           $spamd_max_children   = 5,
   Optional[Integer[1]] $spamd_min_children   = undef,
-  Stdlib::IP::Address  $spamd_listen_address = '127.0.0.1',
-  String               $spamd_allowed_ips    = '127.0.0.1/32',
+  Array[Stdlib::Host]  $spamd_listen_address = ['localhost'],
+  Array[String]        $spamd_allowed_ips    = ['127.0.0.1/32','[::1]/8'],
   Optional[String]     $spamd_username       = undef,
   Optional[String]     $spamd_groupname      = undef,
   Boolean              $spamd_nouserconfig   = false,
