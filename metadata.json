@@ -1,6 +1,6 @@
 {
   "name": "LeLutin-spamassassin",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "author": "Scott Barr",
   "summary": "Spamassassin Module",
   "license": "Apache-2.0",
