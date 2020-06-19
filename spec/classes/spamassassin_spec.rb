@@ -190,6 +190,18 @@ describe 'spamassassin' do
             'ensure' => 'directory'})
           }
         end
+
+        describe "and run_execs_as_user set" do
+          let(:params) {{
+            :razor_enabled => true,
+            :run_execs_as_user => 'spamd',
+          }}
+
+          it { should contain_exec('razor_register').with({
+            'user' => 'spamd',
+            'cwd' => '/'})
+          }
+        end
       end
 
       describe "with shortcircuit enabled" do

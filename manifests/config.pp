@@ -10,6 +10,10 @@ class spamassassin::config {
     Exec {
       path => ['/bin', '/usr/bin'],
       user => $spamassassin::run_execs_as_user,
+      # The default cwd is unusable as non-root, and this breaks Razor's Perl
+      # interpreter with errors like this:
+      # Can't locate Razor2/Client/Agent.pm: ... Permission denied at /usr/bin/razor-admin line 15
+      cwd  => '/',
     }
   } else {
     Exec {
