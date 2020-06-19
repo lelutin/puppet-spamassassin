@@ -500,7 +500,7 @@ This module has been built on and tested against Puppet 4.10 and higher.
 The module has been tested on:
 
 * CentOS 6
-* Debian 8 and 9
+* Debian 8, 9 and 10
 
 ## Development
 
