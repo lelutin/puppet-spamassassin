@@ -455,21 +455,21 @@ class spamassassin (
   Boolean              $spamd_nouserconfig   = false,
   Boolean              $spamd_allowtell      = false,
   Boolean              $spamd_sql_config     = false,
-  # Scoring options
-  Numeric              $required_score     = 5,
-  Hash                 $score_tests        = {},
   Stdlib::Absolutepath $configdir          = $::spamassassin::params::configdir,
   Stdlib::Absolutepath $spamd_options_file = $::spamassassin::params::spamd_options_file,
   String               $spamd_options_var  = $::spamassassin::params::spamd_options_var,
   String               $spamd_defaults     = $::spamassassin::params::spamd_defaults,
   Stdlib::Absolutepath $sa_update_file     = $::spamassassin::params::sa_update_file,
-  # Whitelist and blacklist options
+  # Scoring options, see Mail::SpamAssassin::Conf(3)
+  Numeric              $required_score     = 5,
+  Hash                 $score_tests        = {},
+  # Whitelist and blacklist options, see Mail::SpamAssassin::Conf(3)
   Array $whitelist_from      = [],
   Array $whitelist_from_rcvd = [],
   Array $whitelist_to        = [],
   Array $blacklist_from      = [],
   Array $blacklist_to        = [],
-  # Message tagging options
+  # Message tagging options, see Mail::SpamAssassin::Conf(3)
   Optional[String] $rewrite_header_subject = undef,
   Optional[String] $rewrite_header_from    = undef,
   Optional[String] $rewrite_header_to      = undef,
@@ -480,19 +480,19 @@ class spamassassin (
   Array            $remove_header_spam     = [],
   Array            $remove_header_ham      = [],
   Array            $remove_header_all      = [],
-  # Network test options
+  # Network test options, see Mail::SpamAssassin::Conf(3)
   Boolean                    $clear_trusted_networks  = false,
   Array                      $trusted_networks        = [],
   Boolean                    $clear_internal_networks = false,
   Array                      $internal_networks       = [],
   Boolean                    $skip_rbl_checks         = true,
   Pattern[/^(test|yes|no)$/] $dns_available           = 'yes',
-  # URIBL options
+  # URIBL options, see Mail::SpamAssassin::Plugin::URIDNSBL(3)
   Array[String]                   $uridnsbl_skip_domain = [],
   Hash[String, Array[String,2,2]] $uridnsbl             = {},
   Hash[String, Array[String,2,2]] $urirhsbl             = {},
   Hash[String, Array[String,3,3]] $urirhssub            = {},
-  # Learning options
+  # Learning options, see Mail::SpamAssassin::Conf(3)
   Boolean                        $bayes_enabled                      = true,
   Boolean                        $bayes_use_hapaxes                  = true,
   Boolean                        $bayes_auto_learn                   = true,
@@ -508,18 +508,18 @@ class spamassassin (
   Optional[String]               $bayes_file_mode                    = undef,
   Optional[Float]                $bayes_auto_learn_threshold_nonspam = undef,
   Optional[Float]                $bayes_auto_learn_threshold_spam    = undef,
-  # SQL based user preferences
+  # SQL based user preferences, see Mail::SpamAssassin::Conf(3)
   Optional[String] $user_scores_dsn              = undef,
   Optional[String] $user_scores_sql_username     = undef,
   Optional[String] $user_scores_sql_password     = undef,
   Optional[String] $user_scores_sql_custom_query = undef,
-  # DCC plugin
+  # DCC plugin, see Mail::SpamAssassin::Plugin::DCC(3)
   Boolean $dcc_enabled            = false,
   Optional[Integer] $dcc_timeout  = undef,
   Optional[Integer] $dcc_body_max = undef,
   Optional[Integer] $dcc_fuz1_max = undef,
   Optional[Integer] $dcc_fuz2_max = undef,
-  # Pyzor plugin
+  # Pyzor plugin, see Mail::SpamAssassin::Plugin::Pyzor(3)
   Boolean                                   $pyzor_enabled = true,
   # TODO: add a pattern to pyzor_timeout to allow strings with an int/float
   #   value with an suffix of s, m, h, d, w
@@ -528,16 +528,16 @@ class spamassassin (
   Optional[Pattern[/[0-9A-Za-z ,._\/-]\+/]] $pyzor_options = undef,
   Optional[Stdlib::Absolutepath]            $pyzor_path    = undef,
   Stdlib::Absolutepath                      $pyzor_home    = $::spamassassin::params::pyzor_home,
-  # Razor plugin
+  # Razor plugin, see Mail::SpamAssassin::Plugin::Razor2(3)
   Boolean              $razor_enabled = true,
   Optional[Integer]    $razor_timeout = undef,
   Stdlib::Absolutepath $razor_home    = $::spamassassin::params::razor_home,
-  # Spamcop plugin
+  # Spamcop plugin, see Mail::SpamAssassin::Plugin::SpamCop(3)
   Boolean           $spamcop_enabled         = false,
   Optional[String]  $spamcop_from_address    = undef,
   Optional[String]  $spamcop_to_address      = undef,
   Optional[Integer] $spamcop_max_report_size = undef,
-  # Auto-whitelist plugin
+  # Auto-whitelist plugin, see Mail::SpamAssassin::AutoWhitelist(3)
   Boolean          $awl_enabled               = false,
   Boolean          $awl_sql_enabled           = false,
   String           $awl_dsn                   = 'DBI:mysql:spamassassin',
@@ -546,12 +546,12 @@ class spamassassin (
   Optional[String] $awl_sql_override_username = undef,
   Optional[String] $auto_whitelist_path       = undef,
   Optional[String] $auto_whitelist_file_mode  = undef,
-  # Language guessing plugin
+  # Language guessing plugin, see Mail::SpamAssassin::Plugin::TextCat(3)
   Boolean       $textcat_enabled   = false,
   Array[String] $ok_languages      = ['all'],
   Array[String] $ok_locales        = ['all'],
   Boolean       $normalize_charset = false,
-  # Shortcircuit plugin
+  # Shortcircuit plugin, see Mail::SpamAssassin::Plugin::Shortcircuit(3)
   Boolean                       $shortcircuit_enabled               = false,
   Optional[Enum['ham','spam','on','off']] $shortcircuit_user_in_whitelist     = undef,
   Optional[Enum['ham','spam','on','off']] $shortcircuit_user_in_def_whitelist = undef,
@@ -561,7 +561,7 @@ class spamassassin (
   Optional[Enum['ham','spam','on','off']] $shortcircuit_user_in_blacklist_to  = undef,
   Optional[Enum['ham','spam','on','off']] $shortcircuit_subject_in_blacklist  = undef,
   Optional[Enum['ham','spam','on','off']] $shortcircuit_all_trusted           = undef,
-  # DKIM plugin
+  # DKIM plugin, see Mail::SpamAssassin::Plugin::DKIM(3)
   Boolean           $dkim_enabled = true,
   Optional[Integer] $dkim_timeout = undef,
   # Rule2XSBody plugin
