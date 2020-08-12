@@ -19,7 +19,14 @@ class spamassassin::params {
       'Redhat': {
           $spamd_options_file   = '/etc/sysconfig/spamassassin'
           $spamd_options_var    = 'SPAMDOPTIONS'
-          $spamd_defaults       = '-d -c -H'
+          case $::operatingsystemmajrelease {
+            '6', '7': {
+              $spamd_defaults   = '-d -c -H'
+            }
+            default: {
+              $spamd_defaults   = '-c -H'
+            }
+          }
           $sa_update_file       = '/etc/sysconfig/sa-update'
       }
       default: {
