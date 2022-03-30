@@ -320,6 +320,14 @@ describe 'spamassassin' do
         }
       end
 
+      describe "with custom config" do
+        let(:params) {{ custom_config: [ 'hashcash_accept *@example.com' ] }}
+
+        it { should contain_file('/etc/mail/spamassassin/local.cf').with({
+          'content' => %r{^hashcash_accept *@example.com$}})
+        }
+      end
+
     end
   end
 end

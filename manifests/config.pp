@@ -137,6 +137,7 @@ class spamassassin::config {
     dkim_enabled                       => $spamassassin::dkim_enabled,
     dkim_timeout                       => $spamassassin::dkim_timeout,
     custom_rules                       => $spamassassin::custom_rules,
+    custom_config                      => $spamassassin::custom_config,
   }
   file { "${spamassassin::configdir}/local.cf":
     ensure  => present,
