@@ -36,6 +36,8 @@ group :development do
   gem "puppet-blacksmith", '~> 6.1',                   require: false, platforms: [:ruby]
 end
 
+gem 'rake', :require => false
+
 puppet_version = ENV['PUPPET_GEM_VERSION']
 puppet_type = gem_type(puppet_version)
 facter_version = ENV['FACTER_GEM_VERSION']
