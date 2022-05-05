@@ -37,7 +37,7 @@ group :development do
 end
 
 gem 'rake', :require => false
-gem 'puppetlabs_spec_helper', '~> 2.0', :require => false
+gem 'puppetlabs_spec_helper', '~> 4.0', :require => false
 
 # This draws in rubocop and other useful gems for puppet tests
 gem 'voxpupuli-test', '~> 5.3', :require => false
