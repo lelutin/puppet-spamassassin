@@ -13,9 +13,41 @@ AllCops:
   - pkg/**/*
   - spec/fixtures/**/*
   - vendor/**/*
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
 Layout/LineLength:
   Description: People have wide screens, use them.
   Max: 200
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+Lint/BinaryOperatorWithIdenticalOperands:
+  Enabled: true
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+Lint/DuplicateElsifCondition:
+  Enabled: true
+Lint/DuplicateRescueException:
+  Enabled: true
+Lint/EmptyConditionalBody:
+  Enabled: true
+Lint/FloatComparison:
+  Enabled: true
+Lint/MissingSuper:
+  Enabled: true
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+Lint/OutOfRangeRegexpRef:
+  Enabled: true
+Lint/RaiseException:
+  Enabled: true
+Lint/SelfAssignment:
+  Enabled: true
+Lint/StructNewOverride:
+  Enabled: true
+Lint/TopLevelReturnWithArgument:
+  Enabled: true
+Lint/UnreachableLoop:
+  Enabled: true
 RSpec/BeforeAfterAll:
   Description: Beware of using after(:all) as it may cause state to leak between tests.
     A necessary evil in acceptance testing.
@@ -99,9 +131,51 @@ RSpec/MultipleExpectations:
   Enabled: false
 RSpec/NestedGroups:
   Enabled: false
+Style/AccessorGrouping:
+  Enabled: true
+Style/ArrayCoercion:
+  Enabled: true
 Style/AsciiComments:
   Enabled: false
+Style/BisectedAttrAccessor:
+  Enabled: true
+Style/CaseLikeIf:
+  Enabled: true
+Style/ExplicitBlockArgument:
+  Enabled: true
+Style/ExponentialNotation:
+  Enabled: true
+Style/GlobalStdStream:
+  Enabled: true
+Style/HashAsLastArrayItem:
+  Enabled: true
+Style/HashEachMethods:
+  Enabled: true
+Style/HashLikeCase:
+  Enabled: true
+Style/HashTransformKeys:
+  Enabled: true
+Style/HashTransformValues:
+  Enabled: true
 Style/IfUnlessModifier:
-  Enabled: false
+  Enabled: true
+Style/OptionalBooleanParameter:
+  Enabled: true
+Style/RedundantAssignment:
+  Enabled: true
+Style/RedundantFetchBlock:
+  Enabled: true
+Style/RedundantFileExtensionInRequire:
+  Enabled: true
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+Style/RedundantRegexpEscape:
+  Enabled: true
+Style/SingleArgumentDig:
+  Enabled: true
+Style/SlicingWithRange:
+  Enabled: true
+Style/StringConcatenation:
+  Enabled: true
 Style/SymbolProc:
   Enabled: false
