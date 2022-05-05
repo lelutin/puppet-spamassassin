@@ -39,6 +39,9 @@ end
 gem 'rake', :require => false
 gem 'puppetlabs_spec_helper', '~> 2.0', :require => false
 
+# This draws in rubocop and other useful gems for puppet tests
+gem 'voxpupuli-test', '~> 5.3', :require => false
+
 puppet_version = ENV['PUPPET_GEM_VERSION']
 puppet_type = gem_type(puppet_version)
 facter_version = ENV['FACTER_GEM_VERSION']
