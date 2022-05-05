@@ -88,6 +88,14 @@
 #     score: 6
 #     describe: 'spam reported claiming "You have received an invoice"'
 #
+# [*custom_config*]
+# Add custom lines to the config file. Useful for configuring modules that aren't otherwise
+# handled by this Puppet module. This is an array of strings, e.g:
+#
+# spamassassin::custom_config:
+#   - hashcash_accept *@example.com
+#   - hashcash_accept *@example.net
+#
 # [*whitelist_from*]
 # Used to whitelist sender addresses which send mail that is often
 # tagged (incorrectly) as spam. This would be written to the global
@@ -571,6 +579,7 @@ class spamassassin (
   Boolean $rules2xsbody_enabled = false,
   # custom rules
   Hash $custom_rules = {},
+  Array[String] $custom_config                                                = [],
 ) inherits spamassassin::params {
 
   if $spamd_sql_config and (

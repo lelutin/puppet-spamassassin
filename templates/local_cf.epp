@@ -248,3 +248,8 @@ dkim_timeout       <%= $dkim_timeout %>
     <%- } -%>
   <%- } -%>
 <%- } -%>
+
+<% if $custom_config { -%>
+# custom_config:
+<%= $custom_config.join("\n") %>
+<% } -%>
