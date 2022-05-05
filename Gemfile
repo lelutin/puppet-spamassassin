@@ -37,6 +37,7 @@ group :development do
 end
 
 gem 'rake', :require => false
+gem 'puppetlabs_spec_helper', '~> 2.0', :require => false
 
 puppet_version = ENV['PUPPET_GEM_VERSION']
 puppet_type = gem_type(puppet_version)
