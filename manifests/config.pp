@@ -238,6 +238,7 @@ class spamassassin::config {
       spamd_nouserconfig   => $spamassassin::spamd_nouserconfig,
       spamd_allowtell      => $spamassassin::spamd_allowtell,
       spamd_sql_config     => $spamassassin::spamd_sql_config,
+      spamd_log_location   => $spamassassin::spamd_log_location,
     }
     $extra_options = epp(
       'spamassassin/service_extra_options.epp',

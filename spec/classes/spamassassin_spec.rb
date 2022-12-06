@@ -98,10 +98,11 @@ describe 'spamassassin' do
             user_scores_dsn:          'DBI:mysql:spamassassin:localhost:3306',
             user_scores_sql_username: 'sqluser',
             user_scores_sql_password: 'somesecret',
+            spamd_log_location:       '/var/log/spamd.log'
           }
         end
 
-        opts = '-u myuser -g mygroup -m 42 --min-children=2 -i 127.0.0.2 '\
+        opts = '-s /var/log/spamd.log -u myuser -g mygroup -m 42 --min-children=2 -i 127.0.0.2 '\
           '-A 10.0.0.0/8 --nouser-config --allow-tell -q'
         it { should contain_file_line('spamd_options').with({
           'line' => /(?:SPAMD)?OPTIONS=".+\s#{opts}"/})

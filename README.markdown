@@ -166,6 +166,9 @@ This option specifies the maximum number of children to spawn.
 Spamd will spawn that number of children, then sleep in the background
 until a child dies, wherein it will go and spawn a new child.
 
+#### `spamd_log_location`
+This option defines the log location for spamd such as /var/log/spamd.log.
+
 #### `spamd_min_children`
 The minimum number of children that will be kept running
 The minimum value is 1, the default value is 1 in spamd, and undef here.

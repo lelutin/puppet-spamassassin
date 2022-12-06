@@ -4,4 +4,5 @@ class { 'spamassassin':
   spamd_max_children   => 3,
   spamd_listen_address => ['0.0.0.0'],
   spamd_allowed_ips    => ['127.0.0.1/32','192.168.0.0/24'],
+  spamd_log_location   => ['/var/log/spamd.log'],
 }
