@@ -98,7 +98,7 @@ describe 'spamassassin' do
             user_scores_dsn:          'DBI:mysql:spamassassin:localhost:3306',
             user_scores_sql_username: 'sqluser',
             user_scores_sql_password: 'somesecret',
-            spamd_log_location:       '/var/log/spamd.log'
+            spamd_log_location:       '/var/log/spamd.log',
           }
         end
 
