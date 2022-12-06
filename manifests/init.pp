@@ -470,7 +470,7 @@ class spamassassin (
   Boolean              $spamd_nouserconfig   = false,
   Boolean              $spamd_allowtell      = false,
   Boolean              $spamd_sql_config     = false,
-  Optional[String]     $spamd_log_location   = undef,
+  Array[String]        $spamd_log_location   = ['/var/log/spamd.log'],
   Stdlib::Absolutepath $configdir          = $::spamassassin::params::configdir,
   Stdlib::Absolutepath $spamd_options_file = $::spamassassin::params::spamd_options_file,
   String               $spamd_options_var  = $::spamassassin::params::spamd_options_var,
