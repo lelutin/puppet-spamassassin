@@ -70,7 +70,7 @@
 # this is useful for spamd hosts which dont have users home directories
 # but do want to load user preferences from an SQL database.
 #
-# [*spamd_log_location*]
+# [*spamd_syslog_facility*]
 # Turn this on to deposit logs for SpamAssassin and define the log location.
 # e.g. /var/log/spamd.log
 #
@@ -470,7 +470,7 @@ class spamassassin (
   Boolean              $spamd_nouserconfig   = false,
   Boolean              $spamd_allowtell      = false,
   Boolean              $spamd_sql_config     = false,
-  Optional[String]     $spamd_log_location   = undef,
+  Optional[String]     $spamd_syslog_facility   = undef,
   Stdlib::Absolutepath $configdir          = $::spamassassin::params::configdir,
   Stdlib::Absolutepath $spamd_options_file = $::spamassassin::params::spamd_options_file,
   String               $spamd_options_var  = $::spamassassin::params::spamd_options_var,

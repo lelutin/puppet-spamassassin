@@ -111,7 +111,7 @@ class { 'spamassassin':
 
 ```puppet
 class { 'spamassassin':
-  spamd_log_location             => '/var/log/spamd.log',
+  spamd_syslog_facility             => '/var/log/spamd.log',
 }
 ```
 
@@ -174,9 +174,21 @@ This option specifies the maximum number of children to spawn.
 Spamd will spawn that number of children, then sleep in the background
 until a child dies, wherein it will go and spawn a new child.
 
-#### `spamd_log_location`
-This option defines the log location where SpamAssassin will deposit logs 
-such as /var/log/spamd.log.
+#### `spamd_syslog_facility`
+This option defines the log location where SpamAssassin will deposit logs,
+this can either be a file location or a syslog name
+
+```puppet
+Examples:
+spamd_syslog_facility => 'mail' # use syslog, facility mail
+spamd_syslog_facility => './mail' # log to file ./mail
+spamd_syslog_facility => 'stderr 2>/dev/null' # log to stderr, throw messages away
+spamd_syslog_facility => 'null' # the same as above
+spamd_syslog_facility => 'file' # log to file ./spamd.log
+spamd_syslog_facility => '/var/log/spamd.log' # log to file /var/log/spamd.log
+```
+
+See the details of the -s option in spamd documentation for more information.
 
 #### `spamd_min_children`
 The minimum number of children that will be kept running
