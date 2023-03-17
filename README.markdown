@@ -529,12 +529,13 @@ Requires re2c and gcc packages (not managed in this module)
 
 ## Limitations
 
-This module has been built on and tested against Puppet 4.10 and higher.
+This module is tested against Puppet 6.0 and higher.
 
 The module has been tested on:
 
-* CentOS 6
-* Debian 8, 9 and 10
+* CentOS 6, 7 and 8
+* Debian 10 and 11
+* Ubuntu 20.04
 
 ## Development
 
