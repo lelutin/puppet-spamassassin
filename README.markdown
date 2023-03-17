@@ -533,7 +533,10 @@ This module is tested against Puppet 6.0 and higher.
 
 The module has been tested on:
 
-* CentOS 6, 7 and 8
+* CentOS 7 and 8
+  * CentOS 8 is EOL. This module still keeps compatibility to this release
+    until version 7 is also EOL since supporting version 8 should come at no
+    additional maintenance cost.
 * Debian 10 and 11
 * Ubuntu 20.04 and 22.04
 
