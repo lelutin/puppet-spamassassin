@@ -33,7 +33,7 @@ group :development do
 end
 
 gem 'rake', :require => false
-gem 'puppetlabs_spec_helper', '~> 4.0', :require => false
+gem 'puppetlabs_spec_helper', '~> 5.0', :require => false
 
 # Use info from metadata.json for tests
 gem 'puppet_metadata', '~> 2.0',  :require => false
