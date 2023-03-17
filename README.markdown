@@ -535,7 +535,7 @@ The module has been tested on:
 
 * CentOS 6, 7 and 8
 * Debian 10 and 11
-* Ubuntu 20.04
+* Ubuntu 20.04 and 22.04
 
 ## Development
 
