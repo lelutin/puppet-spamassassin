@@ -3,13 +3,10 @@ require: rubocop-rspec
 AllCops:
   DisplayCopNames: true
   TargetRubyVersion: '2.7'
-  Include:
-  - "./**/*.rb"
+  NewCops: enable
   Exclude:
   - bin/*
   - ".vendor/**/*"
-  - Gemfile
-  - Rakefile
   - pkg/**/*
   - spec/fixtures/**/*
   - vendor/**/*
@@ -73,6 +70,8 @@ Style/FormatStringToken:
   Description: Following the main puppet project's style, prefer the simpler template
     tokens over annotated ones.
   EnforcedStyle: template
+Style/FrozenStringLiteralComment:
+  Enabled: false
 Style/Lambda:
   Description: Prefer the keyword for easier discoverability.
   EnforcedStyle: literal
