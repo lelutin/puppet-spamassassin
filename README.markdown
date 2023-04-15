@@ -1,7 +1,5 @@
 # Spamassassin
 
-![Build Status](https://img.shields.io/bitbucket/pipelines/wyrie/puppet-spamassassin.svg)
-
 #### Table of Contents
 
 1. [Overview](#overview)
