@@ -124,6 +124,8 @@ RSpec/DescribeClass:
   Enabled: false
 RSpec/ExampleLength:
   Enabled: false
+RSpec/ImplicitSubject:
+  Enabled: false
 RSpec/MessageExpectation:
   Enabled: false
 RSpec/MultipleExpectations:

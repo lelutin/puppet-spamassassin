@@ -1,9 +1,10 @@
 source ENV['GEM_SOURCE'] || 'https://rubygems.org'
 
 def location_for(place_or_version, fake_version = nil)
-  if place_or_version =~ %r{\A(git[:@][^#]*)#(.*)}
+  case place_or_version
+  when %r{\A(git[:@][^#]*)#(.*)}
     [fake_version, { git: Regexp.last_match(1), branch: Regexp.last_match(2), require: false }].compact
-  elsif place_or_version =~ %r{\Afile:\/\/(.*)}
+  when %r{\Afile://(.*)}
     ['>= 0', { path: File.expand_path(Regexp.last_match(1)), require: false }]
   else
     [place_or_version, { require: false }]
@@ -24,22 +25,28 @@ ruby_version_segments = Gem::Version.new(RUBY_VERSION.dup).segments
 minor_version = ruby_version_segments[0..1].join('.')
 
 group :development do
-  gem "fast_gettext", '2.3.0',                         require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.1.0')
-  gem "fast_gettext",                                  require: false if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.1.0')
-  gem "json_pure", '<= 2.6.3',                         require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.0.0')
-  gem "json", '= 2.6.3',                               require: false if Gem::Version.new(RUBY_VERSION.dup) == Gem::Version.new('2.1.9')
-  gem "json", '<= 2.6.3',                              require: false if Gem::Version.new(RUBY_VERSION.dup) == Gem::Version.new('2.4.4')
-  gem "puppet-blacksmith", '~> 6.1',                   require: false, platforms: [:ruby]
+  if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.1.0')
+    gem 'fast_gettext', '2.3.0', require: false
+  else
+    gem 'fast_gettext', require: false
+  end
+  if Gem::Version.new(RUBY_VERSION.dup) == Gem::Version.new('2.1.9')
+    gem 'json', '= 2.6.3', require: false
+  else
+    gem 'json', '<= 2.6.3', require: false
+  end
+  gem 'json_pure', '<= 2.6.3',                         require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.0.0')
+  gem 'puppet-blacksmith', '~> 6.1',                   require: false, platforms: [:ruby]
 end
 
-gem 'rake', :require => false
-gem 'puppetlabs_spec_helper', '~> 4.0', :require => false
+gem 'puppetlabs_spec_helper', '~> 4.0', require: false
+gem 'rake', require: false
 
 # Use info from metadata.json for tests
-gem 'puppet_metadata', '~> 2.0',  :require => false
+gem 'puppet_metadata', '~> 2.0', require: false
 
 # This draws in rubocop and other useful gems for puppet tests
-gem 'voxpupuli-test', '~> 5.3', :require => false
+gem 'voxpupuli-test', '~> 5.3', require: false
 
 puppet_version = ENV['PUPPET_GEM_VERSION']
 puppet_type = gem_type(puppet_version)
@@ -59,11 +66,11 @@ gems['hiera'] = location_for(hiera_version) if hiera_version
 if Gem.win_platform? && puppet_version =~ %r{^(file:///|git://)}
   # If we're using a Puppet gem on Windows which handles its own win32-xxx gem
   # dependencies (>= 3.5.0), set the maximum versions (see PUP-6445).
-  gems['win32-dir'] =      ['<= 0.4.9', require: false]
-  gems['win32-eventlog'] = ['<= 0.6.5', require: false]
-  gems['win32-process'] =  ['<= 0.7.5', require: false]
-  gems['win32-security'] = ['<= 0.2.5', require: false]
-  gems['win32-service'] =  ['0.8.8', require: false]
+  gems['win32-dir'] =      ['<= 0.4.9', { require: false }]
+  gems['win32-eventlog'] = ['<= 0.6.5', { require: false }]
+  gems['win32-process'] =  ['<= 0.7.5', { require: false }]
+  gems['win32-security'] = ['<= 0.2.5', { require: false }]
+  gems['win32-service'] =  ['0.8.8', { require: false }]
 end
 
 gems.each do |gem_name, gem_params|
@@ -73,12 +80,10 @@ end
 # Evaluate Gemfile.local and ~/.gemfile if they exist
 extra_gemfiles = [
   "#{__FILE__}.local",
-  File.join(Dir.home, '.gemfile'),
+  File.join(Dir.home, '.gemfile')
 ]
 
 extra_gemfiles.each do |gemfile|
-  if File.file?(gemfile) && File.readable?(gemfile)
-    eval(File.read(gemfile), binding)
-  end
+  eval(File.read(gemfile), binding) if File.file?(gemfile) && File.readable?(gemfile) # rubocop:disable Security/Eval
 end
 # vim: syntax=ruby
