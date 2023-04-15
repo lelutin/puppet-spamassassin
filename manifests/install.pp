@@ -7,7 +7,7 @@
 #
 class spamassassin::install {
   if $spamassassin::dkim_enabled {
-    case $::osfamily {
+    case $facts['os']['family'] {
       'Debian' : {
         package { 'dkim':
           ensure => installed,
@@ -21,7 +21,7 @@ class spamassassin::install {
         }
       }
       default: {
-        fail("${::operatingsystem} is not supported")
+        fail("${facts['os']['name']} is not supported")
       }
     }
   }
@@ -38,7 +38,7 @@ class spamassassin::install {
   }
 
   if $spamassassin::razor_enabled {
-    case $::osfamily {
+    case $facts['os']['family'] {
       'Debian': {
         $razor_package = 'razor'
       }
@@ -46,7 +46,7 @@ class spamassassin::install {
         $razor_package = 'perl-Razor-Agent'
       }
       default: {
-        fail("${::operatingsystem} is not supported")
+        fail("${facts['os']['name']} is not supported")
       }
     }
 

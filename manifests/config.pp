@@ -140,12 +140,12 @@ class spamassassin::config {
     custom_config                      => $spamassassin::custom_config,
   }
   file { "${spamassassin::configdir}/local.cf":
-    ensure  => present,
+    ensure  => file,
     content => epp('spamassassin/local_cf.epp',$local_cf_context),
   }
 
   file { "${spamassassin::configdir}/init.pre":
-    ensure => present,
+    ensure => file,
     source => 'puppet:///modules/spamassassin/init.pre',
   }
 
@@ -158,7 +158,7 @@ class spamassassin::config {
     textcat_enabled => $spamassassin::textcat_enabled,
   }
   file { "${spamassassin::configdir}/v310.pre":
-    ensure  => present,
+    ensure  => file,
     content => epp('spamassassin/v310_pre.epp',$v310_context),
   }
 
@@ -166,7 +166,7 @@ class spamassassin::config {
     dkim_enabled => $spamassassin::dkim_enabled,
   }
   file { "${spamassassin::configdir}/v312.pre":
-    ensure  => present,
+    ensure  => file,
     content => epp('spamassassin/v312_pre.epp', $v312_context),
   }
 
@@ -175,7 +175,7 @@ class spamassassin::config {
     rules2xsbody_enabled => $spamassassin::rules2xsbody_enabled,
   }
   file { "${spamassassin::configdir}/v320.pre":
-    ensure  => present,
+    ensure  => file,
     content => epp('spamassassin/v320_pre.epp', $v320_context),
   }
 
@@ -187,37 +187,38 @@ class spamassassin::config {
       user_scores_sql_custom_query => $spamassassin::user_scores_sql_custom_query,
     }
     file { "${spamassassin::configdir}/sql.cf":
-      ensure  => present,
+      ensure  => file,
       content => epp('spamassassin/sql.cf.epp', $sql_cf_context),
     }
   }
 
   # Enable or explicitly disable sa-update cron.
-  case $::osfamily {
-      'Debian': {
-          $cron = $spamassassin::sa_update ? {
-            true    => 1,
-            default => 0,
-          }
-          file_line { 'sa_update':
-            path    => $spamassassin::sa_update_file,
-            line    => "CRON=${cron}",
-            match   => '^CRON=[0-1]$',
-            require => Package['spamassassin']
-          }
+  case $facts['os']['family'] {
+    'Debian': {
+      $cron = $spamassassin::sa_update ? {
+        true    => 1,
+        default => 0,
       }
-      'Redhat': {
-          $saupdate = bool2str($spamassassin::sa_update, 'yes', 'no')
-          file_line { 'sa_update':
-            path    => $spamassassin::sa_update_file,
-            line    => "SAUPDATE=${saupdate}",
-            match   => '^SAUPDATE=',
-            require => Package['spamassassin']
-          }
+      file_line { 'sa_update':
+        path    => $spamassassin::sa_update_file,
+        line    => "CRON=${cron}",
+        match   => '^CRON=[0-1]$',
+        require => Package['spamassassin'],
       }
+    }
+    'Redhat': {
+      $saupdate = bool2str($spamassassin::sa_update, 'yes', 'no')
+      file_line { 'sa_update':
+        path    => $spamassassin::sa_update_file,
+        line    => "SAUPDATE=${saupdate}",
+        match   => '^SAUPDATE=',
+        require => Package['spamassassin'],
+      }
+    }
+    default: {}
   }
 
-  if $::osfamily == 'Debian' {
+  if $facts['os']['family'] == 'Debian' {
     # We enable the service regardless of our service_enabled parameter. Trying to
     # stop or start the spamassassin init script without the enabled will fail.
     file_line { 'spamd_service' :

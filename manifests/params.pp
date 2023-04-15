@@ -9,28 +9,28 @@ class spamassassin::params {
   $razor_home = "${spamassassin::params::configdir}/.razor"
   $pyzor_home = "${spamassassin::params::configdir}/.pyzor"
 
-  case $::osfamily {
-      'Debian': {
-          $spamd_options_file   = '/etc/default/spamassassin'
-          $spamd_options_var    = 'OPTIONS'
-          $spamd_defaults       = '-c -H'
-          $sa_update_file       = $spamd_options_file
+  case $facts['os']['family'] {
+    'Debian': {
+      $spamd_options_file   = '/etc/default/spamassassin'
+      $spamd_options_var    = 'OPTIONS'
+      $spamd_defaults       = '-c -H'
+      $sa_update_file       = $spamd_options_file
+    }
+    'Redhat': {
+      $spamd_options_file   = '/etc/sysconfig/spamassassin'
+      $spamd_options_var    = 'SPAMDOPTIONS'
+      case $facts['os']['release']['major'] {
+        '6', '7': {
+          $spamd_defaults   = '-d -c -H'
+        }
+        default: {
+          $spamd_defaults   = '-c -H'
+        }
       }
-      'Redhat': {
-          $spamd_options_file   = '/etc/sysconfig/spamassassin'
-          $spamd_options_var    = 'SPAMDOPTIONS'
-          case $::operatingsystemmajrelease {
-            '6', '7': {
-              $spamd_defaults   = '-d -c -H'
-            }
-            default: {
-              $spamd_defaults   = '-c -H'
-            }
-          }
-          $sa_update_file       = '/etc/sysconfig/sa-update'
-      }
-      default: {
-          fail("${::operatingsystem} is not supported by this module.")
-      }
+      $sa_update_file       = '/etc/sysconfig/sa-update'
+    }
+    default: {
+      fail("${facts['os']['name']} is not supported by this module.")
+    }
   }
 }

@@ -7,9 +7,9 @@
 #
 class spamassassin::service {
   service { 'spamassassin':
-      ensure  => $spamassassin::service_enabled,
-      enable  => $spamassassin::service_enabled,
-      pattern => 'spamd',
-      require => Package['spamassassin'],
+    ensure  => $spamassassin::service_enabled,
+    enable  => $spamassassin::service_enabled,
+    pattern => 'spamd',
+    require => Package['spamassassin'],
   }
 }

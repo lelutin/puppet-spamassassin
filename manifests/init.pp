@@ -15,13 +15,13 @@
 # to be run as a different user specify the username
 # in this directive. Example: amavis. Default: undef
 #
-# [*service_enable*]
+# [*service_enabled*]
 # Boolean. Will enable service at boot
 # and ensure a running service.
 #
 # [*notify_service_name*]
 # String. If specified then this service will be notified instead of "spamd"
-# when config is update. Only has an effect if service_enable is false.
+# when config is update. Only has an effect if service_enabled is false.
 #
 # [*spamd_max_children*]
 # This option specifies the maximum number of children to spawn.
@@ -73,6 +73,22 @@
 # [*spamd_syslog_facility*]
 # Turn this on to deposit logs for SpamAssassin and define the log location.
 # e.g. /var/log/spamd.log
+#
+# [*configdir*]
+# Absolute path to the directory containing spamassassin's configuration files.
+#
+# [*spamd_options_file*]
+# Absolute path to the file containing global options to spamd.
+#
+# [*spamd_options_var*]
+# Name of the shell variable used for storing spamd options in
+# spamd_options_file.
+#
+# [*spamd_defaults*]
+# String of spamd option flags set in spamd_options_file.
+#
+# [*sa_update_file*]
+# Absolute path to file that contains shell variables for sa-update.
 #
 # [*required_score*]
 # Set the score required before a mail is considered spam. n.nn can be an
@@ -471,11 +487,11 @@ class spamassassin (
   Boolean              $spamd_allowtell      = false,
   Boolean              $spamd_sql_config     = false,
   Optional[String]     $spamd_syslog_facility   = undef,
-  Stdlib::Absolutepath $configdir          = $::spamassassin::params::configdir,
-  Stdlib::Absolutepath $spamd_options_file = $::spamassassin::params::spamd_options_file,
-  String               $spamd_options_var  = $::spamassassin::params::spamd_options_var,
-  String               $spamd_defaults     = $::spamassassin::params::spamd_defaults,
-  Stdlib::Absolutepath $sa_update_file     = $::spamassassin::params::sa_update_file,
+  Stdlib::Absolutepath $configdir          = $spamassassin::params::configdir,
+  Stdlib::Absolutepath $spamd_options_file = $spamassassin::params::spamd_options_file,
+  String               $spamd_options_var  = $spamassassin::params::spamd_options_var,
+  String               $spamd_defaults     = $spamassassin::params::spamd_defaults,
+  Stdlib::Absolutepath $sa_update_file     = $spamassassin::params::sa_update_file,
   # Scoring options, see Mail::SpamAssassin::Conf(3)
   Numeric              $required_score     = 5,
   Hash                 $score_tests        = {},
@@ -543,11 +559,11 @@ class spamassassin (
   Optional[Integer]                         $pyzor_max     = undef,
   Optional[Pattern[/[0-9A-Za-z ,._\/-]\+/]] $pyzor_options = undef,
   Optional[Stdlib::Absolutepath]            $pyzor_path    = undef,
-  Stdlib::Absolutepath                      $pyzor_home    = $::spamassassin::params::pyzor_home,
+  Stdlib::Absolutepath                      $pyzor_home    = $spamassassin::params::pyzor_home,
   # Razor plugin, see Mail::SpamAssassin::Plugin::Razor2(3)
   Boolean              $razor_enabled = true,
   Optional[Integer]    $razor_timeout = undef,
-  Stdlib::Absolutepath $razor_home    = $::spamassassin::params::razor_home,
+  Stdlib::Absolutepath $razor_home    = $spamassassin::params::razor_home,
   # Spamcop plugin, see Mail::SpamAssassin::Plugin::SpamCop(3)
   Boolean           $spamcop_enabled         = false,
   Optional[String]  $spamcop_from_address    = undef,
@@ -586,7 +602,6 @@ class spamassassin (
   Hash $custom_rules = {},
   Array[String] $custom_config                                                = [],
 ) inherits spamassassin::params {
-
   if $spamd_sql_config and (
     $user_scores_dsn !~ String
     or $user_scores_sql_username !~ String
@@ -602,5 +617,4 @@ class spamassassin (
   Class['spamassassin::install']
   -> Class['spamassassin::config']
   ~> Class['spamassassin::service']
-
 }
