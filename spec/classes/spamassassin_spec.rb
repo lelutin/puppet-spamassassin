@@ -3,24 +3,38 @@ require 'spec_helper'
 describe 'spamassassin' do
   let(:facts) { { is_virtual: 'false' } }
 
-  context 'with a non-supported osfamily' do
+  context 'with a non-supported os family' do
     let(:params) { {} }
     let :facts do
       {
-        osfamily: 'foo',
-        operatingsystem: 'bar',
+        os: {
+          family: 'foo',
+          name: 'bar',
+        },
       }
     end
 
     it 'fails' do
-      expect.to raise_error(Puppet::Error, %r{bar is not supported by this module.})
+      is_expected.to raise_error(Puppet::Error, %r{bar is not supported by this module.})
     end
   end
 
   %w[Debian RedHat].each do |system|
     context "when on system #{system}" do
       let :facts do
-        super().merge({ osfamily: system })
+        super().merge(
+          {
+            os: {
+              family: system,
+              release: {
+                # some checks test that we use the differing default options
+                # for each distro. this version number triggers redhat default
+                # versions
+                major: '8',
+              },
+            },
+          }
+        )
       end
 
       it { is_expected.to create_class('spamassassin') }
@@ -34,25 +48,25 @@ describe 'spamassassin' do
 
       it {
         is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
-          ensure: 'present',
+          ensure: 'file',
         )
       }
 
       it {
         is_expected.to contain_file('/etc/mail/spamassassin/v310.pre').with(
-          ensure: 'present',
+          ensure: 'file',
         )
       }
 
       it {
         is_expected.to contain_file('/etc/mail/spamassassin/v312.pre').with(
-          ensure: 'present',
+          ensure: 'file',
         )
       }
 
       it {
         is_expected.to contain_file('/etc/mail/spamassassin/v320.pre').with(
-          ensure: 'present',
+          ensure: 'file',
         )
       }
 
@@ -76,7 +90,7 @@ describe 'spamassassin' do
           it {
             is_expected.to contain_file_line('spamd_options').with(
               {
-                'line' => %r{SPAMDOPTIONS="-d -c -H -m 5 -i 127.0.0.1 -A 127.0.0.1/32"},
+                'line' => %r{SPAMDOPTIONS="-d -c -H -m 5 -i localhost -A 127.0.0.1/32 -A \[::1\]/8"},
               },
             )
           }
@@ -92,7 +106,7 @@ describe 'spamassassin' do
           it {
             is_expected.to contain_file_line('spamd_options').with(
               {
-                'line' => %r{OPTIONS="-c -H -m 5 -i 127.0.0.1 -A 127.0.0.1/32"},
+                'line' => %r{OPTIONS="-c -H -m 5 -i localhost -A 127.0.0.1/32 -A \[::1\]/8"},
               },
             )
           }
@@ -128,7 +142,7 @@ describe 'spamassassin' do
           }
         end
 
-        opts = '-s /var/log/spamd.log -u myuser -g mygroup -m 42 --min-children=2 -i 127.0.0.2 '\
+        opts = '-u myuser -s /var/log/spamd.log -g mygroup -m 42 --min-children=2 -i 127.0.0.2 '\
                '-A 10.0.0.0/8 --nouser-config --allow-tell -q'
         it {
           is_expected.to contain_file_line('spamd_options').with(
@@ -496,7 +510,7 @@ describe 'spamassassin' do
         }
 
         it {
-          is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
+          is_expected.to contain_file('/etc/mail/spamassassin/local.cf').without(
             {
               'content' => %r{^header LOCAL_TEST},
             },
@@ -510,7 +524,7 @@ describe 'spamassassin' do
         it {
           is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
             {
-              'content' => %r{^hashcash_accept *@example.com$},
+              'content' => %r{^hashcash_accept \*@example.com$},
             },
           )
         }

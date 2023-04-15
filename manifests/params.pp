@@ -20,7 +20,7 @@ class spamassassin::params {
       $spamd_options_file   = '/etc/sysconfig/spamassassin'
       $spamd_options_var    = 'SPAMDOPTIONS'
       case $facts['os']['release']['major'] {
-        '6', '7': {
+        '6', '7', '8': {
           $spamd_defaults   = '-d -c -H'
         }
         default: {
