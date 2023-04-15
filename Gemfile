@@ -39,7 +39,7 @@ group :development do
   gem 'puppet-blacksmith', '~> 6.1',                   require: false, platforms: [:ruby]
 end
 
-gem 'puppetlabs_spec_helper', '~> 4.0', require: false
+gem 'puppetlabs_spec_helper', '~> 5.0', require: false
 gem 'rake', require: false
 
 # Use info from metadata.json for tests
