@@ -33,7 +33,7 @@ describe 'spamassassin' do
                 major: '8',
               },
             },
-          }
+          },
         )
       end
 
