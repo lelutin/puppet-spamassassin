@@ -80,7 +80,7 @@ end
 # Evaluate Gemfile.local and ~/.gemfile if they exist
 extra_gemfiles = [
   "#{__FILE__}.local",
-  File.join(Dir.home, '.gemfile')
+  File.join(Dir.home, '.gemfile'),
 ]
 
 extra_gemfiles.each do |gemfile|
