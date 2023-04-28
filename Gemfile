@@ -21,7 +21,7 @@ def gem_type(place_or_version)
   end
 end
 
-puppet_version = "~> #{ENV['PUPPET_GEM_VERSION']}"
+puppet_version = "~> #{ENV['PUPPET_GEM_VERSION']}" unless ENV['PUPPET_GEM_VERSION'].nil?
 puppet_type = gem_type(puppet_version)
 facter_version = ENV['FACTER_GEM_VERSION']
 hiera_version = ENV['HIERA_GEM_VERSION']
