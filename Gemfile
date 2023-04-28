@@ -21,6 +21,11 @@ def gem_type(place_or_version)
   end
 end
 
+puppet_version = ENV['PUPPET_GEM_VERSION']
+puppet_type = gem_type(puppet_version)
+facter_version = ENV['FACTER_GEM_VERSION']
+hiera_version = ENV['HIERA_GEM_VERSION']
+
 ruby_version_segments = Gem::Version.new(RUBY_VERSION.dup).segments
 minor_version = ruby_version_segments[0..1].join('.')
 
@@ -39,7 +44,11 @@ group :development do
   gem 'puppet-blacksmith', '~> 6.1',                   require: false, platforms: [:ruby]
 end
 
-gem 'puppetlabs_spec_helper', '~> 5.0', require: false
+if Gem::Version.new(puppet_version) < Gem::Version.new('7.0.0')
+  gem 'puppetlabs_spec_helper', '~> 5.0', require: false
+else
+  gem 'puppetlabs_spec_helper', '~> 6.0', require: false
+end
 gem 'rake', require: false
 
 # Use info from metadata.json for tests
@@ -47,11 +56,6 @@ gem 'puppet_metadata', '~> 2.0', require: false
 
 # This draws in rubocop and other useful gems for puppet tests
 gem 'voxpupuli-test', '~> 5.3', require: false
-
-puppet_version = ENV['PUPPET_GEM_VERSION']
-puppet_type = gem_type(puppet_version)
-facter_version = ENV['FACTER_GEM_VERSION']
-hiera_version = ENV['HIERA_GEM_VERSION']
 
 gems = {}
 
