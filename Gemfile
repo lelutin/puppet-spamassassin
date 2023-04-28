@@ -21,7 +21,7 @@ def gem_type(place_or_version)
   end
 end
 
-puppet_version = ENV['PUPPET_GEM_VERSION']
+puppet_version = "~> #{ENV['PUPPET_GEM_VERSION']}"
 puppet_type = gem_type(puppet_version)
 facter_version = ENV['FACTER_GEM_VERSION']
 hiera_version = ENV['HIERA_GEM_VERSION']
@@ -44,7 +44,7 @@ group :development do
   gem 'puppet-blacksmith', '~> 6.1',                   require: false, platforms: [:ruby]
 end
 
-if Gem::Version.new(puppet_version) < Gem::Version.new('7.0.0')
+if Gem::Version.new(ENV['PUPPET_GEM_VERSION']) < Gem::Version.new('7.0.0')
   gem 'puppetlabs_spec_helper', '~> 5.0', require: false
 else
   gem 'puppetlabs_spec_helper', '~> 6.0', require: false
