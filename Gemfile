@@ -41,7 +41,7 @@ group :development do
     gem 'json', '<= 2.6.3', require: false
   end
   gem 'json_pure', '<= 2.6.3',                         require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.0.0')
-  gem 'puppet-blacksmith', '~> 6.1',                   require: false, platforms: [:ruby]
+  gem 'puppet-blacksmith', '~> 7.0',                   require: false, platforms: [:ruby]
 end
 
 if Gem::Version.new(ENV['PUPPET_GEM_VERSION']) < Gem::Version.new('7.0.0')
