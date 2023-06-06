@@ -47,11 +47,7 @@ group :development do
   # rubocop:enable Bundler/DuplicatedGem
 end
 
-if Gem::Version.new(ENV['PUPPET_GEM_VERSION']) < Gem::Version.new('7.0.0')
-  gem 'puppetlabs_spec_helper', '~> 5.0', require: false
-else
-  gem 'puppetlabs_spec_helper', '~> 6.0', require: false
-end
+gem 'puppetlabs_spec_helper', '>= 5.0', require: false
 gem 'rake', require: false
 
 # Use info from metadata.json for tests
