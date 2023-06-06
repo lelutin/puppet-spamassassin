@@ -40,8 +40,11 @@ group :development do
   else
     gem 'json', '<= 2.6.3', require: false
   end
-  gem 'json_pure', '<= 2.6.3',                         require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.0.0')
-  gem 'puppet-blacksmith', '~> 7.0',                   require: false, platforms: [:ruby]
+  gem 'json_pure', '<= 2.6.3', require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.0.0')
+  # rubocop:disable Bundler/DuplicatedGem
+  gem 'puppet-blacksmith', '~> 7.0', require: false, platforms: [:ruby] if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.7.0')
+  gem 'puppet-blacksmith', '~> 6.1', require: false, platforms: [:ruby] if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.7.0')
+  # rubocop:enable Bundler/DuplicatedGem
 end
 
 if Gem::Version.new(ENV['PUPPET_GEM_VERSION']) < Gem::Version.new('7.0.0')
@@ -52,10 +55,16 @@ end
 gem 'rake', require: false
 
 # Use info from metadata.json for tests
-gem 'puppet_metadata', '~> 3.0', require: false
+# rubocop:disable Bundler/DuplicatedGem
+gem 'puppet_metadata', '~> 3.0', require: false if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.7.0')
+gem 'puppet_metadata', '~> 2.1', require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.7.0')
+# rubocop:enable Bundler/DuplicatedGem
 
 # This draws in rubocop and other useful gems for puppet tests
-gem 'voxpupuli-test', '~> 6.0', require: false
+# rubocop:disable Bundler/DuplicatedGem
+gem 'voxpupuli-test', '~> 6.0', require: false if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.7.0')
+gem 'voxpupuli-test', '~> 5.7', require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.7.0')
+# rubocop:enable Bundler/DuplicatedGem
 
 gems = {}
 
