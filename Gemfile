@@ -52,7 +52,7 @@ end
 gem 'rake', require: false
 
 # Use info from metadata.json for tests
-gem 'puppet_metadata', '~> 2.0', require: false
+gem 'puppet_metadata', '~> 3.0', require: false
 
 # This draws in rubocop and other useful gems for puppet tests
 gem 'voxpupuli-test', '~> 6.0', require: false
