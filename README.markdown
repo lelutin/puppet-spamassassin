@@ -163,9 +163,17 @@ like the razor-admin or pyzor discover commands
 to be run as a different user specify the username
 in this directive. Example: amavis. Default: undef
 
+#### `package_name`
+String. The package name to use.
+Default: Distribution specific
+
 #### `service_enable`
 Boolean. Will enable service at boot
 and ensure a running service.
+
+#### `service_name`
+String. The service name to use for the spamassassin service.
+Default: Distribution specific
 
 #### `spamd_max_children`
 This option specifies the maximum number of children to spawn.

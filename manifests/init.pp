@@ -15,9 +15,17 @@
 # to be run as a different user specify the username
 # in this directive. Example: amavis. Default: undef
 #
+# [*package_name*]
+# String. The package name to use.
+# Default: Distribution specific
+#
 # [*service_enabled*]
 # Boolean. Will enable service at boot
 # and ensure a running service.
+#
+# [*service_name*]
+# String. The service name to use for the spamassassin service.
+# Default: Distribution specific
 #
 # [*notify_service_name*]
 # String. If specified then this service will be notified instead of "spamd"
@@ -474,8 +482,10 @@
 class spamassassin (
   Boolean          $sa_update         = false,
   Optional[String] $run_execs_as_user = undef,
+  String           $package_name      = $spamassassin::params::package_name,
   # Spamd settings
   Boolean              $service_enabled      = false,
+  String               $service_name         = $spamassassin::params::service_name,
   Optional[String]     $notify_service_name  = undef,
   Integer[1]           $spamd_max_children   = 5,
   Optional[Integer[1]] $spamd_min_children   = undef,

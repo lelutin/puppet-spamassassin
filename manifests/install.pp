@@ -28,6 +28,7 @@ class spamassassin::install {
 
   package { 'spamassassin':
     ensure => installed,
+    name   => $spamassassin::package_name
   }
 
   if $spamassassin::pyzor_enabled {
