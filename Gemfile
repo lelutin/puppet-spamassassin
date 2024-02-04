@@ -36,9 +36,9 @@ group :development do
     gem 'fast_gettext', require: false
   end
   if Gem::Version.new(RUBY_VERSION.dup) == Gem::Version.new('2.1.9')
-    gem 'json', '= 2.6.3', require: false
+    gem 'json', '= 2.7.1', require: false
   else
-    gem 'json', '<= 2.6.3', require: false
+    gem 'json', '<= 2.7.1', require: false
   end
   gem 'json_pure', '<= 2.7.1', require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.0.0')
   # rubocop:disable Bundler/DuplicatedGem
