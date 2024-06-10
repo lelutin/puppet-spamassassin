@@ -53,7 +53,7 @@ gem 'rake', require: false
 # Use info from metadata.json for tests
 # rubocop:disable Bundler/DuplicatedGem
 gem 'puppet_metadata', '~> 4.0', require: false if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.7.0')
-gem 'puppet_metadata', '~> 4.0', require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.7.0')
+gem 'puppet_metadata', '~> 2.1', require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.7.0')
 # rubocop:enable Bundler/DuplicatedGem
 
 # This draws in rubocop and other useful gems for puppet tests
