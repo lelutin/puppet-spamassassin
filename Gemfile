@@ -23,8 +23,8 @@ end
 
 puppet_version = "~> #{ENV['PUPPET_GEM_VERSION']}" unless ENV['PUPPET_GEM_VERSION'].nil?
 puppet_type = gem_type(puppet_version)
-facter_version = ENV['FACTER_GEM_VERSION']
-hiera_version = ENV['HIERA_GEM_VERSION']
+facter_version = ENV.fetch('FACTER_GEM_VERSION', nil)
+hiera_version = ENV.fetch('HIERA_GEM_VERSION', nil)
 
 ruby_version_segments = Gem::Version.new(RUBY_VERSION.dup).segments
 minor_version = ruby_version_segments[0..1].join('.')
@@ -57,10 +57,7 @@ gem 'puppet_metadata', '~> 2.1', require: false if Gem::Version.new(RUBY_VERSION
 # rubocop:enable Bundler/DuplicatedGem
 
 # This draws in rubocop and other useful gems for puppet tests
-# rubocop:disable Bundler/DuplicatedGem
-gem 'voxpupuli-test', '~> 7.0', require: false if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.7.0')
-gem 'voxpupuli-test', '~> 7.0', require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.7.0')
-# rubocop:enable Bundler/DuplicatedGem
+gem 'voxpupuli-test', '~> 7.0', require: false
 
 gems = {}
 

@@ -142,7 +142,7 @@ describe 'spamassassin' do
           }
         end
 
-        opts = '-u myuser -s /var/log/spamd.log -g mygroup -m 42 --min-children=2 -i 127.0.0.2 '\
+        opts = '-u myuser -s /var/log/spamd.log -g mygroup -m 42 --min-children=2 -i 127.0.0.2 ' \
                '-A 10.0.0.0/8 --nouser-config --allow-tell -q'
         it {
           is_expected.to contain_file_line('spamd_options').with(
