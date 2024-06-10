@@ -43,7 +43,7 @@ group :development do
   gem 'json_pure', '<= 2.7.2', require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.0.0')
   # rubocop:disable Bundler/DuplicatedGem
   gem 'puppet-blacksmith', '~> 7.0', require: false, platforms: [:ruby] if Gem::Version.new(RUBY_VERSION.dup) >= Gem::Version.new('2.7.0')
-  gem 'puppet-blacksmith', '~> 6.1', require: false, platforms: [:ruby] if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.7.0')
+  gem 'puppet-blacksmith', '~> 7.0', require: false, platforms: [:ruby] if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.7.0')
   # rubocop:enable Bundler/DuplicatedGem
 end
 
