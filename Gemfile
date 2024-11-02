@@ -31,7 +31,7 @@ minor_version = ruby_version_segments[0..1].join('.')
 
 group :development do
   gem 'fast_gettext', require: false
-  gem 'json', '= 2.7.4', require: false
+  gem 'json', '= 2.7.5', require: false
   gem 'json_pure', '<= 2.7.5', require: false if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('2.0.0')
   gem 'puppet-blacksmith', require: false
 end
