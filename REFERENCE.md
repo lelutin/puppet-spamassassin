@@ -106,6 +106,7 @@ The following parameters are available in the `spamassassin` class:
 * [`pyzor_enabled`](#-spamassassin--pyzor_enabled)
 * [`pyzor_timeout`](#-spamassassin--pyzor_timeout)
 * [`pyzor_max`](#-spamassassin--pyzor_max)
+* [`pyzor_count_min`](#-spamassassin--pyzor_count_min)
 * [`pyzor_options`](#-spamassassin--pyzor_options)
 * [`pyzor_path`](#-spamassassin--pyzor_path)
 * [`pyzor_home`](#-spamassassin--pyzor_home)
@@ -123,7 +124,9 @@ The following parameters are available in the `spamassassin` class:
 * [`awl_sql_password`](#-spamassassin--awl_sql_password)
 * [`awl_sql_override_username`](#-spamassassin--awl_sql_override_username)
 * [`auto_whitelist_path`](#-spamassassin--auto_whitelist_path)
+* [`auto_welcomelist_path`](#-spamassassin--auto_welcomelist_path)
 * [`auto_whitelist_file_mode`](#-spamassassin--auto_whitelist_file_mode)
+* [`auto_welcomelist_file_mode`](#-spamassassin--auto_welcomelist_file_mode)
 * [`textcat_enabled`](#-spamassassin--textcat_enabled)
 * [`ok_languages`](#-spamassassin--ok_languages)
 * [`ok_locales`](#-spamassassin--ok_locales)
@@ -821,10 +824,20 @@ Default value: `undef`
 
 Data type: `Optional[Integer]`
 
+See `pyzor_count_min`. Note that this option has been renamed to
+`pyzor_count_min` in spamassassin 4.0.x and it cannot be used from that
+version onwards.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--pyzor_count_min"></a>`pyzor_count_min`
+
+Data type: `Optional[Integer]`
+
 This option sets how often a message's body checksum must have been reported
 to the Pyzor server before SpamAssassin will consider the Pyzor check as
-matched. Note that this option has been renamed to `pyzor_count_min` in
-spamassassin 4.0.x. If left undefined, spamd will use its default of 5.
+matched. If left undefined, spamd will use its default of 5. Note that this
+option does not exist in versions prior to 4.0.x.
 
 Default value: `undef`
 
@@ -983,12 +996,21 @@ Default value: `undef`
 
 Data type: `Optional[String]`
 
+See `auto_welcomelist_path`. Note that the option was renamed to
+`auto_welcomelist_path` in spamassassin 4.0.x. `auto_whitelist_path` is
+still valid with 4.0.x, but is planned to be removed in 4.1.x.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--auto_welcomelist_path"></a>`auto_welcomelist_path`
+
+Data type: `Optional[String]`
+
 This is the automatic-welcomelist directory and filename. By default, each
 user has their own welcomelist database in their ~/.spamassassin directory
 with mode 0700. For system-wide SpamAssassin use, you may want to share this
 across all users, although that is not recommended. If left undefined, spamd
-will use its default value of `~/.spamassassin/auto-whitelist`. Note that
-the option was renamed to `auto_welcomelist_path` in spamassassin 4.0.x
+will use its default value of `~/.spamassassin/auto-whitelist`.
 
 Default value: `undef`
 
@@ -996,12 +1018,22 @@ Default value: `undef`
 
 Data type: `Optional[String]`
 
+See `auto_welcomelist_file_mode`. Note that this option was renamed to
+`auto_welcomelist_file_mode` in spamassassin 4.0.x.
+`auto_whitelist_file_mode` is still valid with 4.0.x, but is planned to be
+removed in 4.1.x.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--auto_welcomelist_file_mode"></a>`auto_welcomelist_file_mode`
+
+Data type: `Optional[String]`
+
 The file mode bits used for the automatic-whitelist directory or file. Make
 sure you specify this using the 'x' mode bits set, as it may also be used to
 create directories. However, if a file is created, the resulting file will
 not have any execute bits set (the umask is set to 0111). If left undefined,
-spamd will use its default of `0700`. Note that this option was renamed to
-`auto_welcomelist_file_mode` in spamassassin 4.0.x
+spamd will use its default of `0700`.
 
 Default value: `undef`
 
