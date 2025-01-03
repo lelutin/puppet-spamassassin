@@ -1,9 +1,7 @@
-# == Class: spamassassin::config
+# @summary Configure spamassassin and related software.
 #
-# Configure spamassassin and related software.
-#
-# This class should not be used directly. Use the spamassassin class and its
-# parameters instead.
+# @note This class should not be used directly. Use the spamassassin class and
+#   its parameters instead.
 #
 class spamassassin::config {
   if $spamassassin::run_execs_as_user {

@@ -1,9 +1,7 @@
-# == Class: spamassassin::install
+# @summary Install packages for spamassassin and related software.
 #
-# Install packages for spamassassin and related software.
-#
-# This class should not be used directly. Use the spamassassin class and its
-# parameters instead.
+# @note This class should not be used directly. Use the spamassassin class and
+#   its parameters instead.
 #
 class spamassassin::install {
   if $spamassassin::dkim_enabled {

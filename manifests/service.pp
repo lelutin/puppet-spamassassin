@@ -1,9 +1,7 @@
-# == Class: spamassassin::service
+# @summary Setup spamassassin service.
 #
-# Setup spamassassin service.
-#
-# This class should not be used directly. Use the spamassassin class and its
-# parameters instead.
+# @note This class should not be used directly. Use the spamassassin class and
+#   its parameters instead.
 #
 class spamassassin::service {
   service { 'spamassassin':

@@ -6,496 +6,20 @@
 
 ### Classes
 
-* [`spamassassin`](#spamassassin): == Class: spamassassin  This module installs and configures spamassassin and a few of it's plugins.  === Parameters  [*sa_update*] Boolean. E
-* [`spamassassin::config`](#spamassassin--config): == Class: spamassassin::config  Configure spamassassin and related software.  This class should not be used directly. Use the spamassassin cl
-* [`spamassassin::install`](#spamassassin--install): == Class: spamassassin::install  Install packages for spamassassin and related software.  This class should not be used directly. Use the spa
-* [`spamassassin::params`](#spamassassin--params): == Class: spamassassin::params  Default parameter values for class spamassassin  TODO: This should be replaced by data-in-module with hiera 5
-* [`spamassassin::service`](#spamassassin--service): == Class: spamassassin::service  Setup spamassassin service.  This class should not be used directly. Use the spamassassin class and its para
+* [`spamassassin`](#spamassassin): This module installs and configures spamassassin and a few of its
+plugins.
+* [`spamassassin::config`](#spamassassin--config): Configure spamassassin and related software.
+* [`spamassassin::install`](#spamassassin--install): Install packages for spamassassin and related software.
+* [`spamassassin::params`](#spamassassin--params): Default parameter values for class spamassassin
+* [`spamassassin::service`](#spamassassin--service): Setup spamassassin service.
 
 ## Classes
 
 ### <a name="spamassassin"></a>`spamassassin`
 
-== Class: spamassassin
+For examples, see tests folder.
 
-This module installs and configures spamassassin
-and a few of it's plugins.
-
-=== Parameters
-
-[*sa_update*]
-Boolean. Enable the sa-update cron job.
-Default: false
-
-[*run_execs_as_user*]
-If you enabled razor and/or pyzor and would
-like the razor-admin or pyzor discover commands
-to be run as a different user specify the username
-in this directive. Example: amavis. Default: undef
-
-[*package_name*]
-String. The package name to use.
-Default: Distribution specific
-
-[*service_enabled*]
-Boolean. Will enable service at boot
-and ensure a running service.
-
-[*service_name*]
-String. The service name to use for the spamassassin service.
-Default: Distribution specific
-
-[*notify_service_name*]
-String. If specified then this service will be notified instead of "spamd"
-when config is update. Only has an effect if service_enabled is false.
-
-[*spamd_max_children*]
-This option specifies the maximum number of children to spawn.
-Spamd will spawn that number of children, then sleep in the background
-until a child dies, wherein it will go and spawn a new child.
-
-[*spamd_min_children*]
-The minimum number of children that will be kept running
-The minimum value is 1, the default value is 1 in spamd, and undef here.
-If you have lots of free RAM, you may want to increase this.
-
-[*spamd_listen_address*]
-List of IP addresses spamd will listen to (defaults to "localhost",
-which will listen both on IPv4 and IPv6 locally). Use 0.0.0.0 to listen on
-all interfaces. You can also use a valid hostname which will make spamd
-listen on the first address that name resolves to. To listen only to an IPv6
-address, make sure to encase the address within square brackets (i.e.
-"[fe80::fc54:ff:fe8f:4b36]")
-
-[*spamd_allowed_ips*]
-Specify a list of authorized hosts or networks which can connect to this
-spamd instance. Values can be single IP addresses or CIDR format networks.
-Hostnames are not supported, only IP addresses. Similarly to
-spamd_listen_address, to specify IPs or CIDR notation for IPV6, make sure to
-encase the address or network part in square brackets)
-
-[*spamd_username*]
-spamd runs as this user
-
-[*spamd_groupname*]
-spamd runs in this group
-
-[*spamd_nouserconfig*]
-Turn off (on) reading of per-user configuration files (user_prefs) from
-the user's home directory. The default behaviour is to read per-user
-configuration from the user's home directory (--user-config).
-
-[*spamd_allowtell*]
-Allow learning and forgetting (to a local Bayes database), reporting and
-revoking (to a remote database) by spamd. The client issues a TELL command
-to tell what type of message is being processed and whether local (learn/forget)
-or remote (report/revoke) databases should be updated.
-
-[*spamd_sql_config*]
-Turn on SQL lookups even when per-user config files have been disabled with -x
-this is useful for spamd hosts which dont have users home directories
-but do want to load user preferences from an SQL database.
-
-[*spamd_syslog_facility*]
-Turn this on to deposit logs for SpamAssassin and define the log location.
-e.g. /var/log/spamd.log
-
-[*configdir*]
-Absolute path to the directory containing spamassassin's configuration files.
-
-[*spamd_options_file*]
-Absolute path to the file containing global options to spamd.
-
-[*spamd_options_var*]
-Name of the shell variable used for storing spamd options in
-spamd_options_file.
-
-[*spamd_defaults*]
-String of spamd option flags set in spamd_options_file.
-
-[*sa_update_file*]
-Absolute path to file that contains shell variables for sa-update.
-
-[*required_score*]
-Set the score required before a mail is considered spam. n.nn can be an
-integer or a real number.
-
-[*score_tests*]
-Assign scores (the number of points for a hit) to a given test.
-Scores can be positive or negative real numbers or integers.
-
-[*custom_rules*]
-Define custom rules. This is a hash of hashes. The key for the outer hash is the
-spamassassin rule name, the inner hash for each entry should contain the rule definition, e.g:
-
-spamassassin::custom_rules:
-  INVOICE_SPAM:
-    body: '/Invoice.*from.*You have received an invoice from .* To start with it, print out or download a JS copy of your invoice/'
-    score: 6
-    describe: 'spam reported claiming "You have received an invoice"'
-
-[*custom_config*]
-Add custom lines to the config file. Useful for configuring modules that aren't otherwise
-handled by this Puppet module. This is an array of strings, e.g:
-
-spamassassin::custom_config:
-  - hashcash_accept *@example.com
-  - hashcash_accept *@example.net
-
-[*whitelist_from*]
-Used to whitelist sender addresses which send mail that is often
-tagged (incorrectly) as spam. This would be written to the global
-local.cf file
-
-[*whitelist_from_rcvd*]
-Used to whitelist the combination of a sender address and rDNS name/IP.
-This would be written to the global local.cf file
-
-[*whitelist_to*]
-If the given address appears as a recipient in the message headers
-(Resent-To, To, Cc, obvious envelope recipient, etc.) the mail will
-be whitelisted.
-
-[*blacklist_from*]
-Used to specify addresses which send mail that is often
-tagged (incorrectly) as non-spam, but which the user doesn't want.
-
-[*blacklist_to*]
-If the given address appears as a recipient in the message headers
-(Resent-To, To, Cc, obvious envelope recipient, etc.) the mail will
-be blacklisted.
-
-[*rewrite_header_subject*]
-By default, suspected spam messages will not have the Subject, From
-or To lines tagged to indicate spam. By setting this option, the header
-will be tagged with the value of the parameter to indicate that a message
-is spam.
-
-[*rewrite_header_from*]
-See rewrite_header_subject.
-
-[*rewrite_header_to*]
-See rewrite_header_subject.
-
-[*add_header_spam*]
-Customise headers to be added to spam emails. Each array item should contain: header_name string.
-
-[*add_header_ham*]
-See add_header_spam.
-
-[*add_header_all*]
-See add_header_spam.
-
-[*remove_header_spam*]
-Remove headers from spam emails. Each array item should be a header_name to remove.
-
-[*remove_header_ham*]
-See remove_header_spam.
-
-[*remove_header_all*]
-See remove_header_spam.
-
-[*report_safe*]
-Values: 0,1 or 2.
-See: http://spamassassin.apache.org/full/3.3.x/doc/Mail_SpamAssassin_Conf.html#report_safe
-Default: 0
-
-[*clear_trusted_networks*]
-Boolean. Empty the list of trusted networks. Default: false
-
-[*trusted_networks*]
-What networks or hosts are 'trusted' in your setup. Trusted in this case means
-that relay hosts on these networks are considered to not be potentially operated
-by spammers, open relays, or open proxies.
-
-[*clear_internal_networks*]
-Boolean. Empty the list of internal networks. Default: false
-
-[*internal_networks*]
-Internal means that relay hosts on these networks are considered
-to be MXes for your domain(s), or internal relays.
-
-[*skip_rbl_checks*]
-Boolean. If false SpamAssassin will run RBL checks. Default: true
-
-[*dns_available*]
-If set to 'test', SpamAssassin will query some default hosts on the
-internet to attempt to check if DNS is working or not. Default: yes
-
-[*uridnsbl_skip_domain*]
-List of domains for which URIDNSBL tests should be skipped. This can be used
-to reduce the volume of URIBDNSBL checks, for example by disabling checks for
-known domains that get sent to very often.
-
-[*uridnsbl*]
-Specify a lookup. Each entry's key is the name of the rule to be used. The
-value should be an array with two items. The first item is the dnsbl zone to
-lookup IPs in, and the second item is the type of lookup to perform (TXT or
-A). Note that you must also define a body-eval rule calling check_uridnsbl()
-to use this.
-
-[*urirhsbl*]
-Specify a RHSBL-style domain lookup. Each entry's key is the name of the rule
-to be used. The value should be an array with two items. The first item is
-the dnsbl zone to lookup IPs in, and the second item is the type of lookup to
-perform (TXT or A).
-
-[*urirhssub*]
-Specify a RHSBL-style domain lookup with a sub-test. Each entry's key is the
-name of the rule to be used. The value should be an array with three items.
-The first item is the dnsbl zone to lookup IPs in. The second item is the
-type of lookup to perform (TXT or A). Finally, the third item is the sub-test
-to run against the returned data.
-
-[*bayes_enabled*]
-Boolean. Whether to use the naive-Bayesian-style classifier built
-into SpamAssassin. Default: true
-
-[*bayes_use_hapaxes*]
-Boolean. Should the Bayesian classifier use hapaxes (words/tokens that occur
-only once) when classifying? This produces significantly better hit-rates,
-but increases database size by about a factor of 8 to 10. Default: true
-
-[*bayes_auto_learn*]
-Boolean. Whether SpamAssassin should automatically feed high-scoring mails
-into its learning systems. Default: true
-
-[*bayes_ignore_header*]
-See http://spamassassin.apache.org/full/3.3.x/doc/Mail_SpamAssassin_Conf.html#bayes_ignore_header
-
-[*bayes_auto_expire*]
-Boolean. If enabled, the Bayes system will try to automatically expire old
-tokens from the database. Default: true
-
-[*bayes_sql_enabled*]
-Boolean. If true will write the SQL-related directives to local.cf.
-Default: false
-
-[*bayes_sql_dsn*]
-This parameter gives the connect string used to connect to the SQL based
-Bayes storage. By default will use the mysql driver and a database called
-spamassassin. Please note the module does not manage any database settings
-or the creation of the schema.
-
-[*bayes_sql_username*]
-The sql username used for the dsn provided above.
-
-[*bayes_sql_password*]
-The sql password used for the dsn provided above.
-
-[*bayes_sql_override_username*]
-If this options is set the BayesStore::SQL module will override the set
-username with the value given. This could be useful for implementing global
-or group bayes databases.
-
-[*bayes_store_module*]
-This parameter configures the module that spamassassin will use when
-connecting to the Bayes SQL database. The default will work for most
-database types, but selecting the module for a DBMS may result provide
-performance improvements or additional features. Certain modules may
-require the additional perl modules that are not installed by this Puppet
-module.
-
-[*bayes_path*]
-This is the directory and filename for Bayes databases. Please note this
-parameter is not used if bayes_sql_enabled is true.
-
-[*bayes_file_mode*]
-The permissions that spamassassin will set to the bayes file that it may
-create.
-
-[*bayes_auto_learn_threshold_nonspam*]
-Score at which SA learns the message as ham.
-
-[*bayes_auto_learn_threshold_spam*]
-Score at which SA learns the message as spam.
-
-[*user_scores_dsn*]
-The perl DBI DSN string used to specify the SQL server holding user config
-example: 'DBI:mysql:dbname:hostname
-
-[*user_scores_sql_username*]
-The SQL username to connect to the above server
-
-[*user_scores_sql_password*]
-The SQL password for the above user
-
-[*user_scores_sql_custom_query*]
-Custom SQL query to use for spamd user_prefs.
-
-[*dcc_enabled*]
-Boolean. Enable/disable the DCC plugin. Default: false
-
-[*dcc_timeout*]
-How many seconds you wait for DCC to complete,
-before scanning continues without the DCC results. Default: 8
-
-[*dcc_body_max*]
-This option sets how often a message's body/fuz1/fuz2 checksum
-must have been reported to the DCC server before SpamAssassin
-will consider the DCC check as matched. As nearly all DCC clients
-are auto-reporting these checksums, you should set this to a relatively
-high value, e.g. 999999 (this is DCC's MANY count). Default: 999999
-
-[*dcc_fuz1_max*]
-See dcc_body_max. Default: 999999
-
-[*dcc_fuz2_max*]
-See dcc_body_max. Default: 999999
-
-[*pyzor_enabled*]
-Boolean. Enable/disable the Pyzor plugin. Default: true
-
-[*pyzor_timeout*]
-How many seconds you wait for Pyzor to complete, before scanning continues
-without the Pyzor results. Default: 3.5
-
-[*pyzor_max*]
-This option sets how often a message's body checksum must have been reported
-to the Pyzor server before SpamAssassin will consider the Pyzor check as matched.
-Default: 5
-
-[*pyzor_options*]
-Specify additional options to the pyzor command. Please note that only characters
-in the range [0-9A-Za-z ,._/-] are allowed for security reasons. Please note that
-the module will automatically add the homedir options as part of the configuration.
-
-[*pyzor_path*]
-This option tells SpamAssassin specifically where to find the pyzor client instead
-of relying on SpamAssassin to find it in the current PATH.
-
-[*pyzor_home*]
-Define the homedir for pyzor. Default is to use the [global config dir]/.pyzor
-
-[*razor_enabled*]
-Boolean. Enable/disable the Pyzor plugin. Default: true
-
-[*razor_timeout*]
-How many seconds you wait for Razor to complete before you go on without the results.
-Default: 5
-
-[*razor_home*]
-Define the homedir for razor. Please note that if you set a custom path the module will
-automatically use the directory in which you store your razor config as the home
-directory for the module. Default is to use the [global config dir]/.razor
-
-[*spamcop_enabled*]
-Boolean. Enable/disable the Pyzor plugin. Default: false
-
-[*spamcop_from_address*]
-This address is used during manual reports to SpamCop as the From: address. You
-can use your normal email address. If this is not set, a guess will be used as
-the From: address in SpamCop reports.
-
-[*spamcop_to_address*]
-Your customized SpamCop report submission address. You need to obtain this address
-by registering at http://www.spamcop.net/. If this is not set, SpamCop reports will
-go to a generic reporting address for SpamAssassin users and your reports will probably
-have less weight in the SpamCop system.
-
-[*spamcop_max_report_size*]
-Messages larger than this size (in kilobytes) will be truncated in report messages sent
-to SpamCop. The default setting is the maximum size that SpamCop will accept at the time
-of release. Default: 50
-
-[*awl_enabled*]
-Boolean. Enable/disable the Auto-Whitelist plugin. Default: false
-
-[*awl_sql_enabled*]
-Boolean. If true will set auto_whitelist_factory to use sql and will write the
-sql dsn, and other directives, to local.cf. Default: false
-
-[*awl_dsn*]
-This parameter gives the connect string used to connect to the SQL based
-storage. By default will use the mysql driver and a database called
-spamassassin. Please note the module does not manage any database
-settings or the creation of the schema.
-
-[*awl_sql_username*]
-The sql username used for the dsn provided above.
-
-[*awl_sql_password*]
-The sql password used for the dsn provided above.
-
-[*awl_sql_override_username*]
-Used by the SQLBasedAddrList storage implementation.  If this option is
-set the SQLBasedAddrList module will override the set username with the
-value given. This can be useful for implementing global or group based
-auto-whitelist databases.
-
-[*auto_whitelist_path*]
-This is the automatic-whitelist directory and filename.
-Default: ~/.spamassassin/auto-whitelist
-
-[*auto_whitelist_file_mode*]
-The file mode bits used for the automatic-whitelist directory or file.
-Default: 0600
-
-[*textcat_enabled*]
-Boolean. Enable/disable the TextCat plugin. Default: false
-
-[*ok_languages*]
-List of languages which are considered okay for incoming mail. If unset,
-defaults to accepting all languages.
-Default: ['all']
-
-[*ok_locales*]
-List of charsets that are permitted. If unset, defaults to accepting all
-locales.
-Default: ['all']
-
-[*normalize_charset*]
-Boolean. Enable/disable scanning non-UTF8 or non-ASCII parts to guess charset.
-Default: false
-
-[*shortcircuit_enabled*]
-Boolean. Enable/disable the Shortcircuit plugin. Default: false
-
-[*shortcircuit_user_in_whitelist*]
-Values: ham, spam, on or off.
-
-[*shortcircuit_user_in_def_whitelist*]
-Values: ham, spam, on or off.
-
-[*shortcircuit_user_in_all_spam_to*]
-Values: ham, spam, on or off.
-
-[*shortcircuit_subject_in_whitelist*]
-Values: ham, spam, on or off.
-
-[*shortcircuit_user_in_blacklist*]
-Values: ham, spam, on or off.
-
-[*shortcircuit_user_in_blacklist_to*]
-Values: ham, spam, on or off.
-
-[*shortcircuit_subject_in_blacklist*]
-Values: ham, spam, on or off.
-
-[*shortcircuit_all_trusted*]
-Values: ham, spam, on or off.
-
-[*dkim_enabled*]
-Boolean. Enable/disable the DKIM plugin. Default: true
-
-[*dkim_timeout*]
-How many seconds to wait for a DKIM query to complete,
-before scanning continues without the DKIM result.
-Default: 5
-
-[*rules2xsbody_enabled*]
-Boolean.  Enable the Rule2XSBody plugin.
-Compile ruleset to native code with sa-compile.
-Requires re2c and gcc packages (not managed in this module)
-
-
-=== Examples
-
- See tests folder.
-
-=== Authors
-
-Scott Barr <gsbarr@gmail.com>
+Authors: Scott Barr <gsbarr@gmail.com>
 
 #### Parameters
 
@@ -524,6 +48,8 @@ The following parameters are available in the `spamassassin` class:
 * [`sa_update_file`](#-spamassassin--sa_update_file)
 * [`required_score`](#-spamassassin--required_score)
 * [`score_tests`](#-spamassassin--score_tests)
+* [`custom_rules`](#-spamassassin--custom_rules)
+* [`custom_config`](#-spamassassin--custom_config)
 * [`whitelist_from`](#-spamassassin--whitelist_from)
 * [`whitelist_from_rcvd`](#-spamassassin--whitelist_from_rcvd)
 * [`whitelist_to`](#-spamassassin--whitelist_to)
@@ -532,13 +58,13 @@ The following parameters are available in the `spamassassin` class:
 * [`rewrite_header_subject`](#-spamassassin--rewrite_header_subject)
 * [`rewrite_header_from`](#-spamassassin--rewrite_header_from)
 * [`rewrite_header_to`](#-spamassassin--rewrite_header_to)
-* [`report_safe`](#-spamassassin--report_safe)
 * [`add_header_spam`](#-spamassassin--add_header_spam)
 * [`add_header_ham`](#-spamassassin--add_header_ham)
 * [`add_header_all`](#-spamassassin--add_header_all)
 * [`remove_header_spam`](#-spamassassin--remove_header_spam)
 * [`remove_header_ham`](#-spamassassin--remove_header_ham)
 * [`remove_header_all`](#-spamassassin--remove_header_all)
+* [`report_safe`](#-spamassassin--report_safe)
 * [`clear_trusted_networks`](#-spamassassin--clear_trusted_networks)
 * [`trusted_networks`](#-spamassassin--trusted_networks)
 * [`clear_internal_networks`](#-spamassassin--clear_internal_networks)
@@ -610,14 +136,12 @@ The following parameters are available in the `spamassassin` class:
 * [`dkim_enabled`](#-spamassassin--dkim_enabled)
 * [`dkim_timeout`](#-spamassassin--dkim_timeout)
 * [`rules2xsbody_enabled`](#-spamassassin--rules2xsbody_enabled)
-* [`custom_rules`](#-spamassassin--custom_rules)
-* [`custom_config`](#-spamassassin--custom_config)
 
 ##### <a name="-spamassassin--sa_update"></a>`sa_update`
 
 Data type: `Boolean`
 
-
+Enable the sa-update cron job.
 
 Default value: `false`
 
@@ -625,7 +149,9 @@ Default value: `false`
 
 Data type: `Optional[String]`
 
-
+If you enabled razor and/or pyzor and would like the razor-admin or pyzor
+discover commands to be run as a different user specify the username in this
+directive. Example: amavis. Default: undef
 
 Default value: `undef`
 
@@ -633,7 +159,7 @@ Default value: `undef`
 
 Data type: `String`
 
-
+The package name to use. Default: Distribution specific
 
 Default value: `$spamassassin::params::package_name`
 
@@ -641,7 +167,7 @@ Default value: `$spamassassin::params::package_name`
 
 Data type: `Boolean`
 
-
+Will enable service at boot and ensure a running service.
 
 Default value: `false`
 
@@ -649,7 +175,8 @@ Default value: `false`
 
 Data type: `String`
 
-
+The service name to use for the spamassassin service. Default: Distribution
+specific
 
 Default value: `$spamassassin::params::service_name`
 
@@ -657,7 +184,8 @@ Default value: `$spamassassin::params::service_name`
 
 Data type: `Optional[String]`
 
-
+If specified then this service will be notified instead of "spamd" when
+config is update. Only has an effect if service_enabled is false.
 
 Default value: `undef`
 
@@ -665,7 +193,9 @@ Default value: `undef`
 
 Data type: `Integer[1]`
 
-
+The maximum number of children to spawn. Spamd will spawn that number of
+children, then sleep in the background until a child dies, wherein it will
+go and spawn a new child.
 
 Default value: `5`
 
@@ -673,7 +203,9 @@ Default value: `5`
 
 Data type: `Optional[Integer[1]]`
 
-
+The minimum number of children that will be kept running. The minimum
+possible value is 1, the default value is 1 in spamd, and undef here. If you have lots of
+free RAM, you may want to increase this.
 
 Default value: `undef`
 
@@ -681,7 +213,12 @@ Default value: `undef`
 
 Data type: `Array[Stdlib::Host]`
 
-
+List of IP addresses spamd will listen to (defaults to "localhost", which
+will listen both on IPv4 and IPv6 locally). Use 0.0.0.0 to listen on all
+interfaces. You can also use a valid hostname which will make spamd listen
+on the first address that name resolves to. To listen only to an IPv6
+address, make sure to encase the address within square brackets (i.e.
+"[fe80::fc54:ff:fe8f:4b36]")
 
 Default value: `['localhost']`
 
@@ -689,7 +226,11 @@ Default value: `['localhost']`
 
 Data type: `Array[String]`
 
-
+Specify a list of authorized hosts or networks which can connect to this
+spamd instance. Values can be single IP addresses or CIDR format networks.
+Hostnames are not supported, only IP addresses. Similarly to
+`spamd_listen_address`, to specify IPs or CIDR notation for IPV6, make sure
+to encase the address or network part in square brackets)
 
 Default value: `['127.0.0.1/32','[::1]/8']`
 
@@ -697,7 +238,7 @@ Default value: `['127.0.0.1/32','[::1]/8']`
 
 Data type: `Optional[String]`
 
-
+spamd runs as this user
 
 Default value: `undef`
 
@@ -705,7 +246,7 @@ Default value: `undef`
 
 Data type: `Optional[String]`
 
-
+spamd runs in this group
 
 Default value: `undef`
 
@@ -713,7 +254,11 @@ Default value: `undef`
 
 Data type: `Boolean`
 
-
+Turn off (on) reading of per-user configuration files (user_prefs) from the
+user's home directory. The default behaviour is to read per-user
+configuration from the user's home directory (`--user-config`/`-c`).
+Note that by default `spamd_defaults` activates `--create-prefs` so you may
+want to revise that parameter if you set this option.
 
 Default value: `false`
 
@@ -721,7 +266,10 @@ Default value: `false`
 
 Data type: `Boolean`
 
-
+Allow learning and forgetting (to a local Bayes database), reporting and
+revoking (to a remote database) by spamd. The client issues a TELL command
+to tell what type of message is being processed and whether local
+(learn/forget) or remote (report/revoke) databases should be updated.
 
 Default value: `false`
 
@@ -729,7 +277,9 @@ Default value: `false`
 
 Data type: `Boolean`
 
-
+Turn on SQL lookups even when per-user config files have been disabled with
+`-x` this is useful for spamd hosts which dont have users home directories
+but do want to load user preferences from an SQL database.
 
 Default value: `false`
 
@@ -737,7 +287,8 @@ Default value: `false`
 
 Data type: `Optional[String]`
 
-
+Turn this on to deposit logs for SpamAssassin and define the log location.
+e.g. `/var/log/spamd.log`
 
 Default value: `undef`
 
@@ -745,7 +296,7 @@ Default value: `undef`
 
 Data type: `Stdlib::Absolutepath`
 
-
+Absolute path to the directory containing spamassassin's configuration files.
 
 Default value: `$spamassassin::params::configdir`
 
@@ -753,7 +304,7 @@ Default value: `$spamassassin::params::configdir`
 
 Data type: `Stdlib::Absolutepath`
 
-
+Absolute path to the file containing global options to spamd.
 
 Default value: `$spamassassin::params::spamd_options_file`
 
@@ -761,7 +312,8 @@ Default value: `$spamassassin::params::spamd_options_file`
 
 Data type: `String`
 
-
+Name of the shell variable used for storing spamd options in
+`spamd_options_file`.
 
 Default value: `$spamassassin::params::spamd_options_var`
 
@@ -769,7 +321,8 @@ Default value: `$spamassassin::params::spamd_options_var`
 
 Data type: `String`
 
-
+String of spamd option flags set in `spamd_options_file`. If you change some
+parameters you may need to revise those deamon flags.
 
 Default value: `$spamassassin::params::spamd_defaults`
 
@@ -777,7 +330,7 @@ Default value: `$spamassassin::params::spamd_defaults`
 
 Data type: `Stdlib::Absolutepath`
 
-
+Absolute path to file that contains shell variables for sa-update.
 
 Default value: `$spamassassin::params::sa_update_file`
 
@@ -785,7 +338,8 @@ Default value: `$spamassassin::params::sa_update_file`
 
 Data type: `Numeric`
 
-
+Set the score required before a mail is considered spam. Can be an integer
+or a floating-point number.
 
 Default value: `5`
 
@@ -793,703 +347,24 @@ Default value: `5`
 
 Data type: `Hash`
 
-
+Assign scores (the number of points for a hit) to a given test. Scores can
+be positive or negative real numbers or integers.
 
 Default value: `{}`
-
-##### <a name="-spamassassin--whitelist_from"></a>`whitelist_from`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--whitelist_from_rcvd"></a>`whitelist_from_rcvd`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--whitelist_to"></a>`whitelist_to`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--blacklist_from"></a>`blacklist_from`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--blacklist_to"></a>`blacklist_to`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--rewrite_header_subject"></a>`rewrite_header_subject`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--rewrite_header_from"></a>`rewrite_header_from`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--rewrite_header_to"></a>`rewrite_header_to`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--report_safe"></a>`report_safe`
-
-Data type: `Integer[0,2]`
-
-
-
-Default value: `0`
-
-##### <a name="-spamassassin--add_header_spam"></a>`add_header_spam`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--add_header_ham"></a>`add_header_ham`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--add_header_all"></a>`add_header_all`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--remove_header_spam"></a>`remove_header_spam`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--remove_header_ham"></a>`remove_header_ham`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--remove_header_all"></a>`remove_header_all`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--clear_trusted_networks"></a>`clear_trusted_networks`
-
-Data type: `Boolean`
-
-
-
-Default value: `false`
-
-##### <a name="-spamassassin--trusted_networks"></a>`trusted_networks`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--clear_internal_networks"></a>`clear_internal_networks`
-
-Data type: `Boolean`
-
-
-
-Default value: `false`
-
-##### <a name="-spamassassin--internal_networks"></a>`internal_networks`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--skip_rbl_checks"></a>`skip_rbl_checks`
-
-Data type: `Boolean`
-
-
-
-Default value: `true`
-
-##### <a name="-spamassassin--dns_available"></a>`dns_available`
-
-Data type: `Pattern[/^(test|yes|no)$/]`
-
-
-
-Default value: `'yes'`
-
-##### <a name="-spamassassin--uridnsbl_skip_domain"></a>`uridnsbl_skip_domain`
-
-Data type: `Array[String]`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--uridnsbl"></a>`uridnsbl`
-
-Data type: `Hash[String, Array[String,2,2]]`
-
-
-
-Default value: `{}`
-
-##### <a name="-spamassassin--urirhsbl"></a>`urirhsbl`
-
-Data type: `Hash[String, Array[String,2,2]]`
-
-
-
-Default value: `{}`
-
-##### <a name="-spamassassin--urirhssub"></a>`urirhssub`
-
-Data type: `Hash[String, Array[String,3,3]]`
-
-
-
-Default value: `{}`
-
-##### <a name="-spamassassin--bayes_enabled"></a>`bayes_enabled`
-
-Data type: `Boolean`
-
-
-
-Default value: `true`
-
-##### <a name="-spamassassin--bayes_use_hapaxes"></a>`bayes_use_hapaxes`
-
-Data type: `Boolean`
-
-
-
-Default value: `true`
-
-##### <a name="-spamassassin--bayes_auto_learn"></a>`bayes_auto_learn`
-
-Data type: `Boolean`
-
-
-
-Default value: `true`
-
-##### <a name="-spamassassin--bayes_ignore_header"></a>`bayes_ignore_header`
-
-Data type: `Array`
-
-
-
-Default value: `[]`
-
-##### <a name="-spamassassin--bayes_auto_expire"></a>`bayes_auto_expire`
-
-Data type: `Boolean`
-
-
-
-Default value: `true`
-
-##### <a name="-spamassassin--bayes_sql_enabled"></a>`bayes_sql_enabled`
-
-Data type: `Boolean`
-
-
-
-Default value: `false`
-
-##### <a name="-spamassassin--bayes_sql_dsn"></a>`bayes_sql_dsn`
-
-Data type: `String`
-
-
-
-Default value: `'DBI:mysql:spamassassin'`
-
-##### <a name="-spamassassin--bayes_sql_username"></a>`bayes_sql_username`
-
-Data type: `String`
-
-
-
-Default value: `'root'`
-
-##### <a name="-spamassassin--bayes_sql_password"></a>`bayes_sql_password`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--bayes_sql_override_username"></a>`bayes_sql_override_username`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--bayes_store_module"></a>`bayes_store_module`
-
-Data type: `String`
-
-
-
-Default value: `'Mail::SpamAssassin::BayesStore::SQL'`
-
-##### <a name="-spamassassin--bayes_path"></a>`bayes_path`
-
-Data type: `Optional[Stdlib::Absolutepath]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--bayes_file_mode"></a>`bayes_file_mode`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--bayes_auto_learn_threshold_nonspam"></a>`bayes_auto_learn_threshold_nonspam`
-
-Data type: `Optional[Float]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--bayes_auto_learn_threshold_spam"></a>`bayes_auto_learn_threshold_spam`
-
-Data type: `Optional[Float]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--user_scores_dsn"></a>`user_scores_dsn`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--user_scores_sql_username"></a>`user_scores_sql_username`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--user_scores_sql_password"></a>`user_scores_sql_password`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--user_scores_sql_custom_query"></a>`user_scores_sql_custom_query`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--dcc_enabled"></a>`dcc_enabled`
-
-Data type: `Boolean`
-
-
-
-Default value: `false`
-
-##### <a name="-spamassassin--dcc_timeout"></a>`dcc_timeout`
-
-Data type: `Optional[Integer]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--dcc_body_max"></a>`dcc_body_max`
-
-Data type: `Optional[Integer]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--dcc_fuz1_max"></a>`dcc_fuz1_max`
-
-Data type: `Optional[Integer]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--dcc_fuz2_max"></a>`dcc_fuz2_max`
-
-Data type: `Optional[Integer]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--pyzor_enabled"></a>`pyzor_enabled`
-
-Data type: `Boolean`
-
-
-
-Default value: `true`
-
-##### <a name="-spamassassin--pyzor_timeout"></a>`pyzor_timeout`
-
-Data type: `Optional[Numeric]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--pyzor_max"></a>`pyzor_max`
-
-Data type: `Optional[Integer]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--pyzor_options"></a>`pyzor_options`
-
-Data type: `Optional[Pattern[/[0-9A-Za-z ,._\/-]\+/]]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--pyzor_path"></a>`pyzor_path`
-
-Data type: `Optional[Stdlib::Absolutepath]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--pyzor_home"></a>`pyzor_home`
-
-Data type: `Stdlib::Absolutepath`
-
-
-
-Default value: `$spamassassin::params::pyzor_home`
-
-##### <a name="-spamassassin--razor_enabled"></a>`razor_enabled`
-
-Data type: `Boolean`
-
-
-
-Default value: `true`
-
-##### <a name="-spamassassin--razor_timeout"></a>`razor_timeout`
-
-Data type: `Optional[Integer]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--razor_home"></a>`razor_home`
-
-Data type: `Stdlib::Absolutepath`
-
-
-
-Default value: `$spamassassin::params::razor_home`
-
-##### <a name="-spamassassin--spamcop_enabled"></a>`spamcop_enabled`
-
-Data type: `Boolean`
-
-
-
-Default value: `false`
-
-##### <a name="-spamassassin--spamcop_from_address"></a>`spamcop_from_address`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--spamcop_to_address"></a>`spamcop_to_address`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--spamcop_max_report_size"></a>`spamcop_max_report_size`
-
-Data type: `Optional[Integer]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--awl_enabled"></a>`awl_enabled`
-
-Data type: `Boolean`
-
-
-
-Default value: `false`
-
-##### <a name="-spamassassin--awl_sql_enabled"></a>`awl_sql_enabled`
-
-Data type: `Boolean`
-
-
-
-Default value: `false`
-
-##### <a name="-spamassassin--awl_dsn"></a>`awl_dsn`
-
-Data type: `String`
-
-
-
-Default value: `'DBI:mysql:spamassassin'`
-
-##### <a name="-spamassassin--awl_sql_username"></a>`awl_sql_username`
-
-Data type: `String`
-
-
-
-Default value: `'root'`
-
-##### <a name="-spamassassin--awl_sql_password"></a>`awl_sql_password`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--awl_sql_override_username"></a>`awl_sql_override_username`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--auto_whitelist_path"></a>`auto_whitelist_path`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--auto_whitelist_file_mode"></a>`auto_whitelist_file_mode`
-
-Data type: `Optional[String]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--textcat_enabled"></a>`textcat_enabled`
-
-Data type: `Boolean`
-
-
-
-Default value: `false`
-
-##### <a name="-spamassassin--ok_languages"></a>`ok_languages`
-
-Data type: `Array[String]`
-
-
-
-Default value: `['all']`
-
-##### <a name="-spamassassin--ok_locales"></a>`ok_locales`
-
-Data type: `Array[String]`
-
-
-
-Default value: `['all']`
-
-##### <a name="-spamassassin--normalize_charset"></a>`normalize_charset`
-
-Data type: `Boolean`
-
-
-
-Default value: `false`
-
-##### <a name="-spamassassin--shortcircuit_enabled"></a>`shortcircuit_enabled`
-
-Data type: `Boolean`
-
-
-
-Default value: `false`
-
-##### <a name="-spamassassin--shortcircuit_user_in_whitelist"></a>`shortcircuit_user_in_whitelist`
-
-Data type: `Optional[Enum['ham','spam','on','off']]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--shortcircuit_user_in_def_whitelist"></a>`shortcircuit_user_in_def_whitelist`
-
-Data type: `Optional[Enum['ham','spam','on','off']]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--shortcircuit_user_in_all_spam_to"></a>`shortcircuit_user_in_all_spam_to`
-
-Data type: `Optional[Enum['ham','spam','on','off']]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--shortcircuit_subject_in_whitelist"></a>`shortcircuit_subject_in_whitelist`
-
-Data type: `Optional[Enum['ham','spam','on','off']]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--shortcircuit_user_in_blacklist"></a>`shortcircuit_user_in_blacklist`
-
-Data type: `Optional[Enum['ham','spam','on','off']]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--shortcircuit_user_in_blacklist_to"></a>`shortcircuit_user_in_blacklist_to`
-
-Data type: `Optional[Enum['ham','spam','on','off']]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--shortcircuit_subject_in_blacklist"></a>`shortcircuit_subject_in_blacklist`
-
-Data type: `Optional[Enum['ham','spam','on','off']]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--shortcircuit_all_trusted"></a>`shortcircuit_all_trusted`
-
-Data type: `Optional[Enum['ham','spam','on','off']]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--dkim_enabled"></a>`dkim_enabled`
-
-Data type: `Boolean`
-
-
-
-Default value: `true`
-
-##### <a name="-spamassassin--dkim_timeout"></a>`dkim_timeout`
-
-Data type: `Optional[Integer]`
-
-
-
-Default value: `undef`
-
-##### <a name="-spamassassin--rules2xsbody_enabled"></a>`rules2xsbody_enabled`
-
-Data type: `Boolean`
-
-
-
-Default value: `false`
 
 ##### <a name="-spamassassin--custom_rules"></a>`custom_rules`
 
 Data type: `Hash`
 
+Define custom rules. This is a hash of hashes. The key for the outer hash is
+the spamassassin rule name, the inner hash for each entry should contain the
+rule definition, e.g:
 
+  spamassassin::custom_rules:
+    INVOICE_SPAM:
+      body: '/Invoice.*from.*You have received an invoice from .* To start with it, print out or download a JS copy of your invoice/'
+      score: 6
+      describe: 'spam reported claiming "You have received an invoice"'
 
 Default value: `{}`
 
@@ -1497,42 +372,812 @@ Default value: `{}`
 
 Data type: `Array[String]`
 
+Add custom lines to the config file. Useful for configuring modules that
+aren't otherwise handled by this Puppet module. This is an array of strings,
+e.g:
 
+  spamassassin::custom_config:
+    - hashcash_accept *@example.com
+    - hashcash_accept *@example.net
 
 Default value: `[]`
 
-### <a name="spamassassin--config"></a>`spamassassin::config`
+##### <a name="-spamassassin--whitelist_from"></a>`whitelist_from`
 
-== Class: spamassassin::config
+Data type: `Array`
+
+Used to whitelist sender addresses which send mail that is often tagged
+(incorrectly) as spam. This would be written to the global `local.cf` file
+
+Default value: `[]`
+
+##### <a name="-spamassassin--whitelist_from_rcvd"></a>`whitelist_from_rcvd`
+
+Data type: `Array`
+
+Used to whitelist the combination of a sender address and rDNS name/IP. This
+would be written to the global `local.cf` file
+
+Default value: `[]`
+
+##### <a name="-spamassassin--whitelist_to"></a>`whitelist_to`
+
+Data type: `Array`
+
+If the given address appears as a recipient in the message headers
+(Resent-To, To, Cc, obvious envelope recipient, etc.) the mail will be
+whitelisted.
+
+Default value: `[]`
+
+##### <a name="-spamassassin--blacklist_from"></a>`blacklist_from`
+
+Data type: `Array`
+
+Used to specify addresses which send mail that is often tagged (incorrectly)
+as non-spam, but which the user doesn't want.
+
+Default value: `[]`
+
+##### <a name="-spamassassin--blacklist_to"></a>`blacklist_to`
+
+Data type: `Array`
+
+If the given address appears as a recipient in the message headers
+(Resent-To, To, Cc, obvious envelope recipient, etc.) the mail will be
+blacklisted.
+
+Default value: `[]`
+
+##### <a name="-spamassassin--rewrite_header_subject"></a>`rewrite_header_subject`
+
+Data type: `Optional[String]`
+
+By default, suspected spam messages will not have the Subject, From or To
+lines tagged to indicate spam. By setting this option, the header will be
+tagged with the value of the parameter to indicate that a message is spam.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--rewrite_header_from"></a>`rewrite_header_from`
+
+Data type: `Optional[String]`
+
+See `rewrite_header_subject`.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--rewrite_header_to"></a>`rewrite_header_to`
+
+Data type: `Optional[String]`
+
+See `rewrite_header_subject`.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--add_header_spam"></a>`add_header_spam`
+
+Data type: `Array`
+
+Customise headers to be added to spam emails. Each array item should
+contain: `header_name` string.
+
+Default value: `[]`
+
+##### <a name="-spamassassin--add_header_ham"></a>`add_header_ham`
+
+Data type: `Array`
+
+See `add_header_spam`.
+
+Default value: `[]`
+
+##### <a name="-spamassassin--add_header_all"></a>`add_header_all`
+
+Data type: `Array`
+
+See `add_header_spam`.
+
+Default value: `[]`
+
+##### <a name="-spamassassin--remove_header_spam"></a>`remove_header_spam`
+
+Data type: `Array`
+
+Remove headers from spam emails. Each array item should be a `header_name`
+to remove.
+
+Default value: `[]`
+
+##### <a name="-spamassassin--remove_header_ham"></a>`remove_header_ham`
+
+Data type: `Array`
+
+See `remove_header_spam`.
+
+Default value: `[]`
+
+##### <a name="-spamassassin--remove_header_all"></a>`remove_header_all`
+
+Data type: `Array`
+
+See `remove_header_spam`.
+
+Default value: `[]`
+
+##### <a name="-spamassassin--report_safe"></a>`report_safe`
+
+Data type: `Integer[0,2]`
+
+Values can be 0, 1 or 2.
+See: http://spamassassin.apache.org/full/3.3.x/doc/Mail_SpamAssassin_Conf.html#report_safe
+Default: 0
+
+Default value: `0`
+
+##### <a name="-spamassassin--clear_trusted_networks"></a>`clear_trusted_networks`
+
+Data type: `Boolean`
+
+Empty the list of trusted networks. Default: false
+
+Default value: `false`
+
+##### <a name="-spamassassin--trusted_networks"></a>`trusted_networks`
+
+Data type: `Array`
+
+What networks or hosts are 'trusted' in your setup. Trusted in this case
+means that relay hosts on these networks are considered to not be
+potentially operated by spammers, open relays, or open proxies.
+
+Default value: `[]`
+
+##### <a name="-spamassassin--clear_internal_networks"></a>`clear_internal_networks`
+
+Data type: `Boolean`
+
+Empty the list of internal networks. Default: false
+
+Default value: `false`
+
+##### <a name="-spamassassin--internal_networks"></a>`internal_networks`
+
+Data type: `Array`
+
+Internal means that relay hosts on these networks are considered to be MXes
+for your domain(s), or internal relays.
+
+Default value: `[]`
+
+##### <a name="-spamassassin--skip_rbl_checks"></a>`skip_rbl_checks`
+
+Data type: `Boolean`
+
+If false SpamAssassin will run RBL checks. Default: true
+
+Default value: `true`
+
+##### <a name="-spamassassin--dns_available"></a>`dns_available`
+
+Data type: `Pattern[/^(test|yes|no)$/]`
+
+If set to 'test', SpamAssassin will query some default hosts on the internet
+to attempt to check if DNS is working or not. Default: yes
+
+Default value: `'yes'`
+
+##### <a name="-spamassassin--uridnsbl_skip_domain"></a>`uridnsbl_skip_domain`
+
+Data type: `Array[String]`
+
+List of domains for which URIDNSBL tests should be skipped. This can be used
+to reduce the volume of URIBDNSBL checks, for example by disabling checks
+for known domains that get sent to very often.
+
+Default value: `[]`
+
+##### <a name="-spamassassin--uridnsbl"></a>`uridnsbl`
+
+Data type: `Hash[String, Array[String,2,2]]`
+
+Specify a lookup. Each entry's key is the name of the rule to be used. The
+value should be an array with two items. The first item is the dnsbl zone to
+lookup IPs in, and the second item is the type of lookup to perform (TXT or
+A). Note that you must also define a body-eval rule calling check_uridnsbl()
+to use this.
+
+Default value: `{}`
+
+##### <a name="-spamassassin--urirhsbl"></a>`urirhsbl`
+
+Data type: `Hash[String, Array[String,2,2]]`
+
+Specify a RHSBL-style domain lookup. Each entry's key is the name of the
+rule to be used. The value should be an array with two items. The first item
+is the dnsbl zone to lookup IPs in, and the second item is the type of
+lookup to perform (TXT or A).
+
+Default value: `{}`
+
+##### <a name="-spamassassin--urirhssub"></a>`urirhssub`
+
+Data type: `Hash[String, Array[String,3,3]]`
+
+Specify a RHSBL-style domain lookup with a sub-test. Each entry's key is the
+name of the rule to be used. The value should be an array with three items.
+The first item is the dnsbl zone to lookup IPs in. The second item is the
+type of lookup to perform (TXT or A). Finally, the third item is the
+sub-test to run against the returned data.
+
+Default value: `{}`
+
+##### <a name="-spamassassin--bayes_enabled"></a>`bayes_enabled`
+
+Data type: `Boolean`
+
+Whether to use the naive-Bayesian-style classifier built into SpamAssassin.
+Default: true
+
+Default value: `true`
+
+##### <a name="-spamassassin--bayes_use_hapaxes"></a>`bayes_use_hapaxes`
+
+Data type: `Boolean`
+
+Should the Bayesian classifier use hapaxes (words/tokens that occur only
+once) when classifying? This produces significantly better hit-rates, but
+increases database size by about a factor of 8 to 10. Default: true
+
+Default value: `true`
+
+##### <a name="-spamassassin--bayes_auto_learn"></a>`bayes_auto_learn`
+
+Data type: `Boolean`
+
+Whether SpamAssassin should automatically feed high-scoring mails into its
+learning systems. Default: true
+
+Default value: `true`
+
+##### <a name="-spamassassin--bayes_ignore_header"></a>`bayes_ignore_header`
+
+Data type: `Array`
+
+See http://spamassassin.apache.org/full/3.3.x/doc/Mail_SpamAssassin_Conf.html#bayes_ignore_header
+
+Default value: `[]`
+
+##### <a name="-spamassassin--bayes_auto_expire"></a>`bayes_auto_expire`
+
+Data type: `Boolean`
+
+If enabled, the Bayes system will try to automatically expire old tokens
+from the database. Default: true
+
+Default value: `true`
+
+##### <a name="-spamassassin--bayes_sql_enabled"></a>`bayes_sql_enabled`
+
+Data type: `Boolean`
+
+If true will write the SQL-related directives to local.cf. Default: false
+
+Default value: `false`
+
+##### <a name="-spamassassin--bayes_sql_dsn"></a>`bayes_sql_dsn`
+
+Data type: `String`
+
+This parameter gives the connect string used to connect to the SQL based
+Bayes storage. By default will use the mysql driver and a database called
+spamassassin. Please note the module does not manage any database settings
+or the creation of the schema.
+
+Default value: `'DBI:mysql:spamassassin'`
+
+##### <a name="-spamassassin--bayes_sql_username"></a>`bayes_sql_username`
+
+Data type: `String`
+
+The sql username used for the dsn provided above.
+
+Default value: `'root'`
+
+##### <a name="-spamassassin--bayes_sql_password"></a>`bayes_sql_password`
+
+Data type: `Optional[String]`
+
+The sql password used for the dsn provided above.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--bayes_sql_override_username"></a>`bayes_sql_override_username`
+
+Data type: `Optional[String]`
+
+If this options is set the BayesStore::SQL module will override the set
+username with the value given. This could be useful for implementing global
+or group bayes databases.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--bayes_store_module"></a>`bayes_store_module`
+
+Data type: `String`
+
+This parameter configures the module that spamassassin will use when
+connecting to the Bayes SQL database. The default will work for most
+database types, but selecting the module for a DBMS may result provide
+performance improvements or additional features. Certain modules may require
+the additional perl modules that are not installed by this Puppet module.
+
+Default value: `'Mail::SpamAssassin::BayesStore::SQL'`
+
+##### <a name="-spamassassin--bayes_path"></a>`bayes_path`
+
+Data type: `Optional[Stdlib::Absolutepath]`
+
+This is the directory and filename for Bayes databases. Please note this
+parameter is not used if `bayes_sql_enabled` is true.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--bayes_file_mode"></a>`bayes_file_mode`
+
+Data type: `Optional[String]`
+
+The permissions that spamassassin will set to the bayes file that it may
+create.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--bayes_auto_learn_threshold_nonspam"></a>`bayes_auto_learn_threshold_nonspam`
+
+Data type: `Optional[Float]`
+
+Score at which SA learns the message as ham.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--bayes_auto_learn_threshold_spam"></a>`bayes_auto_learn_threshold_spam`
+
+Data type: `Optional[Float]`
+
+Score at which SA learns the message as spam.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--user_scores_dsn"></a>`user_scores_dsn`
+
+Data type: `Optional[String]`
+
+The perl DBI DSN string used to specify the SQL server holding user config.
+Example: 'DBI:mysql:dbname:hostname
+
+Default value: `undef`
+
+##### <a name="-spamassassin--user_scores_sql_username"></a>`user_scores_sql_username`
+
+Data type: `Optional[String]`
+
+The SQL username to connect to the above server.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--user_scores_sql_password"></a>`user_scores_sql_password`
+
+Data type: `Optional[String]`
+
+The SQL password for the above user.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--user_scores_sql_custom_query"></a>`user_scores_sql_custom_query`
+
+Data type: `Optional[String]`
+
+Custom SQL query to use for spamd user_prefs.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--dcc_enabled"></a>`dcc_enabled`
+
+Data type: `Boolean`
+
+Enable/disable the DCC plugin. Default: false
+
+Default value: `false`
+
+##### <a name="-spamassassin--dcc_timeout"></a>`dcc_timeout`
+
+Data type: `Optional[Integer]`
+
+How many seconds you wait for DCC to complete, before scanning continues
+without the DCC results. Default: 8
+
+Default value: `undef`
+
+##### <a name="-spamassassin--dcc_body_max"></a>`dcc_body_max`
+
+Data type: `Optional[Integer]`
+
+This option sets how often a message's body/fuz1/fuz2 checksum must have
+been reported to the DCC server before SpamAssassin will consider the DCC
+check as matched. As nearly all DCC clients are auto-reporting these
+checksums, you should set this to a relatively high value, e.g. 999999 (this
+is DCC's MANY count). Default: 999999
+
+Default value: `undef`
+
+##### <a name="-spamassassin--dcc_fuz1_max"></a>`dcc_fuz1_max`
+
+Data type: `Optional[Integer]`
+
+See `dcc_body_max`. Default: 999999
+
+Default value: `undef`
+
+##### <a name="-spamassassin--dcc_fuz2_max"></a>`dcc_fuz2_max`
+
+Data type: `Optional[Integer]`
+
+See `dcc_body_max`. Default: 999999
+
+Default value: `undef`
+
+##### <a name="-spamassassin--pyzor_enabled"></a>`pyzor_enabled`
+
+Data type: `Boolean`
+
+Enable/disable the Pyzor plugin. Default: true
+
+Default value: `true`
+
+##### <a name="-spamassassin--pyzor_timeout"></a>`pyzor_timeout`
+
+Data type: `Optional[Numeric]`
+
+How many seconds you wait for Pyzor to complete, before scanning continues
+without the Pyzor results. Default: 3.5
+
+Default value: `undef`
+
+##### <a name="-spamassassin--pyzor_max"></a>`pyzor_max`
+
+Data type: `Optional[Integer]`
+
+This option sets how often a message's body checksum must have been reported
+to the Pyzor server before SpamAssassin will consider the Pyzor check as
+matched. Default: 5
+
+Default value: `undef`
+
+##### <a name="-spamassassin--pyzor_options"></a>`pyzor_options`
+
+Data type: `Optional[Pattern[/[0-9A-Za-z ,._\/-]\+/]]`
+
+Specify additional options to the pyzor command. Please note that only
+characters in the range `[0-9A-Za-z ,._/-]` are allowed for security reasons.
+Please note that the module will automatically add the homedir options as
+part of the configuration.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--pyzor_path"></a>`pyzor_path`
+
+Data type: `Optional[Stdlib::Absolutepath]`
+
+This option tells SpamAssassin specifically where to find the pyzor client
+instead of relying on SpamAssassin to find it in the current PATH.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--pyzor_home"></a>`pyzor_home`
+
+Data type: `Stdlib::Absolutepath`
+
+Define the homedir for pyzor. Default is to use the [global config dir]/.pyzor
+
+Default value: `$spamassassin::params::pyzor_home`
+
+##### <a name="-spamassassin--razor_enabled"></a>`razor_enabled`
+
+Data type: `Boolean`
+
+Enable/disable the Pyzor plugin. Default: true
+
+Default value: `true`
+
+##### <a name="-spamassassin--razor_timeout"></a>`razor_timeout`
+
+Data type: `Optional[Integer]`
+
+How many seconds you wait for Razor to complete before you go on without the
+results. Default: 5
+
+Default value: `undef`
+
+##### <a name="-spamassassin--razor_home"></a>`razor_home`
+
+Data type: `Stdlib::Absolutepath`
+
+Define the homedir for razor. Please note that if you set a custom path the
+module will automatically use the directory in which you store your razor
+config as the home directory for the module. Default is to use the [global
+config dir]/.razor
+
+Default value: `$spamassassin::params::razor_home`
+
+##### <a name="-spamassassin--spamcop_enabled"></a>`spamcop_enabled`
+
+Data type: `Boolean`
+
+Enable/disable the Pyzor plugin. Default: false
+
+Default value: `false`
+
+##### <a name="-spamassassin--spamcop_from_address"></a>`spamcop_from_address`
+
+Data type: `Optional[String]`
+
+This address is used during manual reports to SpamCop as the From: address.
+You can use your normal email address. If this is not set, a guess will be
+used as the From: address in SpamCop reports.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--spamcop_to_address"></a>`spamcop_to_address`
+
+Data type: `Optional[String]`
+
+Your customized SpamCop report submission address. You need to obtain this
+address by registering at http://www.spamcop.net/. If this is not set,
+SpamCop reports will go to a generic reporting address for SpamAssassin
+users and your reports will probably have less weight in the SpamCop system.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--spamcop_max_report_size"></a>`spamcop_max_report_size`
+
+Data type: `Optional[Integer]`
+
+Messages larger than this size (in kilobytes) will be truncated in report
+messages sent to SpamCop. The default setting is the maximum size that
+SpamCop will accept at the time of release. Default: 50
+
+Default value: `undef`
+
+##### <a name="-spamassassin--awl_enabled"></a>`awl_enabled`
+
+Data type: `Boolean`
+
+Enable/disable the Auto-Whitelist plugin. Default: false
+
+Default value: `false`
+
+##### <a name="-spamassassin--awl_sql_enabled"></a>`awl_sql_enabled`
+
+Data type: `Boolean`
+
+If true will set auto_whitelist_factory to use sql and will write the sql
+dsn, and other directives, to local.cf. Default: false
+
+Default value: `false`
+
+##### <a name="-spamassassin--awl_dsn"></a>`awl_dsn`
+
+Data type: `String`
+
+This parameter gives the connect string used to connect to the SQL based
+storage. By default will use the mysql driver and a database called
+spamassassin. Please note the module does not manage any database settings
+or the creation of the schema.
+
+Default value: `'DBI:mysql:spamassassin'`
+
+##### <a name="-spamassassin--awl_sql_username"></a>`awl_sql_username`
+
+Data type: `String`
+
+The sql username used for the dsn provided above.
+
+Default value: `'root'`
+
+##### <a name="-spamassassin--awl_sql_password"></a>`awl_sql_password`
+
+Data type: `Optional[String]`
+
+The sql password used for the dsn provided above.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--awl_sql_override_username"></a>`awl_sql_override_username`
+
+Data type: `Optional[String]`
+
+Used by the SQLBasedAddrList storage implementation. If this option is set
+the SQLBasedAddrList module will override the set username with the value
+given. This can be useful for implementing global or group based
+auto-whitelist databases.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--auto_whitelist_path"></a>`auto_whitelist_path`
+
+Data type: `Optional[String]`
+
+This is the automatic-whitelist directory and filename. Default:
+~/.spamassassin/auto-whitelist
+
+Default value: `undef`
+
+##### <a name="-spamassassin--auto_whitelist_file_mode"></a>`auto_whitelist_file_mode`
+
+Data type: `Optional[String]`
+
+The file mode bits used for the automatic-whitelist directory or file.
+Default: 0600
+
+Default value: `undef`
+
+##### <a name="-spamassassin--textcat_enabled"></a>`textcat_enabled`
+
+Data type: `Boolean`
+
+Enable/disable the TextCat plugin. Default: false
+
+Default value: `false`
+
+##### <a name="-spamassassin--ok_languages"></a>`ok_languages`
+
+Data type: `Array[String]`
+
+List of languages which are considered okay for incoming mail. If unset,
+defaults to accepting all languages. Default: ['all']
+
+Default value: `['all']`
+
+##### <a name="-spamassassin--ok_locales"></a>`ok_locales`
+
+Data type: `Array[String]`
+
+List of charsets that are permitted. If unset, defaults to accepting all
+locales. Default: ['all']
+
+Default value: `['all']`
+
+##### <a name="-spamassassin--normalize_charset"></a>`normalize_charset`
+
+Data type: `Boolean`
+
+Enable/disable scanning non-UTF8 or non-ASCII parts to guess charset.
+Default: false
+
+Default value: `false`
+
+##### <a name="-spamassassin--shortcircuit_enabled"></a>`shortcircuit_enabled`
+
+Data type: `Boolean`
+
+Enable/disable the Shortcircuit plugin. Default: false
+
+Default value: `false`
+
+##### <a name="-spamassassin--shortcircuit_user_in_whitelist"></a>`shortcircuit_user_in_whitelist`
+
+Data type: `Optional[Enum['ham','spam','on','off']]`
+
+Values: ham, spam, on or off.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--shortcircuit_user_in_def_whitelist"></a>`shortcircuit_user_in_def_whitelist`
+
+Data type: `Optional[Enum['ham','spam','on','off']]`
+
+Values: ham, spam, on or off.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--shortcircuit_user_in_all_spam_to"></a>`shortcircuit_user_in_all_spam_to`
+
+Data type: `Optional[Enum['ham','spam','on','off']]`
+
+Values: ham, spam, on or off.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--shortcircuit_subject_in_whitelist"></a>`shortcircuit_subject_in_whitelist`
+
+Data type: `Optional[Enum['ham','spam','on','off']]`
+
+Values: ham, spam, on or off.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--shortcircuit_user_in_blacklist"></a>`shortcircuit_user_in_blacklist`
+
+Data type: `Optional[Enum['ham','spam','on','off']]`
+
+Values: ham, spam, on or off.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--shortcircuit_user_in_blacklist_to"></a>`shortcircuit_user_in_blacklist_to`
+
+Data type: `Optional[Enum['ham','spam','on','off']]`
+
+Values: ham, spam, on or off.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--shortcircuit_subject_in_blacklist"></a>`shortcircuit_subject_in_blacklist`
+
+Data type: `Optional[Enum['ham','spam','on','off']]`
+
+Values: ham, spam, on or off.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--shortcircuit_all_trusted"></a>`shortcircuit_all_trusted`
+
+Data type: `Optional[Enum['ham','spam','on','off']]`
+
+Values: ham, spam, on or off.
+
+Default value: `undef`
+
+##### <a name="-spamassassin--dkim_enabled"></a>`dkim_enabled`
+
+Data type: `Boolean`
+
+Enable/disable the DKIM plugin. Default: true
+
+Default value: `true`
+
+##### <a name="-spamassassin--dkim_timeout"></a>`dkim_timeout`
+
+Data type: `Optional[Integer]`
+
+How many seconds to wait for a DKIM query to complete, before scanning
+continues without the DKIM result. Default: 5
+
+Default value: `undef`
+
+##### <a name="-spamassassin--rules2xsbody_enabled"></a>`rules2xsbody_enabled`
+
+Data type: `Boolean`
+
+Enable the Rule2XSBody plugin. Compile ruleset to native code with
+sa-compile. Requires re2c and gcc packages (not managed in this module)
+
+Default value: `false`
+
+### <a name="spamassassin--config"></a>`spamassassin::config`
 
 Configure spamassassin and related software.
 
-This class should not be used directly. Use the spamassassin class and its
-parameters instead.
+* **Note** This class should not be used directly. Use the spamassassin class and
+its parameters instead.
 
 ### <a name="spamassassin--install"></a>`spamassassin::install`
 
-== Class: spamassassin::install
-
 Install packages for spamassassin and related software.
 
-This class should not be used directly. Use the spamassassin class and its
-parameters instead.
+* **Note** This class should not be used directly. Use the spamassassin class and
+its parameters instead.
 
 ### <a name="spamassassin--params"></a>`spamassassin::params`
 
-== Class: spamassassin::params
-
 Default parameter values for class spamassassin
 
-TODO: This should be replaced by data-in-module with hiera 5
+* **TODO** This should be replaced by data-in-module with hiera 5
 
 ### <a name="spamassassin--service"></a>`spamassassin::service`
 
-== Class: spamassassin::service
-
 Setup spamassassin service.
 
-This class should not be used directly. Use the spamassassin class and its
-parameters instead.
+* **Note** This class should not be used directly. Use the spamassassin class and
+its parameters instead.
 
