@@ -66,6 +66,8 @@
 # Turn off (on) reading of per-user configuration files (user_prefs) from
 # the user's home directory. The default behaviour is to read per-user
 # configuration from the user's home directory (--user-config).
+# Note that by default `spamd_defaults` activates `--create-prefs` so you may
+# want to revise that parameter if you set this option.
 #
 # [*spamd_allowtell*]
 # Allow learning and forgetting (to a local Bayes database), reporting and
