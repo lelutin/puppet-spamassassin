@@ -24,6 +24,9 @@ plugins.
 
 For examples, see tests folder.
 
+* **See also**
+  * https://spamassassin.apache.org/full/4.0.x/doc/
+
 #### Parameters
 
 The following parameters are available in the `spamassassin` class:
@@ -51,8 +54,6 @@ The following parameters are available in the `spamassassin` class:
 * [`sa_update_file`](#-spamassassin--sa_update_file)
 * [`required_score`](#-spamassassin--required_score)
 * [`score_tests`](#-spamassassin--score_tests)
-* [`custom_rules`](#-spamassassin--custom_rules)
-* [`custom_config`](#-spamassassin--custom_config)
 * [`whitelist_from`](#-spamassassin--whitelist_from)
 * [`whitelist_from_rcvd`](#-spamassassin--whitelist_from_rcvd)
 * [`whitelist_to`](#-spamassassin--whitelist_to)
@@ -61,13 +62,13 @@ The following parameters are available in the `spamassassin` class:
 * [`rewrite_header_subject`](#-spamassassin--rewrite_header_subject)
 * [`rewrite_header_from`](#-spamassassin--rewrite_header_from)
 * [`rewrite_header_to`](#-spamassassin--rewrite_header_to)
+* [`report_safe`](#-spamassassin--report_safe)
 * [`add_header_spam`](#-spamassassin--add_header_spam)
 * [`add_header_ham`](#-spamassassin--add_header_ham)
 * [`add_header_all`](#-spamassassin--add_header_all)
 * [`remove_header_spam`](#-spamassassin--remove_header_spam)
 * [`remove_header_ham`](#-spamassassin--remove_header_ham)
 * [`remove_header_all`](#-spamassassin--remove_header_all)
-* [`report_safe`](#-spamassassin--report_safe)
 * [`clear_trusted_networks`](#-spamassassin--clear_trusted_networks)
 * [`trusted_networks`](#-spamassassin--trusted_networks)
 * [`clear_internal_networks`](#-spamassassin--clear_internal_networks)
@@ -139,6 +140,8 @@ The following parameters are available in the `spamassassin` class:
 * [`dkim_enabled`](#-spamassassin--dkim_enabled)
 * [`dkim_timeout`](#-spamassassin--dkim_timeout)
 * [`rules2xsbody_enabled`](#-spamassassin--rules2xsbody_enabled)
+* [`custom_rules`](#-spamassassin--custom_rules)
+* [`custom_config`](#-spamassassin--custom_config)
 
 ##### <a name="-spamassassin--sa_update"></a>`sa_update`
 
@@ -154,7 +157,7 @@ Data type: `Optional[String]`
 
 If you enabled razor and/or pyzor and would like the razor-admin or pyzor
 discover commands to be run as a different user specify the username in this
-directive. Example: amavis. Default: undef
+directive. Example: `amavis`
 
 Default value: `undef`
 
@@ -162,7 +165,7 @@ Default value: `undef`
 
 Data type: `String`
 
-The package name to use. Default: Distribution specific
+The package name to use. Default is distribution-specific
 
 Default value: `$spamassassin::params::package_name`
 
@@ -178,8 +181,8 @@ Default value: `false`
 
 Data type: `String`
 
-The service name to use for the spamassassin service. Default: Distribution
-specific
+The service name to use for the spamassassin service. Default is
+distribution-specific
 
 Default value: `$spamassassin::params::service_name`
 
@@ -355,36 +358,6 @@ be positive or negative real numbers or integers.
 
 Default value: `{}`
 
-##### <a name="-spamassassin--custom_rules"></a>`custom_rules`
-
-Data type: `Hash`
-
-Define custom rules. This is a hash of hashes. The key for the outer hash is
-the spamassassin rule name, the inner hash for each entry should contain the
-rule definition, e.g:
-
-  spamassassin::custom_rules:
-    INVOICE_SPAM:
-      body: '/Invoice.*from.*You have received an invoice from .* To start with it, print out or download a JS copy of your invoice/'
-      score: 6
-      describe: 'spam reported claiming "You have received an invoice"'
-
-Default value: `{}`
-
-##### <a name="-spamassassin--custom_config"></a>`custom_config`
-
-Data type: `Array[String]`
-
-Add custom lines to the config file. Useful for configuring modules that
-aren't otherwise handled by this Puppet module. This is an array of strings,
-e.g:
-
-  spamassassin::custom_config:
-    - hashcash_accept *@example.com
-    - hashcash_accept *@example.net
-
-Default value: `[]`
-
 ##### <a name="-spamassassin--whitelist_from"></a>`whitelist_from`
 
 Data type: `Array`
@@ -458,6 +431,14 @@ See `rewrite_header_subject`.
 
 Default value: `undef`
 
+##### <a name="-spamassassin--report_safe"></a>`report_safe`
+
+Data type: `Integer[0,2]`
+
+See: https://spamassassin.apache.org/full/4.0.x/doc/Mail_SpamAssassin_Conf.html#report_safe-0-1-2-default:-1
+
+Default value: `0`
+
 ##### <a name="-spamassassin--add_header_spam"></a>`add_header_spam`
 
 Data type: `Array`
@@ -508,21 +489,11 @@ See `remove_header_spam`.
 
 Default value: `[]`
 
-##### <a name="-spamassassin--report_safe"></a>`report_safe`
-
-Data type: `Integer[0,2]`
-
-Values can be 0, 1 or 2.
-See: http://spamassassin.apache.org/full/3.3.x/doc/Mail_SpamAssassin_Conf.html#report_safe
-Default: 0
-
-Default value: `0`
-
 ##### <a name="-spamassassin--clear_trusted_networks"></a>`clear_trusted_networks`
 
 Data type: `Boolean`
 
-Empty the list of trusted networks. Default: false
+Empty the list of trusted networks.
 
 Default value: `false`
 
@@ -540,7 +511,7 @@ Default value: `[]`
 
 Data type: `Boolean`
 
-Empty the list of internal networks. Default: false
+Empty the list of internal networks.
 
 Default value: `false`
 
@@ -557,7 +528,7 @@ Default value: `[]`
 
 Data type: `Boolean`
 
-If false SpamAssassin will run RBL checks. Default: true
+If false SpamAssassin will run RBL checks.
 
 Default value: `true`
 
@@ -566,7 +537,7 @@ Default value: `true`
 Data type: `Pattern[/^(test|yes|no)$/]`
 
 If set to 'test', SpamAssassin will query some default hosts on the internet
-to attempt to check if DNS is working or not. Default: yes
+to attempt to check if DNS is working or not.
 
 Default value: `'yes'`
 
@@ -620,7 +591,6 @@ Default value: `{}`
 Data type: `Boolean`
 
 Whether to use the naive-Bayesian-style classifier built into SpamAssassin.
-Default: true
 
 Default value: `true`
 
@@ -630,7 +600,7 @@ Data type: `Boolean`
 
 Should the Bayesian classifier use hapaxes (words/tokens that occur only
 once) when classifying? This produces significantly better hit-rates, but
-increases database size by about a factor of 8 to 10. Default: true
+increases database size by about a factor of 8 to 10.
 
 Default value: `true`
 
@@ -639,7 +609,7 @@ Default value: `true`
 Data type: `Boolean`
 
 Whether SpamAssassin should automatically feed high-scoring mails into its
-learning systems. Default: true
+learning systems.
 
 Default value: `true`
 
@@ -647,7 +617,8 @@ Default value: `true`
 
 Data type: `Array`
 
-See http://spamassassin.apache.org/full/3.3.x/doc/Mail_SpamAssassin_Conf.html#bayes_ignore_header
+List of email header names that spamd should ignore.
+See https://spamassassin.apache.org/full/4.0.x/doc/Mail_SpamAssassin_Conf.html#bayes_ignore_header-header_name
 
 Default value: `[]`
 
@@ -656,7 +627,7 @@ Default value: `[]`
 Data type: `Boolean`
 
 If enabled, the Bayes system will try to automatically expire old tokens
-from the database. Default: true
+from the database.
 
 Default value: `true`
 
@@ -664,7 +635,7 @@ Default value: `true`
 
 Data type: `Boolean`
 
-If true will write the SQL-related directives to local.cf. Default: false
+If true will write the SQL-related directives to `local.cf`.
 
 Default value: `false`
 
@@ -788,7 +759,7 @@ Default value: `undef`
 
 Data type: `Boolean`
 
-Enable/disable the DCC plugin. Default: false
+Enable/disable the DCC plugin.
 
 Default value: `false`
 
@@ -797,7 +768,7 @@ Default value: `false`
 Data type: `Optional[Integer]`
 
 How many seconds you wait for DCC to complete, before scanning continues
-without the DCC results. Default: 8
+without the DCC results. If left undef, spamd uses its default value of 5
 
 Default value: `undef`
 
@@ -809,7 +780,7 @@ This option sets how often a message's body/fuz1/fuz2 checksum must have
 been reported to the DCC server before SpamAssassin will consider the DCC
 check as matched. As nearly all DCC clients are auto-reporting these
 checksums, you should set this to a relatively high value, e.g. 999999 (this
-is DCC's MANY count). Default: 999999
+is DCC's MANY count). If left undef, spamd uses its default value of 999999
 
 Default value: `undef`
 
@@ -817,7 +788,7 @@ Default value: `undef`
 
 Data type: `Optional[Integer]`
 
-See `dcc_body_max`. Default: 999999
+See `dcc_body_max`. If left undef, spamd uses its default value of 999999
 
 Default value: `undef`
 
@@ -825,7 +796,7 @@ Default value: `undef`
 
 Data type: `Optional[Integer]`
 
-See `dcc_body_max`. Default: 999999
+See `dcc_body_max`. If left undef, spamd uses its default value of 999999
 
 Default value: `undef`
 
@@ -833,7 +804,7 @@ Default value: `undef`
 
 Data type: `Boolean`
 
-Enable/disable the Pyzor plugin. Default: true
+Enable/disable the Pyzor plugin.
 
 Default value: `true`
 
@@ -842,7 +813,7 @@ Default value: `true`
 Data type: `Optional[Numeric]`
 
 How many seconds you wait for Pyzor to complete, before scanning continues
-without the Pyzor results. Default: 3.5
+without the Pyzor results. If left undef, spamd uses its default of 5
 
 Default value: `undef`
 
@@ -852,7 +823,8 @@ Data type: `Optional[Integer]`
 
 This option sets how often a message's body checksum must have been reported
 to the Pyzor server before SpamAssassin will consider the Pyzor check as
-matched. Default: 5
+matched. Note that this option has been renamed to `pyzor_count_min` in
+spamassassin 4.0.x. If left undefined, spamd will use its default of 5.
 
 Default value: `undef`
 
@@ -888,7 +860,7 @@ Default value: `$spamassassin::params::pyzor_home`
 
 Data type: `Boolean`
 
-Enable/disable the Pyzor plugin. Default: true
+Enable/disable the Razor2 plugin.
 
 Default value: `true`
 
@@ -897,7 +869,7 @@ Default value: `true`
 Data type: `Optional[Integer]`
 
 How many seconds you wait for Razor to complete before you go on without the
-results. Default: 5
+results. If left undefined, spamd will use its default of 5
 
 Default value: `undef`
 
@@ -916,7 +888,7 @@ Default value: `$spamassassin::params::razor_home`
 
 Data type: `Boolean`
 
-Enable/disable the Pyzor plugin. Default: false
+Enable/disable the Pyzor plugin.
 
 Default value: `false`
 
@@ -947,7 +919,8 @@ Data type: `Optional[Integer]`
 
 Messages larger than this size (in kilobytes) will be truncated in report
 messages sent to SpamCop. The default setting is the maximum size that
-SpamCop will accept at the time of release. Default: 50
+SpamCop will accept at the time of release. If left undefined, spamd uses
+its default of 50
 
 Default value: `undef`
 
@@ -955,7 +928,7 @@ Default value: `undef`
 
 Data type: `Boolean`
 
-Enable/disable the Auto-Whitelist plugin. Default: false
+Enable/disable the Auto-Whitelist plugin.
 
 Default value: `false`
 
@@ -964,7 +937,7 @@ Default value: `false`
 Data type: `Boolean`
 
 If true will set auto_whitelist_factory to use sql and will write the sql
-dsn, and other directives, to local.cf. Default: false
+dsn, and other directives, to local.cf.
 
 Default value: `false`
 
@@ -1010,8 +983,12 @@ Default value: `undef`
 
 Data type: `Optional[String]`
 
-This is the automatic-whitelist directory and filename. Default:
-~/.spamassassin/auto-whitelist
+This is the automatic-welcomelist directory and filename. By default, each
+user has their own welcomelist database in their ~/.spamassassin directory
+with mode 0700. For system-wide SpamAssassin use, you may want to share this
+across all users, although that is not recommended. If left undefined, spamd
+will use its default value of `~/.spamassassin/auto-whitelist`. Note that
+the option was renamed to `auto_welcomelist_path` in spamassassin 4.0.x
 
 Default value: `undef`
 
@@ -1019,8 +996,12 @@ Default value: `undef`
 
 Data type: `Optional[String]`
 
-The file mode bits used for the automatic-whitelist directory or file.
-Default: 0600
+The file mode bits used for the automatic-whitelist directory or file. Make
+sure you specify this using the 'x' mode bits set, as it may also be used to
+create directories. However, if a file is created, the resulting file will
+not have any execute bits set (the umask is set to 0111). If left undefined,
+spamd will use its default of `0700`. Note that this option was renamed to
+`auto_welcomelist_file_mode` in spamassassin 4.0.x
 
 Default value: `undef`
 
@@ -1028,7 +1009,7 @@ Default value: `undef`
 
 Data type: `Boolean`
 
-Enable/disable the TextCat plugin. Default: false
+Enable/disable the TextCat plugin.
 
 Default value: `false`
 
@@ -1037,7 +1018,7 @@ Default value: `false`
 Data type: `Array[String]`
 
 List of languages which are considered okay for incoming mail. If unset,
-defaults to accepting all languages. Default: ['all']
+defaults to accepting all languages.
 
 Default value: `['all']`
 
@@ -1046,7 +1027,7 @@ Default value: `['all']`
 Data type: `Array[String]`
 
 List of charsets that are permitted. If unset, defaults to accepting all
-locales. Default: ['all']
+locales.
 
 Default value: `['all']`
 
@@ -1055,7 +1036,6 @@ Default value: `['all']`
 Data type: `Boolean`
 
 Enable/disable scanning non-UTF8 or non-ASCII parts to guess charset.
-Default: false
 
 Default value: `false`
 
@@ -1063,7 +1043,7 @@ Default value: `false`
 
 Data type: `Boolean`
 
-Enable/disable the Shortcircuit plugin. Default: false
+Enable/disable the Shortcircuit plugin.
 
 Default value: `false`
 
@@ -1135,7 +1115,7 @@ Default value: `undef`
 
 Data type: `Boolean`
 
-Enable/disable the DKIM plugin. Default: true
+Enable/disable the DKIM plugin.
 
 Default value: `true`
 
@@ -1144,7 +1124,8 @@ Default value: `true`
 Data type: `Optional[Integer]`
 
 How many seconds to wait for a DKIM query to complete, before scanning
-continues without the DKIM result. Default: 5
+continues without the DKIM result. If left undefined, spamd will use its
+default value of 3.5
 
 Default value: `undef`
 
@@ -1156,4 +1137,34 @@ Enable the Rule2XSBody plugin. Compile ruleset to native code with
 sa-compile. Requires re2c and gcc packages (not managed in this module)
 
 Default value: `false`
+
+##### <a name="-spamassassin--custom_rules"></a>`custom_rules`
+
+Data type: `Hash`
+
+Define custom rules. This is a hash of hashes. The key for the outer hash is
+the spamassassin rule name, the inner hash for each entry should contain the
+rule definition, e.g:
+
+  spamassassin::custom_rules:
+    INVOICE_SPAM:
+      body: '/Invoice.*from.*You have received an invoice from .* To start with it, print out or download a JS copy of your invoice/'
+      score: 6
+      describe: 'spam reported claiming "You have received an invoice"'
+
+Default value: `{}`
+
+##### <a name="-spamassassin--custom_config"></a>`custom_config`
+
+Data type: `Array[String]`
+
+Add custom lines to the config file. Useful for configuring modules that
+aren't otherwise handled by this Puppet module. This is an array of strings,
+e.g:
+
+  spamassassin::custom_config:
+    - hashcash_accept *@example.com
+    - hashcash_accept *@example.net
+
+Default value: `[]`
 
