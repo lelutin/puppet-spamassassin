@@ -1,6 +1,11 @@
 # @summary This module installs and configures spamassassin and a few of its
 #   plugins.
 #
+# For examples, see tests folder.
+#
+# @author Scott Barr <gsbarr@gmail.com>
+#
+#
 # @param sa_update
 #   Enable the sa-update cron job.
 #
@@ -462,11 +467,6 @@
 # @param rules2xsbody_enabled
 #   Enable the Rule2XSBody plugin. Compile ruleset to native code with
 #   sa-compile. Requires re2c and gcc packages (not managed in this module)
-#
-#
-# For examples, see tests folder.
-#
-# Authors: Scott Barr <gsbarr@gmail.com>
 #
 class spamassassin (
   Boolean          $sa_update         = false,

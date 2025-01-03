@@ -6,20 +6,23 @@
 
 ### Classes
 
+#### Public Classes
+
 * [`spamassassin`](#spamassassin): This module installs and configures spamassassin and a few of its
 plugins.
-* [`spamassassin::config`](#spamassassin--config): Configure spamassassin and related software.
-* [`spamassassin::install`](#spamassassin--install): Install packages for spamassassin and related software.
-* [`spamassassin::params`](#spamassassin--params): Default parameter values for class spamassassin
-* [`spamassassin::service`](#spamassassin--service): Setup spamassassin service.
+
+#### Private Classes
+
+* `spamassassin::config`: Configure spamassassin and related software.
+* `spamassassin::install`: Install packages for spamassassin and related software.
+* `spamassassin::params`: Default parameter values for class spamassassin
+* `spamassassin::service`: Setup spamassassin service.
 
 ## Classes
 
 ### <a name="spamassassin"></a>`spamassassin`
 
 For examples, see tests folder.
-
-Authors: Scott Barr <gsbarr@gmail.com>
 
 #### Parameters
 
@@ -1153,31 +1156,4 @@ Enable the Rule2XSBody plugin. Compile ruleset to native code with
 sa-compile. Requires re2c and gcc packages (not managed in this module)
 
 Default value: `false`
-
-### <a name="spamassassin--config"></a>`spamassassin::config`
-
-Configure spamassassin and related software.
-
-* **Note** This class should not be used directly. Use the spamassassin class and
-its parameters instead.
-
-### <a name="spamassassin--install"></a>`spamassassin::install`
-
-Install packages for spamassassin and related software.
-
-* **Note** This class should not be used directly. Use the spamassassin class and
-its parameters instead.
-
-### <a name="spamassassin--params"></a>`spamassassin::params`
-
-Default parameter values for class spamassassin
-
-* **TODO** This should be replaced by data-in-module with hiera 5
-
-### <a name="spamassassin--service"></a>`spamassassin::service`
-
-Setup spamassassin service.
-
-* **Note** This class should not be used directly. Use the spamassassin class and
-its parameters instead.
 

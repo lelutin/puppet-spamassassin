@@ -1,6 +1,8 @@
 # @summary Default parameter values for class spamassassin
 #
-# @todo This should be replaced by data-in-module with hiera 5
+# @api private
+#
+# TODO: This should be replaced by data-in-module with hiera 5
 #
 class spamassassin::params {
   $configdir  = '/etc/mail/spamassassin'

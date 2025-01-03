@@ -1,5 +1,7 @@
 # @summary Install packages for spamassassin and related software.
 #
+# @api private
+#
 # @note This class should not be used directly. Use the spamassassin class and
 #   its parameters instead.
 #
