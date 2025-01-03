@@ -134,10 +134,14 @@ user_awl_sql_password       <%= $awl_sql_password %>
 user_awl_sql_override_username <%= $awl_sql_override_username %>
     <%- } -%>
   <%- } else { -%>
-    <%- if $auto_whitelist_path { -%>
+    <%- if $auto_welcomelist_path { -%>
+auto_welcomelist_path       <%= $auto_welcomelist_path %>
+    <%- } elsif $auto_whitelist_path { -%>
 auto_whitelist_path         <%= $auto_whitelist_path %>
     <%- } -%>
-    <%- if $auto_whitelist_file_mode { -%>
+    <%- if $auto_welcomelist_file_mode { -%>
+auto_welcomelist_file_mode  <%= $auto_welcomelist_file_mode %>
+    <%- } elsif $auto_whitelist_file_mode { -%>
 auto_whitelist_file_mode    <%= $auto_whitelist_file_mode %>
     <%- } -%>
   <%- } -%>

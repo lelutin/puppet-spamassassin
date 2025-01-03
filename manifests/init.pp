@@ -316,21 +316,26 @@
 #   given. This can be useful for implementing global or group based
 #   auto-whitelist databases.
 # @param auto_whitelist_path
+#   See `auto_welcomelist_path`. Note that the option was renamed to
+#   `auto_welcomelist_path` in spamassassin 4.0.x. `auto_whitelist_path` is
+#   still valid with 4.0.x, but is planned to be removed in 4.1.x.
+# @param auto_welcomelist_path
 #   This is the automatic-welcomelist directory and filename. By default, each
 #   user has their own welcomelist database in their ~/.spamassassin directory
 #   with mode 0700. For system-wide SpamAssassin use, you may want to share this
 #   across all users, although that is not recommended. If left undefined, spamd
-#   will use its default value of `~/.spamassassin/auto-whitelist`. Note that
-#   the option was renamed to `auto_welcomelist_path` in spamassassin 4.0.x
-# TODO auto_welcomelist_path
+#   will use its default value of `~/.spamassassin/auto-whitelist`.
 # @param auto_whitelist_file_mode
+#   See `auto_welcomelist_file_mode`. Note that this option was renamed to
+#   `auto_welcomelist_file_mode` in spamassassin 4.0.x.
+#   `auto_whitelist_file_mode` is still valid with 4.0.x, but is planned to be
+#   removed in 4.1.x.
+# @param auto_welcomelist_file_mode
 #   The file mode bits used for the automatic-whitelist directory or file. Make
 #   sure you specify this using the 'x' mode bits set, as it may also be used to
 #   create directories. However, if a file is created, the resulting file will
 #   not have any execute bits set (the umask is set to 0111). If left undefined,
-#   spamd will use its default of `0700`. Note that this option was renamed to
-#   `auto_welcomelist_file_mode` in spamassassin 4.0.x
-# TODO auto_welcomelist_file_mode
+#   spamd will use its default of `0700`.
 #
 # @param textcat_enabled
 #   Enable/disable the TextCat plugin.
@@ -501,7 +506,9 @@ class spamassassin (
   Optional[String] $awl_sql_password          = undef,
   Optional[String] $awl_sql_override_username = undef,
   Optional[String] $auto_whitelist_path       = undef,
+  Optional[String] $auto_welcomelist_path     = undef,
   Optional[String] $auto_whitelist_file_mode  = undef,
+  Optional[String] $auto_welcomelist_file_mode = undef,
   # Language guessing plugin, see Mail::SpamAssassin::Plugin::TextCat(3)
   Boolean       $textcat_enabled   = false,
   Array[String] $ok_languages      = ['all'],
