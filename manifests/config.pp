@@ -115,6 +115,7 @@ class spamassassin::config {
     pyzor_enabled                      => $spamassassin::pyzor_enabled,
     pyzor_timeout                      => $spamassassin::pyzor_timeout,
     pyzor_max                          => $spamassassin::pyzor_max,
+    pyzor_count_min                    => $spamassassin::pyzor_count_min,
     pyzor_path                         => $spamassassin::pyzor_path,
     pyzor_home                         => $spamassassin::pyzor_home,
     pyzor_options                      => $spamassassin::pyzor_options,

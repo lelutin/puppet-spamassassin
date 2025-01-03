@@ -177,7 +177,9 @@ use_pyzor           1
   <%- if $pyzor_timeout { -%>
 pyzor_timeout       <%= $pyzor_timeout %>
   <%- } -%>
-  <%- if $pyzor_max { -%>
+  <%- if $pyzor_count_min { -%>
+pyzor_count_min     <%= $pyzor_count_min %>
+  <%- } elsif $pyzor_max { -%>
 pyzor_max           <%= $pyzor_max %>
   <%- } -%>
   <%- if $pyzor_path { -%>

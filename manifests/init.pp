@@ -249,10 +249,14 @@
 #   How many seconds you wait for Pyzor to complete, before scanning continues
 #   without the Pyzor results. If left undef, spamd uses its default of 5
 # @param pyzor_max
+#   See `pyzor_count_min`. Note that this option has been renamed to
+#   `pyzor_count_min` in spamassassin 4.0.x and it cannot be used from that
+#   version onwards.
+# @param pyzor_count_min
 #   This option sets how often a message's body checksum must have been reported
 #   to the Pyzor server before SpamAssassin will consider the Pyzor check as
-#   matched. Note that this option has been renamed to `pyzor_count_min` in
-#   spamassassin 4.0.x. If left undefined, spamd will use its default of 5.
+#   matched. If left undefined, spamd will use its default of 5. Note that this
+#   option does not exist in versions prior to 4.0.x.
 # @param pyzor_options
 #   Specify additional options to the pyzor command. Please note that only
 #   characters in the range `[0-9A-Za-z ,._/-]` are allowed for security reasons.
@@ -318,6 +322,7 @@
 #   across all users, although that is not recommended. If left undefined, spamd
 #   will use its default value of `~/.spamassassin/auto-whitelist`. Note that
 #   the option was renamed to `auto_welcomelist_path` in spamassassin 4.0.x
+# TODO auto_welcomelist_path
 # @param auto_whitelist_file_mode
 #   The file mode bits used for the automatic-whitelist directory or file. Make
 #   sure you specify this using the 'x' mode bits set, as it may also be used to
@@ -325,6 +330,7 @@
 #   not have any execute bits set (the umask is set to 0111). If left undefined,
 #   spamd will use its default of `0700`. Note that this option was renamed to
 #   `auto_welcomelist_file_mode` in spamassassin 4.0.x
+# TODO auto_welcomelist_file_mode
 #
 # @param textcat_enabled
 #   Enable/disable the TextCat plugin.
@@ -474,6 +480,7 @@ class spamassassin (
   #   value with an suffix of s, m, h, d, w
   Optional[Numeric]                         $pyzor_timeout = undef,
   Optional[Integer]                         $pyzor_max     = undef,
+  Optional[Integer]                         $pyzor_count_min = undef,
   Optional[Pattern[/[0-9A-Za-z ,._\/-]\+/]] $pyzor_options = undef,
   Optional[Stdlib::Absolutepath]            $pyzor_path    = undef,
   Stdlib::Absolutepath                      $pyzor_home    = $spamassassin::params::pyzor_home,
@@ -525,6 +532,10 @@ class spamassassin (
     or $user_scores_sql_password !~ String
   ) {
     fail('spamd_sql_config is enabled but one or more of $user_scores_* not set')
+  }
+
+  if $pyzor_max =~ Integer and $pyzor_count_min =~ Integer {
+    fail('Both options $pyzor_max and $pyzor_count_min cannot be used simultaneously. See documentation for both options.')
   }
 
   contain spamassassin::install
