@@ -11,12 +11,25 @@ class spamassassin::params {
 
   case $facts['os']['family'] {
     'Debian': {
-      if versioncmp($facts['os']['release']['major'], '12') >= 0 {
-        $service_name = 'spamd'
-        $package_name = 'spamd'
-      } else {
-        $service_name = 'spamassassin'
-        $package_name = 'spamassassin'
+      case $facts['os']['name'] {
+        'Ubuntu': {
+          if versioncmp($facts['os']['release']['major'], '24') >= 0 {
+            $service_name = 'spamd'
+            $package_name = 'spamd'
+          } else {
+            $service_name = 'spamassassin'
+            $package_name = 'spamassassin'
+          }
+        }
+        default: {
+          if versioncmp($facts['os']['release']['major'], '12') >= 0 {
+            $service_name = 'spamd'
+            $package_name = 'spamd'
+          } else {
+            $service_name = 'spamassassin'
+            $package_name = 'spamassassin'
+          }
+        }
       }
       $spamd_options_file   = '/etc/default/spamassassin'
       $spamd_options_var    = 'OPTIONS'

@@ -19,6 +19,33 @@ describe 'spamassassin' do
     end
   end
 
+  context 'on Ubuntu' do
+    let :facts do
+      super().merge(
+        {
+          os: {
+            family: 'Debian',
+            name: 'Ubuntu',
+            release: {
+              major: '22.04',
+            },
+          },
+        }
+      )
+    end
+      it {
+        is_expected.to contain_package('spamassassin').with(
+          ensure: 'installed',
+          name: 'spamassassin'
+        )
+      }
+    it {
+      is_expected.to contain_service('spamassassin').with(
+        name: 'spamassassin',
+      )
+    }
+  end
+
   %w[Debian RedHat].each do |system|
     context "when on system #{system}" do
       let :facts do
