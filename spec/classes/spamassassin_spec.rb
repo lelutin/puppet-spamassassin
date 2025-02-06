@@ -19,7 +19,7 @@ describe 'spamassassin' do
     end
   end
 
-  context 'on Ubuntu' do
+  context 'when on system Ubuntu' do
     let :facts do
       super().merge(
         {
@@ -30,15 +30,17 @@ describe 'spamassassin' do
               major: '22.04',
             },
           },
-        }
+        },
       )
     end
-      it {
-        is_expected.to contain_package('spamassassin').with(
-          ensure: 'installed',
-          name: 'spamassassin'
-        )
-      }
+
+    it {
+      is_expected.to contain_package('spamassassin').with(
+        ensure: 'installed',
+        name: 'spamassassin',
+      )
+    }
+
     it {
       is_expected.to contain_service('spamassassin').with(
         name: 'spamassassin',
