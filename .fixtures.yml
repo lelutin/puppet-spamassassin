@@ -2,4 +2,3 @@ fixtures:
   forge_modules:
     "stdlib":
       repo: "puppetlabs/stdlib"
-      ref: "8.0.0"
