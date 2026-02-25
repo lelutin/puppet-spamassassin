@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rspec-puppet-facts'
 require 'voxpupuli/test/spec_helper'
 
@@ -7,7 +9,7 @@ rescue LoadError => e
   warn "Could not require spec_helper_local: #{e.message}"
 end
 
-include RspecPuppetFacts  # rubocop:disable Style/MixinUsage
+include RspecPuppetFacts # rubocop:disable Style/MixinUsage
 
 default_facts = {
   puppetversion: Puppet.version,
