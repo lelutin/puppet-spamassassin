@@ -42,7 +42,7 @@ gem 'rake', require: false
 gem 'puppet_metadata', '< 7.0', require: false
 
 # This draws in rubocop and other useful gems for puppet tests
-gem 'voxpupuli-test', '~> 13.2.0', require: false
+gem 'voxpupuli-test', '~> 14.0.0', require: false
 
 gems = {}
 
