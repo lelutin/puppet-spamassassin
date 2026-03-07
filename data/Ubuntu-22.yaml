@@ -1,0 +1,3 @@
+---
+spamassassin::service_name: 'spamassassin'
+spamassassin::package_name: 'spamassassin'

@@ -1,0 +1,7 @@
+---
+spamassassin::service_name: 'spamassassin'
+spamassassin::package_name: 'spamassassin'
+spamassassin::spamd_options_file: '/etc/sysconfig/spamassassin'
+spamassassin::spamd_options_var: 'SPAMDOPTIONS'
+spamassassin::spamd_defaults: '-d -c -H'
+spamassassin::sa_update_file: '/etc/sysconfig/sa-update'

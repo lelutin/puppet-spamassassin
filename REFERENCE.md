@@ -15,7 +15,6 @@ plugins.
 
 * `spamassassin::config`: Configure spamassassin and related software.
 * `spamassassin::install`: Install packages for spamassassin and related software.
-* `spamassassin::params`: Default parameter values for class spamassassin
 * `spamassassin::service`: Setup spamassassin service.
 
 ## Classes
@@ -170,7 +169,7 @@ Data type: `String`
 
 The package name to use. Default is distribution-specific
 
-Default value: `$spamassassin::params::package_name`
+Default value: `'spamd'`
 
 ##### <a name="-spamassassin--service_enabled"></a>`service_enabled`
 
@@ -187,7 +186,7 @@ Data type: `String`
 The service name to use for the spamassassin service. Default is
 distribution-specific
 
-Default value: `$spamassassin::params::service_name`
+Default value: `'spamd'`
 
 ##### <a name="-spamassassin--notify_service_name"></a>`notify_service_name`
 
@@ -307,7 +306,7 @@ Data type: `Stdlib::Absolutepath`
 
 Absolute path to the directory containing spamassassin's configuration files.
 
-Default value: `$spamassassin::params::configdir`
+Default value: `'/etc/mail/spamassassin'`
 
 ##### <a name="-spamassassin--spamd_options_file"></a>`spamd_options_file`
 
@@ -315,7 +314,7 @@ Data type: `Stdlib::Absolutepath`
 
 Absolute path to the file containing global options to spamd.
 
-Default value: `$spamassassin::params::spamd_options_file`
+Default value: `'/etc/default/spamassassin'`
 
 ##### <a name="-spamassassin--spamd_options_var"></a>`spamd_options_var`
 
@@ -324,7 +323,7 @@ Data type: `String`
 Name of the shell variable used for storing spamd options in
 `spamd_options_file`.
 
-Default value: `$spamassassin::params::spamd_options_var`
+Default value: `'OPTIONS'`
 
 ##### <a name="-spamassassin--spamd_defaults"></a>`spamd_defaults`
 
@@ -333,7 +332,7 @@ Data type: `String`
 String of spamd option flags set in `spamd_options_file`. If you change some
 parameters you may need to revise those deamon flags.
 
-Default value: `$spamassassin::params::spamd_defaults`
+Default value: `'-c -H'`
 
 ##### <a name="-spamassassin--sa_update_file"></a>`sa_update_file`
 
@@ -341,7 +340,7 @@ Data type: `Stdlib::Absolutepath`
 
 Absolute path to file that contains shell variables for sa-update.
 
-Default value: `$spamassassin::params::sa_update_file`
+Default value: `$spamd_options_file`
 
 ##### <a name="-spamassassin--required_score"></a>`required_score`
 
@@ -867,7 +866,7 @@ Data type: `Stdlib::Absolutepath`
 
 Define the homedir for pyzor. Default is to use the [global config dir]/.pyzor
 
-Default value: `$spamassassin::params::pyzor_home`
+Default value: `"${configdir}/.pyzor"`
 
 ##### <a name="-spamassassin--razor_enabled"></a>`razor_enabled`
 
@@ -895,7 +894,7 @@ module will automatically use the directory in which you store your razor
 config as the home directory for the module. Default is to use the [global
 config dir]/.razor
 
-Default value: `$spamassassin::params::razor_home`
+Default value: `"${configdir}/.razor"`
 
 ##### <a name="-spamassassin--spamcop_enabled"></a>`spamcop_enabled`
 

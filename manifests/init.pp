@@ -400,10 +400,10 @@
 class spamassassin (
   Boolean          $sa_update         = false,
   Optional[String] $run_execs_as_user = undef,
-  String           $package_name      = $spamassassin::params::package_name,
+  String           $package_name      = 'spamd',
   # Spamd settings
   Boolean              $service_enabled      = false,
-  String               $service_name         = $spamassassin::params::service_name,
+  String               $service_name         = 'spamd',
   Optional[String]     $notify_service_name  = undef,
   Integer[1]           $spamd_max_children   = 5,
   Optional[Integer[1]] $spamd_min_children   = undef,
@@ -415,11 +415,11 @@ class spamassassin (
   Boolean              $spamd_allowtell      = false,
   Boolean              $spamd_sql_config     = false,
   Optional[String]     $spamd_syslog_facility   = undef,
-  Stdlib::Absolutepath $configdir          = $spamassassin::params::configdir,
-  Stdlib::Absolutepath $spamd_options_file = $spamassassin::params::spamd_options_file,
-  String               $spamd_options_var  = $spamassassin::params::spamd_options_var,
-  String               $spamd_defaults     = $spamassassin::params::spamd_defaults,
-  Stdlib::Absolutepath $sa_update_file     = $spamassassin::params::sa_update_file,
+  Stdlib::Absolutepath $configdir          = '/etc/mail/spamassassin',
+  Stdlib::Absolutepath $spamd_options_file = '/etc/default/spamassassin',
+  String               $spamd_options_var  = 'OPTIONS',
+  String               $spamd_defaults     = '-c -H',
+  Stdlib::Absolutepath $sa_update_file     = $spamd_options_file,
   # Scoring options, see Mail::SpamAssassin::Conf(3)
   Numeric              $required_score     = 5,
   Hash                 $score_tests        = {},
@@ -488,11 +488,11 @@ class spamassassin (
   Optional[Integer]                         $pyzor_count_min = undef,
   Optional[Pattern[/[0-9A-Za-z ,._\/-]\+/]] $pyzor_options = undef,
   Optional[Stdlib::Absolutepath]            $pyzor_path    = undef,
-  Stdlib::Absolutepath                      $pyzor_home    = $spamassassin::params::pyzor_home,
+  Stdlib::Absolutepath                      $pyzor_home    = "${configdir}/.pyzor",
   # Razor plugin, see Mail::SpamAssassin::Plugin::Razor2(3)
   Boolean              $razor_enabled = true,
   Optional[Integer]    $razor_timeout = undef,
-  Stdlib::Absolutepath $razor_home    = $spamassassin::params::razor_home,
+  Stdlib::Absolutepath $razor_home    = "${configdir}/.razor",
   # Spamcop plugin, see Mail::SpamAssassin::Plugin::SpamCop(3)
   Boolean           $spamcop_enabled         = false,
   Optional[String]  $spamcop_from_address    = undef,
@@ -531,8 +531,8 @@ class spamassassin (
   Boolean $rules2xsbody_enabled = false,
   # custom rules
   Hash $custom_rules = {},
-  Array[String] $custom_config                                                = [],
-) inherits spamassassin::params {
+  Array[String] $custom_config = [],
+) {
   if $spamd_sql_config and (
     $user_scores_dsn !~ String
     or $user_scores_sql_username !~ String
