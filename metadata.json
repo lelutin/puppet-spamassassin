@@ -36,7 +36,7 @@
       "version_requirement": ">= 7.0 < 9.0"
     }
   ],
-  "description": "Spamassassin Module for Debian and CentOS.",
+  "description": "Install and configure the Spamassassin spam filtering daemon.",
   "pdk-version": "1.5.0",
   "template-url": "file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git",
   "template-ref": "1.5.0-0-gd1b3eca"
