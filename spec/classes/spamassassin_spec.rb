@@ -32,20 +32,20 @@ describe 'spamassassin' do
               major: '22.04',
             },
           },
-        }
+        },
       )
     end
 
     it {
       is_expected.to contain_package('spamassassin').with(
         ensure: 'installed',
-        name: 'spamassassin'
+        name: 'spamassassin',
       )
     }
 
     it {
       is_expected.to contain_service('spamassassin').with(
-        name: 'spamassassin'
+        name: 'spamassassin',
       )
     }
   end
@@ -64,7 +64,7 @@ describe 'spamassassin' do
                 major: '8',
               },
             },
-          }
+          },
         )
       end
 
@@ -73,31 +73,31 @@ describe 'spamassassin' do
 
       it {
         is_expected.to contain_package('spamassassin').with(
-          ensure: 'installed'
+          ensure: 'installed',
         )
       }
 
       it {
         is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
-          ensure: 'file'
+          ensure: 'file',
         )
       }
 
       it {
         is_expected.to contain_file('/etc/mail/spamassassin/v310.pre').with(
-          ensure: 'file'
+          ensure: 'file',
         )
       }
 
       it {
         is_expected.to contain_file('/etc/mail/spamassassin/v312.pre').with(
-          ensure: 'file'
+          ensure: 'file',
         )
       }
 
       it {
         is_expected.to contain_file('/etc/mail/spamassassin/v320.pre').with(
-          ensure: 'file'
+          ensure: 'file',
         )
       }
 
@@ -109,7 +109,7 @@ describe 'spamassassin' do
             ensure: false,
             enable: false,
             pattern: 'spamd',
-            require: 'Package[spamassassin]'
+            require: 'Package[spamassassin]',
           )
         }
       end
@@ -122,7 +122,7 @@ describe 'spamassassin' do
             is_expected.to contain_file_line('spamd_options').with(
               {
                 'line' => %r{SPAMDOPTIONS="-d -c -H -m 5 -i localhost -A 127.0.0.1/32 -A \[::1\]/8"},
-              }
+              },
             )
           }
         else
@@ -130,7 +130,7 @@ describe 'spamassassin' do
             is_expected.to contain_file_line('spamd_service').with(
               {
                 'line' => %r{ENABLED=1},
-              }
+              },
             )
           }
 
@@ -138,7 +138,7 @@ describe 'spamassassin' do
             is_expected.to contain_file_line('spamd_options').with(
               {
                 'line' => %r{OPTIONS="-c -H -m 5 -i localhost -A 127.0.0.1/32 -A \[::1\]/8"},
-              }
+              },
             )
           }
         end
@@ -148,7 +148,7 @@ describe 'spamassassin' do
             ensure: true,
             enable: true,
             pattern: 'spamd',
-            require: 'Package[spamassassin]'
+            require: 'Package[spamassassin]',
           )
         }
       end
@@ -172,14 +172,16 @@ describe 'spamassassin' do
             spamd_syslog_facility: '/var/log/spamd.log',
           }
         end
+        let(:opts) do
+          '-u myuser -s /var/log/spamd.log -g mygroup -m 42 --min-children=2 -i 127.0.0.2 ' \
+            '-A 10.0.0.0/8 --nouser-config --allow-tell -q'
+        end
 
-        opts = '-u myuser -s /var/log/spamd.log -g mygroup -m 42 --min-children=2 -i 127.0.0.2 ' \
-               '-A 10.0.0.0/8 --nouser-config --allow-tell -q'
         it {
           is_expected.to contain_file_line('spamd_options').with(
             {
               'line' => %r{(?:SPAMD)?OPTIONS=".+\s#{opts}"},
-            }
+            },
           )
         }
       end
@@ -193,7 +195,7 @@ describe 'spamassassin' do
               {
                 'path' => '/etc/sysconfig/sa-update',
                 'line' => %r{SAUPDATE=yes},
-              }
+              },
             )
           }
         else
@@ -202,7 +204,7 @@ describe 'spamassassin' do
               {
                 'path' => '/etc/default/spamassassin',
                 'line' => %r{CRON=1},
-              }
+              },
             )
           }
         end
@@ -213,7 +215,7 @@ describe 'spamassassin' do
 
         it {
           is_expected.to contain_package('dkim').with(
-            ensure: 'installed'
+            ensure: 'installed',
           )
         }
 
@@ -221,7 +223,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/v312.pre').with(
             {
               'content' => %r{^loadplugin Mail::SpamAssassin::Plugin::DKIM},
-            }
+            },
           )
         }
       end
@@ -231,7 +233,7 @@ describe 'spamassassin' do
 
         it {
           is_expected.to contain_package('pyzor').with(
-            ensure: 'installed'
+            ensure: 'installed',
           )
         }
 
@@ -239,7 +241,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
             {
               'content' => %r{use_pyzor           1},
-            }
+            },
           )
         }
 
@@ -247,14 +249,14 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/v310.pre').with(
             {
               'content' => %r{^loadplugin Mail::SpamAssassin::Plugin::Pyzor},
-            }
+            },
           )
         }
 
         it {
           is_expected.to contain_exec('pyzor_discover').with(
             command: "/usr/bin/pyzor --homedir '/etc/mail/spamassassin/.pyzor' discover",
-            unless: 'test -d /etc/mail/spamassassin/.pyzor'
+            unless: 'test -d /etc/mail/spamassassin/.pyzor',
           )
         }
       end
@@ -264,7 +266,7 @@ describe 'spamassassin' do
 
         it {
           is_expected.to contain_package('razor').with(
-            ensure: 'installed'
+            ensure: 'installed',
           )
         }
 
@@ -272,7 +274,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
             {
               'content' => %r{use_razor2          1},
-            }
+            },
           )
         }
 
@@ -280,7 +282,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/v310.pre').with(
             {
               'content' => %r{^loadplugin Mail::SpamAssassin::Plugin::Razor2},
-            }
+            },
           )
         }
 
@@ -288,28 +290,28 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/.razor').with(
             {
               'ensure' => 'directory',
-            }
+            },
           )
         }
 
         it {
           is_expected.to contain_exec('razor_register').that_requires('File[/etc/mail/spamassassin/.razor]').with(
             command: '/usr/bin/razor-admin -home=/etc/mail/spamassassin/.razor -register',
-            unless: 'test -h /etc/mail/spamassassin/.razor/identity'
+            unless: 'test -h /etc/mail/spamassassin/.razor/identity',
           )
         }
 
         it {
           is_expected.to contain_exec('razor_create').that_requires('Exec[razor_register]').with(
             command: '/usr/bin/razor-admin -home=/etc/mail/spamassassin/.razor -create',
-            creates: '/etc/mail/spamassassin/.razor/razor-agent.conf'
+            creates: '/etc/mail/spamassassin/.razor/razor-agent.conf',
           )
         }
 
         it {
           is_expected.to contain_exec('razor_discover').that_requires('Exec[razor_create]').with(
             command: '/usr/bin/razor-admin -home=/etc/mail/spamassassin/.razor -discover',
-            refreshonly: true
+            refreshonly: true,
           )
         }
 
@@ -325,7 +327,7 @@ describe 'spamassassin' do
             is_expected.to contain_file('/tmp/foobar').with(
               {
                 'ensure' => 'directory',
-              }
+              },
             )
           }
         end
@@ -343,7 +345,7 @@ describe 'spamassassin' do
               {
                 'user' => 'spamd',
                 'cwd' => '/',
-              }
+              },
             )
           }
         end
@@ -356,7 +358,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
             {
               'content' => %r{#   Some shortcircuiting},
-            }
+            },
           )
         }
 
@@ -364,7 +366,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/v320.pre').with(
             {
               'content' => %r{^loadplugin Mail::SpamAssassin::Plugin::Shortcircuit},
-            }
+            },
           )
         }
       end
@@ -376,7 +378,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/v320.pre').with(
             {
               'content' => %r{^loadplugin Mail::SpamAssassin::Plugin::Rule2XSBody},
-            }
+            },
           )
         }
       end
@@ -388,7 +390,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
             {
               'content' => %r{use_dcc             1},
-            }
+            },
           )
         }
 
@@ -396,7 +398,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/v310.pre').with(
             {
               'content' => %r{^loadplugin Mail::SpamAssassin::Plugin::DCC},
-            }
+            },
           )
         }
       end
@@ -408,7 +410,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/v310.pre').with(
             {
               'content' => %r{^loadplugin Mail::SpamAssassin::Plugin::SpamCop},
-            }
+            },
           )
         }
       end
@@ -420,7 +422,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
             {
               'content' => %r{use_auto_whitelist  1},
-            }
+            },
           )
         }
 
@@ -428,7 +430,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/v310.pre').with(
             {
               'content' => %r{^loadplugin Mail::SpamAssassin::Plugin::AWL},
-            }
+            },
           )
         }
       end
@@ -447,7 +449,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/sql.cf').with(
             {
               'content' => %r{user_scores_dsn            DBI:mysql:spamassassin:localhost:3306},
-            }
+            },
           )
         }
 
@@ -455,7 +457,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/sql.cf').with(
             {
               'content' => %r{user_scores_sql_username   sqluser},
-            }
+            },
           )
         }
 
@@ -463,7 +465,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/sql.cf').with(
             {
               'content' => %r{user_scores_sql_password   somesecret},
-            }
+            },
           )
         }
       end
@@ -483,7 +485,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
             {
               'content' => %r{bayes_sql_dsn        DBI:mysql:spamassassin:localhost:3306},
-            }
+            },
           )
         }
 
@@ -491,7 +493,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
             {
               'content' => %r{bayes_sql_username   sqluser},
-            }
+            },
           )
         }
 
@@ -499,7 +501,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
             {
               'content' => %r{bayes_sql_password   somesecret},
-            }
+            },
           )
         }
 
@@ -507,7 +509,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
             {
               'content' => %r{bayes_store_module   Mail::SpamAssassin::BayesStore::PgSQL},
-            }
+            },
           )
         }
       end
@@ -523,7 +525,7 @@ describe 'spamassassin' do
             is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
               {
                 'content' => %r{score #{test} #{score}},
-              }
+              },
             )
           }
         end
@@ -536,7 +538,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
             {
               'content' => %r{^body LOCAL_TEST /this is spam/$},
-            }
+            },
           )
         }
 
@@ -544,7 +546,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/local.cf').without(
             {
               'content' => %r{^header LOCAL_TEST},
-            }
+            },
           )
         }
       end
@@ -556,7 +558,7 @@ describe 'spamassassin' do
           is_expected.to contain_file('/etc/mail/spamassassin/local.cf').with(
             {
               'content' => %r{^hashcash_accept \*@example.com$},
-            }
+            },
           )
         }
       end
