@@ -80,6 +80,9 @@
 #   parameters you may need to revise those deamon flags.
 # @param sa_update_file
 #   Absolute path to file that contains shell variables for sa-update.
+# @param manage_sa_update_file
+#   Own `File[$sa_update_file]`. Allows to create the file on OSes which do not
+#   ship it.
 #
 # @param required_score
 #   Set the score required before a mail is considered spam. Can be an integer
@@ -420,6 +423,7 @@ class spamassassin (
   String               $spamd_options_var  = 'OPTIONS',
   String               $spamd_defaults     = '-c -H',
   Stdlib::Absolutepath $sa_update_file     = $spamd_options_file,
+  Boolean              $manage_sa_update_file = false,
   # Scoring options, see Mail::SpamAssassin::Conf(3)
   Numeric              $required_score     = 5,
   Hash                 $score_tests        = {},

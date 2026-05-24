@@ -51,6 +51,7 @@ The following parameters are available in the `spamassassin` class:
 * [`spamd_options_var`](#-spamassassin--spamd_options_var)
 * [`spamd_defaults`](#-spamassassin--spamd_defaults)
 * [`sa_update_file`](#-spamassassin--sa_update_file)
+* [`manage_sa_update_file`](#-spamassassin--manage_sa_update_file)
 * [`required_score`](#-spamassassin--required_score)
 * [`score_tests`](#-spamassassin--score_tests)
 * [`whitelist_from`](#-spamassassin--whitelist_from)
@@ -341,6 +342,15 @@ Data type: `Stdlib::Absolutepath`
 Absolute path to file that contains shell variables for sa-update.
 
 Default value: `$spamd_options_file`
+
+##### <a name="-spamassassin--manage_sa_update_file"></a>`manage_sa_update_file`
+
+Data type: `Boolean`
+
+Own `File[$sa_update_file]`. Allows to create the file on OSes which do not
+ship it.
+
+Default value: `false`
 
 ##### <a name="-spamassassin--required_score"></a>`required_score`
 

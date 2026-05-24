@@ -208,6 +208,15 @@ class spamassassin::config {
         match   => '^CRON=[0-1]$',
         require => Package['spamassassin'],
       }
+      if $spamassassin::manage_sa_update_file {
+        file { $spamassassin::sa_update_file:
+          ensure => file,
+          owner  => root,
+          group  => root,
+          mode   => '0644',
+        }
+        Package['spamassassin'] -> File[$spamassassin::sa_update_file] -> File_line['sa_update']
+      }
     }
     'Redhat': {
       $saupdate = bool2str($spamassassin::sa_update, 'yes', 'no')
