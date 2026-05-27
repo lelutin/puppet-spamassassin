@@ -1,0 +1,10 @@
+---
+
+# Both spamd.service and /etc/init.d/spamd only source /etc/default/spamd
+spamassassin::spamd_options_file: '/etc/default/spamd'
+
+# On the other hand, /usr/sbin/spamassassin-maint (for
+# spamassassin-maintenance.timer) and /etc/cron.daily/spamassassin rely on
+# /etc/default/spamassassin
+spamassassin::sa_update_file: '/etc/default/spamassassin'
+spamassassin::manage_sa_update_file: true

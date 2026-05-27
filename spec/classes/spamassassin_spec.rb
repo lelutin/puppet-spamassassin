@@ -7,6 +7,8 @@ describe 'spamassassin' do
     context "on #{os}" do
       let(:facts) { facts.merge({ is_virtual: 'false' }) }
 
+      debian13 = facts[:os]['name'] == 'Debian' && facts[:os]['release']['major'] == '13'
+
       if (facts[:os]['name'] == 'Ubuntu' && facts[:os]['release']['major'] == '22') \
           || (facts[:os]['name'] == 'Debian' && facts[:os]['release']['major'] == '11') \
           || facts[:os]['family'] == 'RedHat'
@@ -82,6 +84,24 @@ describe 'spamassassin' do
               },
             )
           }
+        elsif debian13
+          it 'writes the spamd service toggle to the Debian 13 spamd defaults file' do
+            is_expected.to contain_file_line('spamd_service').with(
+              {
+                'path' => '/etc/default/spamd',
+                'line' => %r{ENABLED=1},
+              },
+            )
+          end
+
+          it 'writes spamd options to the Debian 13 spamd defaults file' do
+            is_expected.to contain_file_line('spamd_options').with(
+              {
+                'path' => '/etc/default/spamd',
+                'line' => %r{OPTIONS="-c -H -m 5 -i localhost -A 127.0.0.1/32 -A \[::1\]/8"},
+              },
+            )
+          end
         else
           it {
             is_expected.to contain_file_line('spamd_service').with(
@@ -155,6 +175,15 @@ describe 'spamassassin' do
               },
             )
           }
+        elsif debian13
+          it 'writes the Debian 13 sa-update cron setting to the spamassassin defaults file' do
+            is_expected.to contain_file_line('sa_update').with(
+              {
+                'path' => '/etc/default/spamassassin',
+                'line' => %r{CRON=1},
+              },
+            ).that_requires(['File[/etc/default/spamassassin]'])
+          end
         else
           it {
             is_expected.to contain_file_line('sa_update').with(
@@ -164,6 +193,23 @@ describe 'spamassassin' do
               },
             )
           }
+        end
+      end
+
+      if debian13
+        describe 'with auto update enabled and sa-update defaults file management disabled' do
+          let(:params) { { manage_sa_update_file: false, sa_update: true } }
+
+          it {
+            is_expected.to contain_file_line('sa_update').with(
+              {
+                'path' => '/etc/default/spamassassin',
+                'line' => %r{CRON=1},
+              },
+            ).that_requires(['Package[spamassassin]'])
+          }
+
+          it { is_expected.not_to contain_file('/etc/default/spamassassin') }
         end
       end
 
